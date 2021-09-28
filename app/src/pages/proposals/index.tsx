@@ -14,14 +14,14 @@ import { BigNumber, ethers } from "ethers";
 
 type Proposal = {
     proposalId: BigNumber;
-    // proposer: string;
+    proposer: string;
     // targets: string[];
     // values: BigNumber[];
     // signatures: string[];
     // calldatas: string[];
     // startBlock: BigNumber;
     // endBlock: BigNumber;
-    // description: string;
+    description: string;
 }
 export default function Proposals() {
     const { connector, library, active } = useWeb3React()
@@ -47,7 +47,7 @@ export default function Proposals() {
             debugger;
             const proposalsResult = await dao?.queryFilter(filter)
             setProposals(proposalsResult?.map((x) => ({
-                proposalId: x.args.proposalId
+                ...x.args
             })) ?? [])
         }
         setContracts({ dao, moji })
@@ -84,7 +84,9 @@ export default function Proposals() {
                 {
                     proposals.map(x => (
                         <div>
-                            {x.proposalId.toString()}
+                            <div>{x.proposalId.toString()}</div>
+                            <div>{x.proposer.toString()}</div>
+                            <div>{x.description.toString()}</div>
                         </div>
                     ))
                 }
