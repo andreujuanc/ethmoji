@@ -1,14 +1,14 @@
 import { run, ethers, artifacts } from "hardhat";
+import fs from 'fs'
 
 async function main() {
   await run("compile");
 
   const KaoToken = await ethers.getContractFactory("KaoToken");
   const kaoToken = await KaoToken.deploy();
-
   await kaoToken.deployed();
 
-  saveFrontendFiles(kaoToken)
+  saveFrontendFiles(kaoToken.address)
 
   console.log("KaoToken deployed to:", kaoToken.address);
 }
@@ -22,8 +22,7 @@ main()
 
 
 
-function saveFrontendFiles(token: any) {
-  const fs = require("fs");
+function saveFrontendFiles(kaoDaoAddress: string) {
   const contractsDir = __dirname + "/../app/src/contracts";
   console.log('contractsDir', contractsDir)
   if (!fs.existsSync(contractsDir)) {
@@ -32,15 +31,17 @@ function saveFrontendFiles(token: any) {
 
   fs.writeFileSync(
     contractsDir + "/contract-address.json",
-    JSON.stringify({ Token: token.address }, undefined, 2)
+    JSON.stringify({ KaoDao: kaoDaoAddress }, undefined, 2)
   );
 
-  const TokenArtifact = artifacts.readArtifactSync("KaoToken");
+  const TokenArtifact = artifacts.readArtifactSync("KaoDao");
 
   fs.writeFileSync(
-    contractsDir + "/KaoToken.json",
+    contractsDir + "/KaoDao.json",
     JSON.stringify(TokenArtifact, null, 2)
   );
+
+  // TODO: Copy types to /app
 
   console.log("Files saved to frontend")
 }
