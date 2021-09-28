@@ -59,15 +59,19 @@ export default function Proposals() {
 
         if (!callData) throw new Error('Could not create proposal')
 
-        const tx = await contracts?.dao.propose([addresses.KaoToken], [0], [callData], 'Proposal')
-        await tx?.wait()
+        try {
+            const tx = await contracts?.dao.propose([addresses.KaoToken], [0], [callData], 'Proposal')
+            await tx?.wait()
+        }
+        catch (ex: any) {
+            console.error(ex?.data?.message ?? ex.message)
+        }
     }
 
     useEffect(() => {
         getKaoDao()
     }, [addresses.KaoDao, addresses.KaoMoji, connector, library, active])
 
-    console.log("ACTIVE", active)
 
     return (
         <div>
