@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import Connect from './parts/connect'
 
 export function Layout({ children }: { children: any }) {
+    
     return (
         <div className="App">
             <header className="App-header">
@@ -18,6 +20,9 @@ export function Layout({ children }: { children: any }) {
                         Auction
                     </Link>
                 </nav>
+                <div>
+                    <Connect />
+                </div>
             </header>
             <main>
                 {children}
