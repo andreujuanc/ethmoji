@@ -8,7 +8,16 @@ async function main() {
   const kaoToken = await KaoToken.deploy();
   await kaoToken.deployed();
 
-  saveFrontendFiles(kaoToken.address)
+  const KaoMoji = await ethers.getContractFactory("KaoMoji");
+  const kaoMoji = await KaoMoji.deploy();
+  await kaoMoji.deployed();
+
+
+  const KaoDao = await ethers.getContractFactory("KaoDao");
+  const kaoDao = await KaoMoji.deploy();
+  await kaoDao.deployed();
+
+  saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)
 
   console.log("KaoToken deployed to:", kaoToken.address);
 }
@@ -22,7 +31,7 @@ main()
 
 
 
-function saveFrontendFiles(kaoDaoAddress: string) {
+function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
   const contractsDir = __dirname + "/../app/src/contracts";
   console.log('contractsDir', contractsDir)
   if (!fs.existsSync(contractsDir)) {
@@ -31,17 +40,22 @@ function saveFrontendFiles(kaoDaoAddress: string) {
 
   fs.writeFileSync(
     contractsDir + "/contract-address.json",
-    JSON.stringify({ KaoDao: kaoDaoAddress }, undefined, 2)
+    JSON.stringify({ KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
   );
 
-  const TokenArtifact = artifacts.readArtifactSync("KaoDao");
-
-  fs.writeFileSync(
-    contractsDir + "/KaoDao.json",
-    JSON.stringify(TokenArtifact, null, 2)
-  );
-
+  copy("KaoDao");
+  copy("KaoMoji");
+  copy("KaoToken");
   // TODO: Copy types to /app
 
   console.log("Files saved to frontend")
+
+  function copy(artifact: string) {
+    const TokenArtifact = artifacts.readArtifactSync(artifact);
+
+    fs.writeFileSync(
+      contractsDir + `/${artifact}.json`,
+      JSON.stringify(TokenArtifact, null, 2)
+    );
+  }
 }
