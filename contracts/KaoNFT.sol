@@ -18,20 +18,13 @@ contract KaoNFT is ERC1155, AccessControl {
         _setURI(newuri);
     }
 
-    function mint(address account, uint256 id, uint256 amount, bytes memory data)
+    function mint(address account, uint256 id, bytes memory data)
         public
         onlyRole(MINTER_ROLE)
     {
-        _mint(account, id, amount, data);
+        _mint(account, id, 1, data);
     }
-
-    function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
-        public
-        onlyRole(MINTER_ROLE)
-    {
-        _mintBatch(to, ids, amounts, data);
-    }
-
+    
     // The following functions are overrides required by Solidity.
 
     function supportsInterface(bytes4 interfaceId)

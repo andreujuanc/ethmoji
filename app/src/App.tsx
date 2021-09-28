@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Web3ReactProvider } from '@web3-react/core'
+import { ethers } from 'ethers'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import { Layout } from './layout'
+import HomePage from './pages/home'
+import Proposals from './pages/proposals'
+// import your favorite web3 convenience library here
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function getLibrary(provider: any, connector: any) {
+  console.log(provider, connector)
+  return new ethers.providers.Web3Provider(provider)
 }
 
-export default App;
+export default function App() {
+
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <BrowserRouter>
+        <Layout>
+          <Switch  >
+
+            <Route exact path="/" >
+              <HomePage />
+            </Route>
+            <Route exact path="/proposals" >
+              <Proposals />
+            </Route>
+
+            <Route path="*" >
+              404
+            </Route>
+          </Switch>
+        </Layout>
+      </BrowserRouter>
+    </Web3ReactProvider>
+  )
+}
