@@ -2,12 +2,11 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorProposalThreshold.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 
-contract KaoDao is Governor, GovernorProposalThreshold, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
+contract KaoDao is Governor, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
     constructor(ERC20Votes _token)
         Governor("KaoDao")
         GovernorVotes(_token)
@@ -20,10 +19,6 @@ contract KaoDao is Governor, GovernorProposalThreshold, GovernorCountingSimple, 
 
     function votingPeriod() public pure override returns (uint256) {
         return 45818; // 1 week
-    }
-
-    function proposalThreshold() public pure override returns (uint256) {
-        return 10e18;
     }
 
     // The following functions are overrides required by Solidity.
@@ -48,7 +43,7 @@ contract KaoDao is Governor, GovernorProposalThreshold, GovernorCountingSimple, 
 
     function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
         public
-        override(Governor, GovernorProposalThreshold)
+        override(Governor)
         returns (uint256)
     {
         return super.propose(targets, values, calldatas, description);

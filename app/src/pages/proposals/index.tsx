@@ -32,6 +32,7 @@ export default function Proposals() {
 
     const getKaoDao = useMemo(() => async () => {
         const provider = await connector?.getProvider();
+        if (!provider) return
 
         const account = await connector?.getAccount()
         const signer = library && await library.getSigner(account).connectUnchecked()
@@ -43,10 +44,11 @@ export default function Proposals() {
 
         const filter = dao?.filters?.ProposalCreated()
         if (filter) {
-            // const proposalsResult = await dao?.queryFilter(filter)
-            // setProposals(proposalsResult?.map((x) => ({
-            //     proposalId: x.args.proposalId
-            // })) ?? [])
+            debugger;
+            const proposalsResult = await dao?.queryFilter(filter)
+            setProposals(proposalsResult?.map((x) => ({
+                proposalId: x.args.proposalId
+            })) ?? [])
         }
         setContracts({ dao, moji })
     }, [addresses.KaoDao, addresses.KaoMoji, connector, library, active])
@@ -82,7 +84,7 @@ export default function Proposals() {
                 {
                     proposals.map(x => (
                         <div>
-                            {proposals}
+                            {x.proposalId.toString()}
                         </div>
                     ))
                 }
