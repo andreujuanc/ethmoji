@@ -14,7 +14,7 @@ async function main() {
 
 
   const KaoDao = await ethers.getContractFactory("KaoDao");
-  const kaoDao = await KaoMoji.deploy();
+  const kaoDao = await KaoDao.deploy(kaoToken.address);
   await kaoDao.deployed();
 
   saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)

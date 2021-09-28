@@ -24,7 +24,7 @@ type Proposal = {
     // description: string;
 }
 export default function Proposals() {
-    const { connector, library } = useWeb3React()
+    const { connector, library, active } = useWeb3React()
     const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji }>()
     const [proposals, setProposals] = useState<Proposal[]>([])
 
@@ -35,7 +35,7 @@ export default function Proposals() {
 
         const account = await connector?.getAccount()
         const signer = library && await library.getSigner(account).connectUnchecked()
-        debugger;
+
         const dao = KaoDao__factory.connect(addresses.KaoDao, signer);
         const moji = KaoMoji__factory.connect(addresses.KaoMoji, signer);
 
@@ -49,7 +49,7 @@ export default function Proposals() {
             // })) ?? [])
         }
         setContracts({ dao, moji })
-    }, [addresses.KaoDao, connector, library])
+    }, [addresses.KaoDao, addresses.KaoMoji, connector, library, active])
 
 
     const proposeKao = async () => {
@@ -59,18 +59,15 @@ export default function Proposals() {
 
         if (!callData) throw new Error('Could not create proposal')
 
-        console.log('Sending proposal')
-
-        const tx = await contracts?.dao.propose([addresses.KaoToken], [0], [callData], 'Proposal', {
-
-        })
+        const tx = await contracts?.dao.propose([addresses.KaoToken], [0], [callData], 'Proposal')
         await tx?.wait()
-        console.log('Done')
     }
 
     useEffect(() => {
         getKaoDao()
-    }, [])
+    }, [addresses.KaoDao, addresses.KaoMoji, connector, library, active])
+
+    console.log("ACTIVE", active)
 
     return (
         <div>
