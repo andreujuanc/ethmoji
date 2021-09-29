@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
+import Balance from './parts/balance'
 import Connect from './parts/connect'
+import './index.css'
 
 export function Layout({ children }: { children: any }) {
     
     return (
         <div className="App">
-            <header className="App-header">
+            <header className="header">
                 <nav>
                     <Link to="/">
                         Home
@@ -20,6 +22,7 @@ export function Layout({ children }: { children: any }) {
                         Auction
                     </Link>
                 </nav>
+                <Balance />
                 <div>
                     <Connect />
                 </div>

@@ -5,11 +5,13 @@ import { KaoMoji__factory } from "../contracts/factories/KaoMoji__factory";
 import { KaoDao } from "../contracts/KaoDao";
 import { KaoMoji } from "../contracts/KaoMoji";
 import addresses from '../contracts/contract-address.json'
+import { KaoToken } from "../contracts/KaoToken";
+import { KaoToken__factory } from "../contracts/factories/KaoToken__factory";
 
 
 export function useContracts() {
     const { connector, library, active } = useWeb3React()
-    const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji }>()
+    const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji, token: KaoToken }>()
 
     const getKaoDao = useMemo(() => async () => {
         if (!active || !connector || !library) return
@@ -18,8 +20,9 @@ export function useContracts() {
 
         const dao = KaoDao__factory.connect(addresses.KaoDao, signer);
         const moji = KaoMoji__factory.connect(addresses.KaoMoji, signer);
+        const token = KaoToken__factory.connect(addresses.KaoToken, signer);
 
-        setContracts({ dao, moji })
+        setContracts({ dao, moji, token })
 
     }, [connector, library, active])
 

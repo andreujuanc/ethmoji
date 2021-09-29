@@ -2,6 +2,8 @@ import { ethers } from "ethers"
 import { useContracts } from "../../../../hooks/useContracts"
 import addresses from '../../../../contracts/contract-address.json'
 import { ChangeEvent, ChangeEventHandler, EventHandler, useState } from "react"
+import Button from "../../../../components/button"
+import "../../../../components/input/index"
 
 export default function Propose() {
     const contracts = useContracts()
@@ -33,8 +35,8 @@ export default function Propose() {
 
     return (
         <div>
-            <input value={proposalData} onChange={onInputChanged} placeholder={'ಠ╭╮ಠ'} />
-            <button onClick={proposeKao} >Propose Kao</button>
+            <input className={'input'} value={proposalData} onChange={onInputChanged} placeholder={'ಠ╭╮ಠ'} />
+            <Button onClick={proposeKao} >Propose Kao</Button>
         </div>
     )
 }

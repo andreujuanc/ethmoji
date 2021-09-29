@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Signer } from "ethers";
 
 
-export function useContracts() {
+export function useSigner() {
     const { connector, library, active } = useWeb3React()
     const [signer, setSigner] = useState<Signer>()
 

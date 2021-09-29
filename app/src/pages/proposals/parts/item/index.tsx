@@ -10,6 +10,9 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     //const [currentBlockNumber, setCurrentBlockNumber] = useState<number>(0)
     const currentBlockNumber = useBlockNumber()
 
+    // TO see if user has voted
+    // hasVoted(proposalId, account)
+
     const vote = async (support: number) => {
         if (!contracts) return
 
@@ -23,7 +26,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }
 
     return (
-        <div>
+        <div style={{marginBottom: '2.5rem'}}>
             <div>{proposal.proposalId.toString()}</div>
             <div>{proposal.proposer.toString()}</div>
             <div>{proposal.description.toString()}</div>

@@ -1,0 +1,4 @@
+.balanceContainer{
+    display: flex;
+    flex-direction: row;
+}

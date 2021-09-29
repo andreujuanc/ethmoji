@@ -4,7 +4,8 @@ import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { Layout } from './layout'
 import HomePage from './pages/home'
 import Proposals from './pages/proposals'
-// import your favorite web3 convenience library here
+
+import './App.css'
 
 function getLibrary(provider: any, connector: any) {
   console.log(provider, connector)

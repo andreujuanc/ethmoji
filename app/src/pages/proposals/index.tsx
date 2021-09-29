@@ -11,6 +11,7 @@ export default function Proposals() {
                 Proposals
             </h3>
             <Propose />
+            <br />
             <section>
                 {
                     proposals.map(x => <ProposalItem key={x.proposalId.toString()} proposal={x} />)
