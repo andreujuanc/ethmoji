@@ -8,8 +8,6 @@ export function useBlockNumber() {
 
     const updateBlockNumber = useCallback(async () => {
         const blockNumber = await provider?.getBlockNumber()
-        console.log('block', blockNumber)
-
         setCurrentBlockNumber(blockNumber)
     }, [provider])
 

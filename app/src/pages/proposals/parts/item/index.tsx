@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
@@ -22,7 +21,6 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             console.error(ex?.data?.message ?? ex.message)
         }
     }
-    console.log('currentBlockNumber',currentBlockNumber)
 
     return (
         <div>
