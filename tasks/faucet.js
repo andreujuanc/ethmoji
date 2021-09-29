@@ -1,8 +1,5 @@
 const fs = require("fs");
 
-// This file is only here to make interacting with the Dapp easier,
-// feel free to ignore it if you don't need it.
-
 task("faucet", "Sends ETH and tokens to an address")
   .addPositionalParam("receiver", "The address that will receive them")
   .setAction(async ({ receiver }) => {

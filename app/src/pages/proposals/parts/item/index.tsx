@@ -39,7 +39,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             <div>{proposal.proposalId.toString()}</div>
             <div>{proposal.proposer.toString()}</div>
             <div>{proposal.description.toString()}</div>
-            <div>Starts: {proposal.startBlock.toString()} - ${currentBlockNumber}</div>
+            <div>Starts in {proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
             <div>
                 <button onClick={() => vote(0)}>d=====(￣▽￣*)b</button>
                 <button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</button>
