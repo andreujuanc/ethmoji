@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
 import { useProvider } from "../../../../hooks/useProvider";
@@ -7,7 +8,8 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
     const contracts = useContracts()
     const provider = useProvider()
-    const [currentBlockNumber, setCurrentBlockNumber] = useState<number>(0)
+    //const [currentBlockNumber, setCurrentBlockNumber] = useState<number>(0)
+    const currentBlockNumber = useBlockNumber()
 
     const vote = async (support: number) => {
         if (!contracts) return
@@ -20,26 +22,22 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             console.error(ex?.data?.message ?? ex.message)
         }
     }
-
-    const updateBlockNumber = async () => {
-        
-        const blockNumber = await provider?.getBlockNumber()
-        setCurrentBlockNumber(blockNumber ?? 0)
-    }
-
-    useEffect(() => {
-        updateBlockNumber()
-    })
-    
-    const isEnabled = proposal.startBlock.gt(currentBlockNumber)
+    console.log('currentBlockNumber',currentBlockNumber)
 
     return (
         <div>
-            <div>Enabled: {isEnabled}</div>
             <div>{proposal.proposalId.toString()}</div>
             <div>{proposal.proposer.toString()}</div>
             <div>{proposal.description.toString()}</div>
-            <div>Starts in {proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
+
+            {(currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
+                <div>Starts in {currentBlockNumber && proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
+            ) :
+                (currentBlockNumber && proposal.endBlock.lt(currentBlockNumber)) ? (
+                    <div>Ended  {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
+                ) : (<div>Voting ends in {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks</div>)
+            }
+
             <div>
                 <button onClick={() => vote(0)}>d=====(￣▽￣*)b</button>
                 <button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</button>
