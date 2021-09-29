@@ -1,3 +1,4 @@
+import Button from "../../../../components/button";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
@@ -28,10 +29,16 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }
 
     return (
-        <div style={{marginBottom: '2.5rem'}}>
-            <div>Proposal: {proposal.proposalId.toString().substring(0, 5)}...{proposal.proposalId.toString().substr(proposal.proposalId.toString().length -5, 5)}</div>
+        <div style={{ marginBottom: '2.5rem', border: 'solid 5px #000', padding: '1rem', backgroundColor: '#444' }}>
+            <div>Proposal: {proposal.proposalId.toString().substring(0, 5)}...{proposal.proposalId.toString().substr(proposal.proposalId.toString().length - 5, 5)}</div>
             {/* <div>{proposal.proposer.toString()}</div> */}
-            <div>{proposal.description.toString()}</div>
+            <div style={{
+                padding: '1rem',
+                fontSize: '2rem',
+                textAlign: 'center'
+            }}>
+                {proposal.description.toString()}
+            </div>
 
             {(currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
                 <div>Starts in {currentBlockNumber && proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
@@ -42,9 +49,9 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             }
 
             <div className={'voteOptions'}>
-                <button onClick={() => vote(0)}>d=====(￣▽￣*)b</button>
-                <button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</button>
-                <button onClick={() => vote(2)}>(°ー°〃)</button>
+                <Button onClick={() => vote(0)}>d=====(￣▽￣*)b</Button><br />
+                <Button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</Button><br />
+                <Button onClick={() => vote(2)}>(°ー°〃)</Button>
             </div>
         </div>
     )

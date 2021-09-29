@@ -23,7 +23,9 @@ export function Layout({ children }: { children: any }) {
                     </Link>
                 </nav>
                 <Balance />
-                <div>
+                <div style={{
+                    padding: '1rem',
+                }}>
                     <Connect />
                 </div>
             </header>

@@ -27,7 +27,7 @@ export default function Balance() {
 
     return (
         <div className="balanceContainer">
-            <div>
+            <div className={'kaoBalance'}>
                 {balance?.kao ? ethers.utils.formatUnits(balance.kao, 18) : '--'} KAO
             </div>
             <div>

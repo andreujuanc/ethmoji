@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { useMemo } from 'react'
+import Button from '../../components/button'
 
 const injected = new InjectedConnector({
     supportedChainIds: [
@@ -23,8 +24,8 @@ export default function Connect() {
     }, [account])
 
     return (
-        <button onClick={active ? disconnect : connect}>
-            {active ? "Disconnect: " + formattedAccount + ' ChainID: ' + chainId : "Connect"}
-        </button>
+        <Button onClick={active ? disconnect : connect}>
+            {active ? "Disconnect: " + formattedAccount : "Connect"}
+        </Button>
     )
 }
