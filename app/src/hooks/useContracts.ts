@@ -8,10 +8,11 @@ import addresses from '../contracts/contract-address.json'
 
 
 export function useContracts() {
-    const { connector, library } = useWeb3React()
+    const { connector, library, active } = useWeb3React()
     const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji }>()
 
     const getKaoDao = useMemo(() => async () => {
+        if (!active || !connector || !library) return
         const account = await connector?.getAccount()
         const signer = library && await library.getSigner(account).connectUnchecked()
 
@@ -20,7 +21,7 @@ export function useContracts() {
 
         setContracts({ dao, moji })
 
-    }, [connector, library])
+    }, [connector, library, active])
 
     useEffect(() => {
         getKaoDao()

@@ -22,7 +22,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }
 
     const updateBlockNumber = async () => {
-        debugger;
+        
         const blockNumber = await provider?.getBlockNumber()
         setCurrentBlockNumber(blockNumber ?? 0)
     }
@@ -30,7 +30,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     useEffect(() => {
         updateBlockNumber()
     })
-
+    
     const isEnabled = proposal.startBlock.gt(currentBlockNumber)
 
     return (
@@ -39,6 +39,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             <div>{proposal.proposalId.toString()}</div>
             <div>{proposal.proposer.toString()}</div>
             <div>{proposal.description.toString()}</div>
+            <div>Starts: {proposal.startBlock.toString()} - ${currentBlockNumber}</div>
             <div>
                 <button onClick={() => vote(0)}>d=====(￣▽￣*)b</button>
                 <button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</button>

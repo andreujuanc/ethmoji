@@ -16,16 +16,16 @@ export type Proposal = {
 
 
 export default function useProposals() {
-    const [proposals] = useState<Proposal[]>([])
+    const [proposals, setProposals] = useState<Proposal[]>([])
     const contracts = useContracts()
     const getKaoDao = useMemo(() => async () => {
         if (!contracts) return
         const filter = contracts.dao?.filters?.ProposalCreated()
         if (filter) {
-            // const proposalsResult = await contracts.dao?.queryFilter(filter)
-            // setProposals(proposalsResult?.map((x) => ({
-            //     ...x.args
-            // })) ?? [])
+            const proposalsResult = await contracts.dao?.queryFilter(filter)
+            setProposals(proposalsResult?.map((x) => ({
+                ...x.args
+            })) ?? [])
         }
 
     }, [contracts])

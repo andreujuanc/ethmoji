@@ -8,7 +8,7 @@ export function useProvider() {
     const [provider, setProvider] = useState<providers.Provider>()
 
     const getProvider = useMemo(() => async () => {
-        debugger;
+        
         // const provider = await connector?.getProvider();
         // if (!provider) return
 
