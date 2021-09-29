@@ -2,6 +2,8 @@ import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
 import { useProvider } from "../../../../hooks/useProvider";
+import './index.scss'
+
 
 export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.Element {
 
@@ -27,8 +29,8 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
     return (
         <div style={{marginBottom: '2.5rem'}}>
-            <div>{proposal.proposalId.toString()}</div>
-            <div>{proposal.proposer.toString()}</div>
+            <div>Proposal: {proposal.proposalId.toString().substring(0, 5)}...{proposal.proposalId.toString().substr(proposal.proposalId.toString().length -5, 5)}</div>
+            {/* <div>{proposal.proposer.toString()}</div> */}
             <div>{proposal.description.toString()}</div>
 
             {(currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
@@ -39,7 +41,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                 ) : (<div>Voting ends in {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks</div>)
             }
 
-            <div>
+            <div className={'voteOptions'}>
                 <button onClick={() => vote(0)}>d=====(￣▽￣*)b</button>
                 <button onClick={() => vote(1)}>(╯°□°）╯︵ ┻━┻</button>
                 <button onClick={() => vote(2)}>(°ー°〃)</button>

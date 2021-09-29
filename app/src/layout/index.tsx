@@ -27,7 +27,10 @@ export function Layout({ children }: { children: any }) {
                     <Connect />
                 </div>
             </header>
-            <main>
+            <main style={{
+                display: 'flex',
+                justifyContent: 'center'
+            }}>
                 {children}
             </main>
         </div>

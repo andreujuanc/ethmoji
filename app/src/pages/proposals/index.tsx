@@ -6,7 +6,10 @@ export default function Proposals() {
     const proposals = useProposals()
 
     return (
-        <div>
+        <div style={{
+            maxWidth: '600px',
+            minWidth: '600px',
+        }}>
             <h3>
                 Proposals
             </h3>
