@@ -1,4 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
@@ -49,7 +50,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
         }
     }
 
-    const hasVoted =useCallback(async () => {
+    const hasVoted = useCallback(async () => {
         if (!contracts) return
         const account = await provider?.getAddress()
 
@@ -67,7 +68,15 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
     const execute = async () => {
         if (!contracts) return
-        const executionTx = await contracts.dao.execute(proposal.targets, proposal.values, proposal.calldatas, proposal.description)
+        const descriptionHash = ethers.utils.keccak256(proposal.description)
+        debugger;
+        // TODO: For some reason values comes empty array in the prop
+        const executionTx = await contracts.dao.execute(
+            proposal.targets,
+            (proposal as any)[3],
+            proposal.calldatas,
+            descriptionHash
+        )
         await executionTx.wait()
     }
 
