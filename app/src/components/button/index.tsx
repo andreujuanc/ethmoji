@@ -4,12 +4,14 @@ import './index.scss'
 type ButtonProps = {
     children: any
     onClick: () => void | Promise<void>
+    disabled?: boolean
 }
 
 export default function Button(props: ButtonProps) {
     const [clicking, setClicking] = useState(false)
 
     const onClick = async () => {
+        if (clicking || props.disabled) return
         setClicking(true)
         try {
             const result = props.onClick()
@@ -17,15 +19,15 @@ export default function Button(props: ButtonProps) {
                 await result
             }
             setClicking(false)
-        } catch(ex: any) {
+        } catch (ex: any) {
             setClicking(false)
             throw ex
         }
-        
+
     }
 
     return (
-        <button className="button" onClick={onClick}>
+        <button disabled={props.disabled} className="button" onClick={onClick}>
             {props.children}
         </button>
     )

@@ -5,10 +5,10 @@ import { useContracts } from "./useContracts";
 export type Proposal = {
     proposalId: BigNumber;
     proposer: string;
-    // targets: string[];
-    // values: BigNumber[];
-    // signatures: string[];
-    //calldatas: string[];
+    targets: string[];
+    values: BigNumber[];
+    signatures: string[];
+    calldatas: string[];
     startBlock: BigNumber;
     endBlock: BigNumber;
     description: string;

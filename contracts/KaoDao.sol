@@ -14,11 +14,13 @@ contract KaoDao is Governor, GovernorCountingSimple, GovernorVotes, GovernorVote
     {}
 
     function votingDelay() public pure override returns (uint256) {
-        return 273; // 1 hour
+        return  20; //
+            //273; // 1 hour
     }
 
     function votingPeriod() public pure override returns (uint256) {
-        return 45818; // 1 week
+        return 50; //
+            //45818; // 1 week
     }
 
     // The following functions are overrides required by Solidity.

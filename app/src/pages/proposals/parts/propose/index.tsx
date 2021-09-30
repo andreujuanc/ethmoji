@@ -4,11 +4,19 @@ import addresses from '../../../../contracts/contract-address.json'
 import { ChangeEvent, ChangeEventHandler, EventHandler, useState } from "react"
 import Button from "../../../../components/button"
 import "../../../../components/input/index"
+import { useSigner } from "../../../../hooks/useSigner"
 
 export default function Propose() {
     const contracts = useContracts()
+    const signer = useSigner()
     const [proposalData, setProposalData] = useState<string>('')
-
+    
+    const selfDelegate = async () => {
+        const account = await signer?.getAddress()
+        if(!account) throw new Error('Not connected')
+        contracts?.token.delegate(account)
+    }
+    
     const proposeKao = async () => {
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
@@ -32,11 +40,12 @@ export default function Propose() {
         setProposalData(value)
         e.preventDefault();
     }
-
+    // Check if holding tokens but voting power is zero to show the self delegate button
     return (
         <div>
             <input className={'input'} value={proposalData} onChange={onInputChanged} placeholder={'ಠ╭╮ಠ'} />
             <Button onClick={proposeKao} >Propose Kao</Button>
+            <Button onClick={selfDelegate} >SelfDelegate</Button>
         </div>
     )
 }

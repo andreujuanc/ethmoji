@@ -2,7 +2,8 @@ const fs = require("fs");
 
 task("faucet", "Sends ETH and tokens to an address")
   .addPositionalParam("receiver", "The address that will receive them")
-  .setAction(async ({ receiver }) => {
+  .addPositionalParam("amount", "Amount of tokens to transfer")
+  .setAction(async ({ receiver, amount }) => {
     // if (network.name !== "hardhat") {
     //   throw new Error('Only for dev for now')
     // }
@@ -27,7 +28,7 @@ task("faucet", "Sends ETH and tokens to an address")
     const token = await ethers.getContractAt("KaoToken", address.KaoToken);
     const [sender] = await ethers.getSigners();
 
-    const tx = await token.transfer(receiver, ethers.utils.parseUnits('100', 18).toString())
+    const tx = await token.transfer(receiver, ethers.utils.parseUnits(amount, 18).toString())
     await tx.wait();
 
     const tx2 = await sender.sendTransaction({
