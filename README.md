@@ -1,3 +1,6 @@
+# TODO:
+- NFT Data size should depend on voting power somehow
+
 # Utils
 
 

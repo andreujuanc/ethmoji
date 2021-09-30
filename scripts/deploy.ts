@@ -17,6 +17,11 @@ async function main() {
   const kaoDao = await KaoDao.deploy(kaoToken.address);
   await kaoDao.deployed();
 
+
+  const minterRole = await kaoMoji.MINTER_ROLE()
+  await kaoMoji.grantRole(minterRole, kaoDao.address)
+  await kaoMoji.grantRole(minterRole, '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE')
+
   saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)
 
   console.log("KaoToken deployed to:", kaoToken.address);

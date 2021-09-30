@@ -8,7 +8,6 @@ import Proposals from './pages/proposals'
 import './App.css'
 
 function getLibrary(provider: any, connector: any) {
-  console.log(provider, connector)
   return new ethers.providers.Web3Provider(provider)
 }
 
