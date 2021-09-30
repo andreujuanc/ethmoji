@@ -68,8 +68,8 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
     const execute = async () => {
         if (!contracts) return
-        const descriptionHash = ethers.utils.keccak256(proposal.description)
         debugger;
+        const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(proposal.description))
         // TODO: For some reason values comes empty array in the prop
         const executionTx = await contracts.dao.execute(
             proposal.targets,
