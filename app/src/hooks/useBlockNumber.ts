@@ -6,9 +6,8 @@ export function useBlockNumber() {
     const provider = useProvider()
     const [currentBlockNumber, setCurrentBlockNumber] = useState<number>()
 
-    const updateBlockNumber = useCallback(async () => {
-        const blockNumber = await provider?.getBlockNumber()
-        setCurrentBlockNumber(blockNumber)
+    const updateBlockNumber = useCallback(async (block) => {
+        setCurrentBlockNumber(block)
     }, [provider])
 
     useEffect(() => {
