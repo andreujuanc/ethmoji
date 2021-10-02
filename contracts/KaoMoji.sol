@@ -11,6 +11,8 @@ contract KaoMoji is ERC1155Supply, AccessControl {
     bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+    mapping(uint256 => bytes) private _tokenData;
+
     constructor() ERC1155("https://kao.finance/token/{id}") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(URI_SETTER_ROLE, msg.sender);
@@ -27,6 +29,7 @@ contract KaoMoji is ERC1155Supply, AccessControl {
     {
         require(!exists(id), "Already minted");
         _mint(account, id, 1, data);
+        _tokenData[id] = data;
     }
     
     // The following functions are overrides required by Solidity.
@@ -40,6 +43,12 @@ contract KaoMoji is ERC1155Supply, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 
-
+    function getDataOf(uint256 id)
+        public
+        view
+        returns (bytes memory)
+    {
+        return _tokenData[id];
+    }    
 
 }

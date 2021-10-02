@@ -2,6 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
+import Container from "../../../../components/container";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
@@ -100,7 +101,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }, [hasVoted, provider, contracts])
 
     return (
-        <div style={{ marginBottom: '2.5rem', border: 'solid 5px #000', padding: '1rem', backgroundColor: '#444' }}>
+        <Container>
             <div>Proposal: {proposal.proposalId.toString().substring(0, 5)}...{proposal.proposalId.toString().substr(proposal.proposalId.toString().length - 5, 5)}</div>
             {/* <div>{proposal.proposer.toString()}</div> */}
             <div style={{
@@ -151,6 +152,6 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                     <div>Abstain: {votes.abstainVotes.toString()}</div>
                 </div>)
             }
-        </div>
+        </Container>
     )
 }

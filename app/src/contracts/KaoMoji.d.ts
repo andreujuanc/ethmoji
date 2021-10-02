@@ -26,6 +26,8 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     "URI_SETTER_ROLE()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "exists(uint256)": FunctionFragment;
+    "getDataOf(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
@@ -38,6 +40,7 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setURI(string)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "totalSupply(uint256)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
   };
 
@@ -60,6 +63,14 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOfBatch",
     values: [string[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "exists",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDataOf",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -106,6 +117,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
 
   decodeFunctionResult(
@@ -125,6 +140,8 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getDataOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
@@ -156,6 +173,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "setURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
@@ -289,6 +310,10 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    exists(id: BigNumberish, overrides?: CallOverrides): Promise<[boolean]>;
+
+    getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
     grantRole(
@@ -362,6 +387,11 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
   };
 
@@ -382,6 +412,10 @@ export class KaoMoji extends BaseContract {
     ids: BigNumberish[],
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
+
+  exists(id: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+
+  getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -456,6 +490,8 @@ export class KaoMoji extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  totalSupply(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
   uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
@@ -476,6 +512,10 @@ export class KaoMoji extends BaseContract {
       ids: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    exists(id: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+
+    getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -546,6 +586,11 @@ export class KaoMoji extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
   };
@@ -721,6 +766,10 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    exists(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
     getRoleAdmin(
       role: BytesLike,
       overrides?: CallOverrides
@@ -794,6 +843,11 @@ export class KaoMoji extends BaseContract {
 
     supportsInterface(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(
+      id: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -821,6 +875,16 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    exists(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getDataOf(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getRoleAdmin(
       role: BytesLike,
       overrides?: CallOverrides
@@ -894,6 +958,11 @@ export class KaoMoji extends BaseContract {
 
     supportsInterface(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(
+      id: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

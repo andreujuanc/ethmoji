@@ -29,8 +29,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "balanceOfAt(address,uint256)": FunctionFragment;
-    "burn(uint256)": FunctionFragment;
-    "burnFrom(address,uint256)": FunctionFragment;
     "checkpoints(address,uint32)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
@@ -44,7 +42,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "numCheckpoints(address)": FunctionFragment;
@@ -87,11 +84,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "balanceOfAt",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "burnFrom",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -139,10 +131,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
@@ -217,8 +205,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
     functionFragment: "balanceOfAt",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "checkpoints",
     data: BytesLike
@@ -253,7 +239,6 @@ interface KaoTokenInterface extends ethers.utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(
@@ -425,17 +410,6 @@ export class KaoToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    burn(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    burnFrom(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     checkpoints(
       account: string,
       pos: BigNumberish,
@@ -497,12 +471,6 @@ export class KaoToken extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    mint(
-      to: string,
-      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -598,17 +566,6 @@ export class KaoToken extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  burn(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  burnFrom(
-    account: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   checkpoints(
     account: string,
     pos: BigNumberish,
@@ -670,12 +627,6 @@ export class KaoToken extends BaseContract {
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mint(
-    to: string,
-    amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -768,14 +719,6 @@ export class KaoToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    burnFrom(
-      account: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     checkpoints(
       account: string,
       pos: BigNumberish,
@@ -836,12 +779,6 @@ export class KaoToken extends BaseContract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    mint(
-      to: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1065,17 +1002,6 @@ export class KaoToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    burn(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    burnFrom(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     checkpoints(
       account: string,
       pos: BigNumberish,
@@ -1140,12 +1066,6 @@ export class KaoToken extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    mint(
-      to: string,
-      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1247,17 +1167,6 @@ export class KaoToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    burn(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    burnFrom(
-      account: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     checkpoints(
       account: string,
       pos: BigNumberish,
@@ -1328,12 +1237,6 @@ export class KaoToken extends BaseContract {
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mint(
-      to: string,
-      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

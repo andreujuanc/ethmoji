@@ -33,21 +33,16 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "hashProposal(address[],uint256[],bytes[],bytes32)": FunctionFragment;
     "name()": FunctionFragment;
     "proposalDeadline(uint256)": FunctionFragment;
-    "proposalEta(uint256)": FunctionFragment;
     "proposalSnapshot(uint256)": FunctionFragment;
-    "proposalThreshold()": FunctionFragment;
     "proposalVotes(uint256)": FunctionFragment;
     "propose(address[],uint256[],bytes[],string)": FunctionFragment;
-    "queue(address[],uint256[],bytes[],bytes32)": FunctionFragment;
     "quorum(uint256)": FunctionFragment;
     "quorumDenominator()": FunctionFragment;
     "quorumNumerator()": FunctionFragment;
     "state(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "timelock()": FunctionFragment;
     "token()": FunctionFragment;
     "updateQuorumNumerator(uint256)": FunctionFragment;
-    "updateTimelock(address)": FunctionFragment;
     "version()": FunctionFragment;
     "votingDelay()": FunctionFragment;
     "votingPeriod()": FunctionFragment;
@@ -95,16 +90,8 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "proposalEta",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "proposalSnapshot",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "proposalThreshold",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "proposalVotes",
@@ -113,10 +100,6 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "propose",
     values: [string[], BigNumberish[], BytesLike[], string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "queue",
-    values: [string[], BigNumberish[], BytesLike[], BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "quorum",
@@ -135,15 +118,10 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
-  encodeFunctionData(functionFragment: "timelock", values?: undefined): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "updateQuorumNumerator",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateTimelock",
-    values: [string]
   ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
   encodeFunctionData(
@@ -185,15 +163,7 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "proposalEta",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "proposalSnapshot",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "proposalThreshold",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -201,7 +171,6 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "propose", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "queue", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "quorum", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "quorumDenominator",
@@ -216,14 +185,9 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "timelock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "updateQuorumNumerator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateTimelock",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
@@ -240,18 +204,14 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "ProposalCanceled(uint256)": EventFragment;
     "ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)": EventFragment;
     "ProposalExecuted(uint256)": EventFragment;
-    "ProposalQueued(uint256,uint256)": EventFragment;
     "QuorumNumeratorUpdated(uint256,uint256)": EventFragment;
-    "TimelockChange(address,address)": EventFragment;
     "VoteCast(address,uint256,uint8,uint256,string)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ProposalCanceled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalExecuted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProposalQueued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "QuorumNumeratorUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TimelockChange"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteCast"): EventFragment;
 }
 
@@ -287,19 +247,11 @@ export type ProposalExecutedEvent = TypedEvent<
   [BigNumber] & { proposalId: BigNumber }
 >;
 
-export type ProposalQueuedEvent = TypedEvent<
-  [BigNumber, BigNumber] & { proposalId: BigNumber; eta: BigNumber }
->;
-
 export type QuorumNumeratorUpdatedEvent = TypedEvent<
   [BigNumber, BigNumber] & {
     oldQuorumNumerator: BigNumber;
     newQuorumNumerator: BigNumber;
   }
->;
-
-export type TimelockChangeEvent = TypedEvent<
-  [string, string] & { oldTimelock: string; newTimelock: string }
 >;
 
 export type VoteCastEvent = TypedEvent<
@@ -417,17 +369,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    proposalEta(
-      proposalId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     proposalSnapshot(
       proposalId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    proposalThreshold(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     proposalVotes(
       proposalId: BigNumberish,
@@ -445,14 +390,6 @@ export class KaoDao extends BaseContract {
       values: BigNumberish[],
       calldatas: BytesLike[],
       description: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    queue(
-      targets: string[],
-      values: BigNumberish[],
-      calldatas: BytesLike[],
-      descriptionHash: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -475,17 +412,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    timelock(overrides?: CallOverrides): Promise<[string]>;
-
     token(overrides?: CallOverrides): Promise<[string]>;
 
     updateQuorumNumerator(
       newQuorumNumerator: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateTimelock(
-      newTimelock: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -557,17 +487,10 @@ export class KaoDao extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  proposalEta(
-    proposalId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   proposalSnapshot(
     proposalId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
-
-  proposalThreshold(overrides?: CallOverrides): Promise<BigNumber>;
 
   proposalVotes(
     proposalId: BigNumberish,
@@ -588,14 +511,6 @@ export class KaoDao extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  queue(
-    targets: string[],
-    values: BigNumberish[],
-    calldatas: BytesLike[],
-    descriptionHash: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   quorum(
     blockNumber: BigNumberish,
     overrides?: CallOverrides
@@ -612,17 +527,10 @@ export class KaoDao extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  timelock(overrides?: CallOverrides): Promise<string>;
-
   token(overrides?: CallOverrides): Promise<string>;
 
   updateQuorumNumerator(
     newQuorumNumerator: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateTimelock(
-    newTimelock: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -694,17 +602,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    proposalEta(
-      proposalId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     proposalSnapshot(
       proposalId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    proposalThreshold(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposalVotes(
       proposalId: BigNumberish,
@@ -725,14 +626,6 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    queue(
-      targets: string[],
-      values: BigNumberish[],
-      calldatas: BytesLike[],
-      descriptionHash: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     quorum(
       blockNumber: BigNumberish,
       overrides?: CallOverrides
@@ -749,17 +642,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    timelock(overrides?: CallOverrides): Promise<string>;
-
     token(overrides?: CallOverrides): Promise<string>;
 
     updateQuorumNumerator(
       newQuorumNumerator: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateTimelock(
-      newTimelock: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -857,22 +743,6 @@ export class KaoDao extends BaseContract {
       proposalId?: null
     ): TypedEventFilter<[BigNumber], { proposalId: BigNumber }>;
 
-    "ProposalQueued(uint256,uint256)"(
-      proposalId?: null,
-      eta?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { proposalId: BigNumber; eta: BigNumber }
-    >;
-
-    ProposalQueued(
-      proposalId?: null,
-      eta?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { proposalId: BigNumber; eta: BigNumber }
-    >;
-
     "QuorumNumeratorUpdated(uint256,uint256)"(
       oldQuorumNumerator?: null,
       newQuorumNumerator?: null
@@ -887,22 +757,6 @@ export class KaoDao extends BaseContract {
     ): TypedEventFilter<
       [BigNumber, BigNumber],
       { oldQuorumNumerator: BigNumber; newQuorumNumerator: BigNumber }
-    >;
-
-    "TimelockChange(address,address)"(
-      oldTimelock?: null,
-      newTimelock?: null
-    ): TypedEventFilter<
-      [string, string],
-      { oldTimelock: string; newTimelock: string }
-    >;
-
-    TimelockChange(
-      oldTimelock?: null,
-      newTimelock?: null
-    ): TypedEventFilter<
-      [string, string],
-      { oldTimelock: string; newTimelock: string }
     >;
 
     "VoteCast(address,uint256,uint8,uint256,string)"(
@@ -1002,17 +856,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    proposalEta(
-      proposalId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     proposalSnapshot(
       proposalId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    proposalThreshold(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposalVotes(
       proposalId: BigNumberish,
@@ -1024,14 +871,6 @@ export class KaoDao extends BaseContract {
       values: BigNumberish[],
       calldatas: BytesLike[],
       description: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    queue(
-      targets: string[],
-      values: BigNumberish[],
-      calldatas: BytesLike[],
-      descriptionHash: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1054,17 +893,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    timelock(overrides?: CallOverrides): Promise<BigNumber>;
-
     token(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateQuorumNumerator(
       newQuorumNumerator: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateTimelock(
-      newTimelock: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1137,17 +969,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    proposalEta(
-      proposalId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     proposalSnapshot(
       proposalId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    proposalThreshold(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proposalVotes(
       proposalId: BigNumberish,
@@ -1159,14 +984,6 @@ export class KaoDao extends BaseContract {
       values: BigNumberish[],
       calldatas: BytesLike[],
       description: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    queue(
-      targets: string[],
-      values: BigNumberish[],
-      calldatas: BytesLike[],
-      descriptionHash: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1189,17 +1006,10 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    timelock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     updateQuorumNumerator(
       newQuorumNumerator: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateTimelock(
-      newTimelock: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

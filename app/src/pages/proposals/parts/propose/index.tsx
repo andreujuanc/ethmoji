@@ -22,14 +22,7 @@ export default function Propose() {
 
         const receiver = '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE'// TODO: should be the auction contract
         const data = ethers.utils.toUtf8Bytes(proposalData)
-        const callData = contracts?.moji.interface.encodeFunctionData('mint', [receiver, 1, data])
-        
-        // const test = await signer?.sendTransaction({
-        //     data: callData,
-        //     to: addresses.KaoMoji,
-        // })
-
-        // await test?.wait()
+        const callData = contracts?.moji.interface.encodeFunctionData('mint', [receiver, 1, data])        
 
         if (!callData) throw new Error('Could not create proposal')
 

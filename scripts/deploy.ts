@@ -22,7 +22,7 @@ async function main() {
   await kaoMoji.grantRole(minterRole, kaoDao.address)
   await kaoMoji.grantRole(minterRole, '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE')
 
-  saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)
+  await saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)
 
   console.log("KaoToken deployed to:", kaoToken.address);
 }
@@ -36,8 +36,10 @@ main()
 
 
 
-function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
+async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
   const contractsDir = __dirname + "/../app/src/contracts";
+  const typesDir = __dirname + "/../typechain";
+
   console.log('contractsDir', contractsDir)
   if (!fs.existsSync(contractsDir)) {
     fs.mkdirSync(contractsDir);
@@ -48,19 +50,27 @@ function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTok
     JSON.stringify({ KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
   );
 
-  copy("KaoDao");
-  copy("KaoMoji");
-  copy("KaoToken");
+  if(!fs.existsSync(`${contractsDir}/factories`)){
+    fs.mkdirSync(`${contractsDir}/factories`)
+  }
+
+  await copy("KaoDao");
+  await copy("KaoMoji");
+  await copy("KaoToken");
   // TODO: Copy types to /app
 
   console.log("Files saved to frontend")
 
-  function copy(artifact: string) {
+  async function copy(artifact: string) {
     const TokenArtifact = artifacts.readArtifactSync(artifact);
 
     fs.writeFileSync(
       contractsDir + `/${artifact}.json`,
       JSON.stringify(TokenArtifact, null, 2)
     );
+
+    console.log(artifact)
+    fs.copyFileSync(`${typesDir}/${artifact}.d.ts`, `${contractsDir}/${artifact}.d.ts`)
+    fs.copyFileSync(`${typesDir}/factories/${artifact}__factory.ts`, `${contractsDir}/factories/${artifact}__factory.ts`)
   }
 }
