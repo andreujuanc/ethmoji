@@ -20,16 +20,21 @@ export default function Propose() {
     const proposeKao = async () => {
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
-        const auction = '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE'// TODO
-        const data = ethers.utils.toUtf8Bytes('ಠ╭╮ಠ')
-        const callData = contracts?.moji.interface.encodeFunctionData('mint', [auction, 1, data])
+        const receiver = '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE'// TODO: should be the auction contract
+        const data = ethers.utils.toUtf8Bytes(proposalData)
+        const callData = contracts?.moji.interface.encodeFunctionData('mint', [receiver, 1, data])
         
-        //await contracts?.moji.mint(auction, 1, data)
-        
+        // const test = await signer?.sendTransaction({
+        //     data: callData,
+        //     to: addresses.KaoMoji,
+        // })
+
+        // await test?.wait()
+
         if (!callData) throw new Error('Could not create proposal')
 
         try {
-            const tx = await contracts?.dao.propose([addresses.KaoToken], [0], [callData], proposalData)
+            const tx = await contracts?.dao.propose([addresses.KaoMoji], [0], [callData], proposalData)
             await tx?.wait()
         }
         catch (ex: any) {

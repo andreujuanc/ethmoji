@@ -23,9 +23,12 @@ export default function useProposals() {
         const filter = contracts.dao?.filters?.ProposalCreated()
         if (filter) {
             const proposalsResult = await contracts.dao?.queryFilter(filter)
-            setProposals(proposalsResult?.map((x) => ({
+            const proposals: Proposal[] = proposalsResult?.map((x) => ({
                 ...x.args
-            })) ?? [])
+            })) ?? []
+
+                
+            setProposals(proposals.sort((a, b) => b?.startBlock.toNumber() - a?.startBlock?.toNumber()))
         }
 
     }, [contracts])

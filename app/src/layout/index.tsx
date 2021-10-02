@@ -21,6 +21,9 @@ export function Layout({ children }: { children: any }) {
                     <Link to="/auctions">
                         Auction
                     </Link>
+                    <Link to="/buy">
+                        Buy KAO
+                    </Link>
                 </nav>
                 <Balance />
                 <div style={{

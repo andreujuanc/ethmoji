@@ -2,9 +2,12 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract KaoMoji is ERC1155, AccessControl {
+import "hardhat/console.sol";
+
+contract KaoMoji is ERC1155Supply, AccessControl {
     bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -22,6 +25,7 @@ contract KaoMoji is ERC1155, AccessControl {
         public
         onlyRole(MINTER_ROLE)
     {
+        require(!exists(id), "Already minted");
         _mint(account, id, 1, data);
     }
     
@@ -35,4 +39,7 @@ contract KaoMoji is ERC1155, AccessControl {
     {
         return super.supportsInterface(interfaceId);
     }
+
+
+
 }
