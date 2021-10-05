@@ -20,7 +20,7 @@ export default function Propose() {
     const proposeKao = async () => {
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
-        const receiver = '0xD200D7d095D3aE3fF5e29e721E3825c568A9aDDE'// TODO: should be the auction contract
+        const receiver = addresses.AuctionHouse // TODO: this should be coded in the dao to prevent proposals without auction
         const data = ethers.utils.toUtf8Bytes(proposalData)
         const callData = contracts?.moji.interface.encodeFunctionData('mint', [receiver, 1, data])        
 
