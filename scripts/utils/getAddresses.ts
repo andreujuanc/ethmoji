@@ -9,8 +9,12 @@ export function getAddresses(): {
         AuctionHouse?: string,
     }
 } {
-    const addressesFile = __dirname + "/../app/src/contracts/contract-address.json";
+    const addressesFile = __dirname + "/../../app/src/contracts/contract-address.json";
+    const contractsDir = __dirname + "/../../app/src/contracts";
     if (!fs.existsSync(addressesFile)) {
+        if (!fs.existsSync(contractsDir)) {
+            fs.mkdirSync(contractsDir);
+        }
         fs.writeFileSync(addressesFile,
             JSON.stringify({}, undefined, 2)
         );

@@ -1,7 +1,7 @@
 // @ts-ignore
 import { ethers } from "hardhat";
 import fs from "fs-extra";
-import { getAddresses } from "./getAddresses";
+import { getAddresses } from "./utils/getAddresses";
 
 async function main() {
     const WETH = await ethers.getContractFactory("WETH9");
