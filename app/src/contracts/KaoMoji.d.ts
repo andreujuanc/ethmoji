@@ -21,6 +21,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface KaoMojiInterface extends ethers.utils.Interface {
   functions: {
+    "ADDRESS_UPDATER()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MINTER_ROLE()": FunctionFragment;
     "URI_SETTER_ROLE()": FunctionFragment;
@@ -32,18 +33,24 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint(address,uint256,bytes)": FunctionFragment;
+    "mint(bytes)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setAuctionAddress(address)": FunctionFragment;
+    "setKaoToken(address)": FunctionFragment;
     "setURI(string)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "totalSupply(uint256)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "ADDRESS_UPDATER",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
@@ -88,10 +95,7 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
-    values: [string, BigNumberish, BytesLike]
-  ): string;
+  encodeFunctionData(functionFragment: "mint", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
@@ -112,6 +116,11 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "setApprovalForAll",
     values: [string, boolean]
   ): string;
+  encodeFunctionData(
+    functionFragment: "setAuctionAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "setKaoToken", values: [string]): string;
   encodeFunctionData(functionFragment: "setURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -123,6 +132,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
 
+  decodeFunctionResult(
+    functionFragment: "ADDRESS_UPDATER",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -168,6 +181,14 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAuctionAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setKaoToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setURI", data: BytesLike): Result;
@@ -292,6 +313,8 @@ export class KaoMoji extends BaseContract {
   interface: KaoMojiInterface;
 
   functions: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<[string]>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
@@ -335,8 +358,6 @@ export class KaoMoji extends BaseContract {
     ): Promise<[boolean]>;
 
     mint(
-      account: string,
-      id: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -377,6 +398,16 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setAuctionAddress(
+      auctionAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setKaoToken(
+      kaoToken: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setURI(
       newuri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -394,6 +425,8 @@ export class KaoMoji extends BaseContract {
 
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
   };
+
+  ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
@@ -438,8 +471,6 @@ export class KaoMoji extends BaseContract {
   ): Promise<boolean>;
 
   mint(
-    account: string,
-    id: BigNumberish,
     data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -480,6 +511,16 @@ export class KaoMoji extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setAuctionAddress(
+    auctionAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setKaoToken(
+    kaoToken: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setURI(
     newuri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -495,6 +536,8 @@ export class KaoMoji extends BaseContract {
   uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -537,12 +580,7 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(
-      account: string,
-      id: BigNumberish,
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    mint(data: BytesLike, overrides?: CallOverrides): Promise<void>;
 
     renounceRole(
       role: BytesLike,
@@ -579,6 +617,13 @@ export class KaoMoji extends BaseContract {
       approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setAuctionAddress(
+      auctionAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setKaoToken(kaoToken: string, overrides?: CallOverrides): Promise<void>;
 
     setURI(newuri: string, overrides?: CallOverrides): Promise<void>;
 
@@ -748,6 +793,8 @@ export class KaoMoji extends BaseContract {
   };
 
   estimateGas: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<BigNumber>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
@@ -794,8 +841,6 @@ export class KaoMoji extends BaseContract {
     ): Promise<BigNumber>;
 
     mint(
-      account: string,
-      id: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -836,6 +881,16 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setAuctionAddress(
+      auctionAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setKaoToken(
+      kaoToken: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setURI(
       newuri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -855,6 +910,8 @@ export class KaoMoji extends BaseContract {
   };
 
   populateTransaction: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     DEFAULT_ADMIN_ROLE(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -909,8 +966,6 @@ export class KaoMoji extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
-      account: string,
-      id: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -948,6 +1003,16 @@ export class KaoMoji extends BaseContract {
     setApprovalForAll(
       operator: string,
       approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setAuctionAddress(
+      auctionAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setKaoToken(
+      kaoToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

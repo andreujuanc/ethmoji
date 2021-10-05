@@ -1,6 +1,7 @@
 // @ts-ignore
 import { ethers } from "hardhat";
 import fs from "fs-extra";
+import { getAddresses } from "./getAddresses";
 
 async function main() {
     const WETH = await ethers.getContractFactory("WETH9");
@@ -24,14 +25,7 @@ async function main() {
     /**
      * SAVING ADDRESSES
      */
-    const addressesFile = __dirname + "/../app/src/contracts/contract-address.json";
-    if (!fs.existsSync(addressesFile)) {
-        fs.writeFileSync(addressesFile,
-            JSON.stringify({}, undefined, 2)
-        );
-    }
-    const addressJson = fs.readFileSync(addressesFile);
-    const addresses = JSON.parse(addressJson.toString());
+    const { addresses, addressesFile } = getAddresses();
     addresses.WETH = weth.address
     addresses.AuctionHouse = auctionHouse.address
 
@@ -48,3 +42,5 @@ main()
         console.error(error);
         process.exit(1);
     });
+
+

@@ -1,8 +1,13 @@
 import { run, ethers, artifacts } from "hardhat";
 import fs from 'fs'
+import { getAddresses } from "./getAddresses";
 
 async function main() {
   await run("compile");
+  const { addresses } = getAddresses();
+  if(!addresses.AuctionHouse){
+    throw new Error('Auction house must be deployed first')
+  }
 
   const KaoToken = await ethers.getContractFactory("KaoToken");
   const kaoToken = await KaoToken.deploy();
@@ -11,6 +16,9 @@ async function main() {
   const KaoMoji = await ethers.getContractFactory("KaoMoji");
   const kaoMoji = await KaoMoji.deploy();
   await kaoMoji.deployed();
+
+  await kaoMoji.setKaoToken(kaoToken.address)
+  await kaoMoji.setAuctionAddress(addresses.AuctionHouse)
 
 
   const KaoDao = await ethers.getContractFactory("KaoDao");
@@ -48,9 +56,9 @@ async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, 
 
   if (!fs.existsSync(addressesFile)) {
     fs.writeFileSync(addressesFile,
-        JSON.stringify({}, undefined, 2)
+      JSON.stringify({}, undefined, 2)
     );
-}
+  }
 
   const addressJson = fs.readFileSync(addressesFile);
   const addresses = JSON.parse(addressJson.toString());
@@ -60,7 +68,7 @@ async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, 
     JSON.stringify({ ...addresses, KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
   );
 
-  if(!fs.existsSync(`${contractsDir}/factories`)){
+  if (!fs.existsSync(`${contractsDir}/factories`)) {
     fs.mkdirSync(`${contractsDir}/factories`)
   }
 

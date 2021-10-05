@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2",
-    "@zoralabs/auction-house": "github:ourzora/auction-house#main",
-    "@zoralabs/manage-auction-hooks": "^0.0.10"
+    "@zoralabs/auction-house": "github:ourzora/auction-house#main"
   }
 }
