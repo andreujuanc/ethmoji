@@ -112,6 +112,8 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
             _approveAuction(auctionId, true);
         }
 
+        console.log("Auction created %s", auctionId);
+
         return auctionId;
     }
 

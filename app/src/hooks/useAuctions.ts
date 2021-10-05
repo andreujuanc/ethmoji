@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useContracts } from "./useContracts";
 
 export type Auction = {
+    auctionId: BigNumber
+    
     tokenId: BigNumber
     // Address for the ERC721 contract
     tokenContract: string
@@ -37,10 +39,9 @@ export default function useAuctions() {
     const getAuctions = useMemo(() => async () => {
         if (!contracts) return
 
-        const filter = contracts.auction?.filters?.["AuctionCreated(uint256,uint256,address,uint256,uint256,address,address,uint8,address)"]
+        const filter = contracts.auction?.filters.AuctionCreated(null, null, contracts.moji.address)
         if (filter) {
             const auctionsResult = await contracts.auction?.queryFilter(filter)
-            console.log('auctionsResult', auctionsResult)
             const auctions: Auction[] = auctionsResult?.map((x) => ({
                 ...x.args
             })) ?? []

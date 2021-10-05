@@ -26,7 +26,7 @@ export function useContracts() {
         const dao = KaoDao__factory.connect(addresses.KaoDao, signer);
         const moji = KaoMoji__factory.connect(addresses.KaoMoji, signer);
         const token = KaoToken__factory.connect(addresses.KaoToken, signer);
-        const auction = AuctionHouse__factory.connect(addresses.KaoToken, signer);
+        const auction = AuctionHouse__factory.connect(addresses.AuctionHouse, signer);
 
         setContracts({ dao, moji, token, auction })
 

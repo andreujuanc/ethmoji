@@ -46,7 +46,6 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
         public
         onlyRole(MINTER_ROLE)
     {
-        _totalSupply++;
 
         uint256 id = _totalSupply;
         _safeMint(
@@ -71,6 +70,7 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
         );
 
         _approve(address(0), id);
+        _totalSupply++;
         
     }
     
