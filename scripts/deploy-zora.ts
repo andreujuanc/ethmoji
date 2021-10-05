@@ -26,8 +26,9 @@ async function main() {
      */
     const addressesFile = __dirname + "/../app/src/contracts/contract-address.json";
     if (!fs.existsSync(addressesFile)) {
-        console.error("You need to build your contract first");
-        return;
+        fs.writeFileSync(addressesFile,
+            JSON.stringify({}, undefined, 2)
+        );
     }
     const addressJson = fs.readFileSync(addressesFile);
     const addresses = JSON.parse(addressJson.toString());

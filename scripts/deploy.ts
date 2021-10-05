@@ -39,15 +39,25 @@ main()
 async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
   const contractsDir = __dirname + "/../app/src/contracts";
   const typesDir = __dirname + "/../typechain";
+  const addressesFile = contractsDir + "/contract-address.json"
 
   console.log('contractsDir', contractsDir)
   if (!fs.existsSync(contractsDir)) {
     fs.mkdirSync(contractsDir);
   }
 
+  if (!fs.existsSync(addressesFile)) {
+    fs.writeFileSync(addressesFile,
+        JSON.stringify({}, undefined, 2)
+    );
+}
+
+  const addressJson = fs.readFileSync(addressesFile);
+  const addresses = JSON.parse(addressJson.toString());
+
   fs.writeFileSync(
-    contractsDir + "/contract-address.json",
-    JSON.stringify({ KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
+    addressesFile,
+    JSON.stringify({ ...addresses, KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
   );
 
   if(!fs.existsSync(`${contractsDir}/factories`)){
