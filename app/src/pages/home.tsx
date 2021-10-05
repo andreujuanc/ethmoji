@@ -14,7 +14,7 @@ export default function HomePage() {
         const address = await signer?.getAddress()
         if (!address) return
         const data = ethers.utils.toUtf8Bytes('HOLA')
-        await contracts?.moji.mint(address, 1, data)
+        await contracts?.moji.mint(data)
 
     }
     console.log("kaoMojis", kaoMojis)

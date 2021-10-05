@@ -22,7 +22,7 @@ export default function Propose() {
 
         const receiver = addresses.AuctionHouse // TODO: this should be coded in the dao to prevent proposals without auction
         const data = ethers.utils.toUtf8Bytes(proposalData)
-        const callData = contracts?.moji.interface.encodeFunctionData('mint', [receiver, 1, data])        
+        const callData = contracts?.moji.interface.encodeFunctionData('mint', [data])        
 
         if (!callData) throw new Error('Could not create proposal')
 

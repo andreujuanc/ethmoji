@@ -39,7 +39,7 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
     // A mapping of all of the auctions currently running.
     mapping(uint256 => IAuctionHouse.Auction) public auctions;
 
-    bytes4 constant interfaceId = 0x80ac58cd; // 721 interface id
+    bytes4 constant interfaceId_721 = 0x80ac58cd; // 721 interface id
 
     Counters.Counter private _auctionIdTracker;
 
@@ -75,7 +75,7 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
         address auctionCurrency
     ) public override nonReentrant returns (uint256) {
         require(
-            IERC165(tokenContract).supportsInterface(interfaceId),
+            IERC165(tokenContract).supportsInterface(interfaceId_721) || IERC165(tokenContract).supportsInterface(interfaceId_721),
             "tokenContract does not support ERC721 interface"
         );
         require(curatorFeePercentage < 100, "curatorFeePercentage must be less than 100");
