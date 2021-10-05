@@ -9,8 +9,7 @@ task("faucet", "Sends ETH and tokens to an address")
     // }
 
     const KaoToken = await ethers.getContractFactory("KaoToken");
-    const addressesFile =
-      __dirname + "/../app/src/contracts/contract-address.json";
+    const addressesFile = __dirname + "/../app/src/contracts/contract-address.json";
     if (!fs.existsSync(addressesFile)) {
       console.error("You need to build your contract first");
       return;

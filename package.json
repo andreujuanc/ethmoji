@@ -7,6 +7,7 @@
     "test": "hardhat test",
     "local:node": "npx hardhat node",
     "local:deploy": "npx hardhat --network localhost run scripts/deploy.ts",
+    "local:deploy:zora": "npx hardhat --network localhost run scripts/deploy-zora.ts",
     "build": "npm run clean && npm run compile",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile"
@@ -21,6 +22,7 @@
     "@typechain/ethers-v5": "^7.1.0",
     "@typechain/hardhat": "^2.3.0",
     "@types/chai": "^4.2.21",
+    "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.1",
     "chai": "^4.3.4",

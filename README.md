@@ -2,7 +2,9 @@
 - NFT Data size should depend on voting power somehow
 
 # Utils
-
+```
+npm run local:deploy:zora --chainId=31337
+```
 
 ### Faucet
  ```
