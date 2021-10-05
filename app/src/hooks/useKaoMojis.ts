@@ -4,7 +4,6 @@ import { useContracts } from "./useContracts";
 
 export type KaoMojiItem ={
     id: BigNumber
-    data: string
 }
 
 export default function useKaoMoji() {
@@ -19,8 +18,7 @@ export default function useKaoMoji() {
             console.log(result)
             setKaomojis(result?.map((x) => (
                 {
-                    id: x.args.id,
-                    data: x.args.data
+                    id: x.args.id
                 }
             )) ?? [])
         }
