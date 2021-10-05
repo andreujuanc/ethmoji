@@ -12,11 +12,13 @@ async function main() {
     const addressJson = fs.readFileSync(addressesFile);
     const addresses = JSON.parse(addressJson.toString());
 
+    const WETH = await ethers.getContractFactory("WETH");
+    const weth = await WETH.deploy()
+    await weth.deployed();
 
     // We get the contract to deploy
     const AuctionHouse = await ethers.getContractFactory("AuctionHouse");
     const wethAddress = addresses.KaoToken
-    const mediaAddress = addresses.KaoMoji
 
     console.log(`Deploying Auction House`);
 
