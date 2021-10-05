@@ -34,25 +34,26 @@ export type Auction = {
 export default function useAuctions() {
     const [auctions, setAuctions] = useState<Auction[]>([])
     const contracts = useContracts()
-    const getKaoDao = useMemo(() => async () => {
+    const getAuctions = useMemo(() => async () => {
         if (!contracts) return
-        const filter = contracts.auction?.filters?.AuctionCreated()
+
+        const filter = contracts.auction?.filters?.["AuctionCreated(uint256,uint256,address,uint256,uint256,address,address,uint8,address)"]
         if (filter) {
-            const auctionsResult = await contracts.dao?.queryFilter(filter)
-            console.log(auctionsResult)
+            const auctionsResult = await contracts.auction?.queryFilter(filter)
+            console.log('auctionsResult', auctionsResult)
             const auctions: Auction[] = auctionsResult?.map((x) => ({
                 ...x.args
             })) ?? []
 
                 
-            setAuctions(auctions.sort((a, b) => b?.firstBidTime.sub(a?.firstBidTime)?.toNumber()))
+            setAuctions(auctions.sort((a, b) => BigNumber.from(b?.firstBidTime ?? 0 ).sub(a?.firstBidTime ?? 0)?.toNumber()))
         }
 
     }, [contracts])
 
     useEffect(() => {
-        getKaoDao()
-    }, [contracts, getKaoDao])
+        getAuctions()
+    }, [contracts, getAuctions])
 
     return auctions
 }
