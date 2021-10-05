@@ -5,7 +5,6 @@ import { KaoMojiItem } from "./useKaoMojis";
 import { useSigner } from "./useSigner";
 
 export type KaoMoji = KaoMojiItem & {
-    uri?: string
     owned?: boolean
     data?: string
 }
@@ -20,11 +19,10 @@ export function useEnhanceKaoMoji(item: KaoMojiItem) {
     const getData = async () => {
         const account = await signer?.getAddress()
         if (!account) return
-        const uri = await contracts?.moji.uri(item.id)
-        const owned = (await contracts?.moji.balanceOf(account, item.id))?.gt(0)
+        const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() == account.toLowerCase()
         const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
         const data = ethers.utils.toUtf8String(bytesToData)
-        setKaoMoji({ ...kaoMoji, uri, owned, data })
+        setKaoMoji({ ...kaoMoji, owned, data })
     }
 
     useEffect(() => {

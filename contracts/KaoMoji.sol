@@ -46,12 +46,20 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
         public
         onlyRole(MINTER_ROLE)
     {
+        _totalSupply++;
+
         uint256 id = _totalSupply;
-        _safeMint(address(this), id, data);
+        _safeMint(
+            //msg.sender,
+            address(this),
+            //address(_auctionHouse),
+             id, data);
         _tokenData[id] = data;
 
+        _approve(address(_auctionHouse), id);
+
+
         uint8 decimals = IERC20Metadata(_kaoToken).decimals();
-        
         _auctionHouse.createAuction(
             id, 
             address(this), // We have the balance
@@ -62,7 +70,8 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
             _kaoToken
         );
 
-        _totalSupply++;
+        _approve(address(0), id);
+        
     }
     
     // The following functions are overrides required by Solidity.

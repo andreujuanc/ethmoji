@@ -11,7 +11,6 @@ export default function KaoMoji({ item }: { item: KaoMojiItem }) {
         <Container>
             <div>{kaoMoji.id.toString()}</div>
             <div>{kaoMoji.owned}</div>
-            <div>{kaoMoji.uri}</div>
             <div>{kaoMoji.data}</div>
         </Container>
 

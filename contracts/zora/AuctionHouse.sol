@@ -12,6 +12,8 @@ import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
 
 import { IAuctionHouse } from "./interfaces/IAuctionHouse.sol";
 
+import "hardhat/console.sol";
+
 interface IWETH {
     function deposit() external payable;
     function withdraw(uint wad) external;
@@ -80,6 +82,7 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
         );
         require(curatorFeePercentage < 100, "curatorFeePercentage must be less than 100");
         address tokenOwner = IERC721(tokenContract).ownerOf(tokenId);
+
         require(msg.sender == IERC721(tokenContract).getApproved(tokenId) || msg.sender == tokenOwner, "Caller must be approved or owner for token id");
         uint256 auctionId = _auctionIdTracker.current();
 

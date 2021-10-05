@@ -24,29 +24,28 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     "ADDRESS_UPDATER()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MINTER_ROLE()": FunctionFragment;
-    "URI_SETTER_ROLE()": FunctionFragment;
-    "balanceOf(address,uint256)": FunctionFragment;
-    "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "exists(uint256)": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
     "getDataOf(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(bytes)": FunctionFragment;
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "name()": FunctionFragment;
+    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
-    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setAuctionAddress(address)": FunctionFragment;
     "setKaoToken(address)": FunctionFragment;
-    "setURI(string)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "totalSupply(uint256)": FunctionFragment;
-    "uri(uint256)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -62,19 +61,12 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "URI_SETTER_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "balanceOfBatch",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "exists",
+    functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -98,13 +90,14 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "mint", values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "onERC1155BatchReceived",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
+    functionFragment: "onERC721Received",
+    values: [string, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "onERC1155Received",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
+    functionFragment: "ownerOf",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -115,12 +108,8 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "safeBatchTransferFrom",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "safeTransferFrom",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
@@ -131,16 +120,19 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "setKaoToken", values: [string]): string;
-  encodeFunctionData(functionFragment: "setURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "totalSupply",
+    functionFragment: "tokenURI",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "ADDRESS_UPDATER",
@@ -154,16 +146,12 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "MINTER_ROLE",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "URI_SETTER_ROLE",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "balanceOfBatch",
+    functionFragment: "getApproved",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDataOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
@@ -176,23 +164,17 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "onERC1155BatchReceived",
+    functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155Received",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "safeBatchTransferFrom",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom",
     data: BytesLike
@@ -209,39 +191,45 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "setKaoToken",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
 
   events: {
+    "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
-    "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
-    "URI(string,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    approved: string;
+    tokenId: BigNumber;
+  }
+>;
 
 export type ApprovalForAllEvent = TypedEvent<
   [string, string, boolean] & {
-    account: string;
+    owner: string;
     operator: string;
     approved: boolean;
   }
@@ -263,28 +251,8 @@ export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
 >;
 
-export type TransferBatchEvent = TypedEvent<
-  [string, string, string, BigNumber[], BigNumber[]] & {
-    operator: string;
-    from: string;
-    to: string;
-    ids: BigNumber[];
-    values: BigNumber[];
-  }
->;
-
-export type TransferSingleEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber] & {
-    operator: string;
-    from: string;
-    to: string;
-    id: BigNumber;
-    value: BigNumber;
-  }
->;
-
-export type URIEvent = TypedEvent<
-  [string, BigNumber] & { value: string; id: BigNumber }
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; tokenId: BigNumber }
 >;
 
 export class KaoMoji extends BaseContract {
@@ -337,21 +305,18 @@ export class KaoMoji extends BaseContract {
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    URI_SETTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    balanceOf(
-      account: string,
-      id: BigNumberish,
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    exists(id: BigNumberish, overrides?: CallOverrides): Promise<[boolean]>;
+    ): Promise<[string]>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
@@ -370,7 +335,7 @@ export class KaoMoji extends BaseContract {
     ): Promise<[boolean]>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -380,21 +345,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    onERC1155BatchReceived(
-      operator: string,
-      from: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    name(overrides?: CallOverrides): Promise<[string]>;
 
-    onERC1155Received(
-      operator: string,
-      from: string,
-      id: BigNumberish,
-      value: BigNumberish,
-      data: BytesLike,
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    ownerOf(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -410,21 +372,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -444,22 +403,24 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setURI(
-      newuri: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    totalSupply(
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
@@ -468,21 +429,18 @@ export class KaoMoji extends BaseContract {
 
   MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  URI_SETTER_ROLE(overrides?: CallOverrides): Promise<string>;
+  approve(
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  balanceOf(
-    account: string,
-    id: BigNumberish,
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  getApproved(
+    tokenId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  balanceOfBatch(
-    accounts: string[],
-    ids: BigNumberish[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  exists(id: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+  ): Promise<string>;
 
   getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -501,7 +459,7 @@ export class KaoMoji extends BaseContract {
   ): Promise<boolean>;
 
   isApprovedForAll(
-    account: string,
+    owner: string,
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -511,23 +469,17 @@ export class KaoMoji extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  onERC1155BatchReceived(
-    operator: string,
-    from: string,
-    ids: BigNumberish[],
-    values: BigNumberish[],
-    data: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  name(overrides?: CallOverrides): Promise<string>;
 
-  onERC1155Received(
-    operator: string,
-    from: string,
-    id: BigNumberish,
-    value: BigNumberish,
-    data: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  onERC721Received(
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    arg3: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   renounceRole(
     role: BytesLike,
@@ -541,21 +493,18 @@ export class KaoMoji extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  safeBatchTransferFrom(
+  "safeTransferFrom(address,address,uint256)"(
     from: string,
     to: string,
-    ids: BigNumberish[],
-    amounts: BigNumberish[],
-    data: BytesLike,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  safeTransferFrom(
+  "safeTransferFrom(address,address,uint256,bytes)"(
     from: string,
     to: string,
-    id: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike,
+    tokenId: BigNumberish,
+    _data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -575,19 +524,21 @@ export class KaoMoji extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setURI(
-    newuri: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  totalSupply(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  symbol(overrides?: CallOverrides): Promise<string>;
 
-  uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  transferFrom(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
@@ -596,21 +547,18 @@ export class KaoMoji extends BaseContract {
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    URI_SETTER_ROLE(overrides?: CallOverrides): Promise<string>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    exists(id: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+    ): Promise<string>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -629,30 +577,24 @@ export class KaoMoji extends BaseContract {
     ): Promise<boolean>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     mint(data: BytesLike, overrides?: CallOverrides): Promise<void>;
 
-    onERC1155BatchReceived(
-      operator: string,
-      from: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      data: BytesLike,
+    name(overrides?: CallOverrides): Promise<string>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    onERC1155Received(
-      operator: string,
-      from: string,
-      id: BigNumberish,
-      value: BigNumberish,
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     renounceRole(
       role: BytesLike,
@@ -666,21 +608,18 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -697,38 +636,58 @@ export class KaoMoji extends BaseContract {
 
     setKaoToken(kaoToken: string, overrides?: CallOverrides): Promise<void>;
 
-    setURI(newuri: string, overrides?: CallOverrides): Promise<void>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    totalSupply(
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    symbol(overrides?: CallOverrides): Promise<string>;
 
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
+    Approval(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
     "ApprovalForAll(address,address,bool)"(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
     ApprovalForAll(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
@@ -785,83 +744,23 @@ export class KaoMoji extends BaseContract {
       { role: string; account: string; sender: string }
     >;
 
-    "TransferBatch(address,address,address,uint256[],uint256[])"(
-      operator?: string | null,
+    "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
 
-    TransferBatch(
-      operator?: string | null,
+    Transfer(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
-
-    "TransferSingle(address,address,address,uint256,uint256)"(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    TransferSingle(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    "URI(string,uint256)"(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
-
-    URI(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
   };
 
   estimateGas: {
@@ -871,21 +770,18 @@ export class KaoMoji extends BaseContract {
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    URI_SETTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    exists(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -907,7 +803,7 @@ export class KaoMoji extends BaseContract {
     ): Promise<BigNumber>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -917,21 +813,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    onERC1155BatchReceived(
-      operator: string,
-      from: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      data: BytesLike,
-      overrides?: CallOverrides
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    onERC1155Received(
-      operator: string,
-      from: string,
-      id: BigNumberish,
-      value: BigNumberish,
-      data: BytesLike,
+    ownerOf(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -947,21 +840,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -981,22 +871,24 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setURI(
-      newuri: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    totalSupply(
-      id: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1008,22 +900,19 @@ export class KaoMoji extends BaseContract {
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    URI_SETTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      account: string,
-      id: BigNumberish,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    exists(
-      id: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1050,7 +939,7 @@ export class KaoMoji extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1060,21 +949,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    onERC1155BatchReceived(
-      operator: string,
-      from: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      data: BytesLike,
-      overrides?: CallOverrides
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    onERC1155Received(
-      operator: string,
-      from: string,
-      id: BigNumberish,
-      value: BigNumberish,
-      data: BytesLike,
+    ownerOf(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1090,21 +976,18 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1124,24 +1007,23 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setURI(
-      newuri: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(
-      id: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    uri(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -11,7 +11,7 @@ export default function useKaoMoji() {
     const contracts = useContracts()
     const getKaoDao = useMemo(() => async () => {
         if (!contracts) return
-        const filter = contracts.moji?.filters?.TransferSingle()
+        const filter = contracts.moji?.filters?.Transfer()
 
         if (filter) {
             const result = await contracts.moji?.queryFilter(filter)
