@@ -6,6 +6,7 @@ import HomePage from './pages/home'
 import Proposals from './pages/proposals'
 
 import './App.css'
+import Auctions from './pages/auctions'
 
 function getLibrary(provider: any, connector: any) {
   return new ethers.providers.Web3Provider(provider)
@@ -24,6 +25,10 @@ export default function App() {
             </Route>
             <Route exact path="/proposals" >
               <Proposals />
+            </Route>
+
+            <Route exact path="/auctions" >
+              <Auctions />
             </Route>
 
             <Route path="*" >

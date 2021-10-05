@@ -17,12 +17,14 @@ export function useEnhanceKaoMoji(item: KaoMojiItem) {
     })
 
     const getData = async () => {
-        const account = await signer?.getAddress()
-        if (!account) return
-        const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() == account.toLowerCase()
-        const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
-        const data = ethers.utils.toUtf8String(bytesToData)
-        setKaoMoji({ ...kaoMoji, owned, data })
+        // const account = await signer?.getAddress()
+        // if (!account) return
+        // const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() == account.toLowerCase()
+        // //const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
+        // //const data = ethers.utils.toUtf8String(bytesToData)
+        // setKaoMoji({ ...kaoMoji,
+        //     owned//, data
+        //  })
     }
 
     useEffect(() => {

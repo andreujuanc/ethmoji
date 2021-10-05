@@ -36,15 +36,16 @@ export default function useAuctions() {
     const contracts = useContracts()
     const getKaoDao = useMemo(() => async () => {
         if (!contracts) return
-        const filter = contracts.dao?.filters?.AuctionCreated()
+        const filter = contracts.auction?.filters?.AuctionCreated()
         if (filter) {
             const auctionsResult = await contracts.dao?.queryFilter(filter)
+            console.log(auctionsResult)
             const auctions: Auction[] = auctionsResult?.map((x) => ({
                 ...x.args
             })) ?? []
 
                 
-            setAuctions(auctions.sort((a, b) => b?.startBlock.toNumber() - a?.startBlock?.toNumber()))
+            setAuctions(auctions.sort((a, b) => b?.firstBidTime.sub(a?.firstBidTime)?.toNumber()))
         }
 
     }, [contracts])

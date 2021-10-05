@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContracts } from "./useContracts";
 
-export type KaoMojiItem ={
+export type KaoMojiItem = {
     id: BigNumber
 }
 
@@ -14,13 +14,18 @@ export default function useKaoMoji() {
         const filter = contracts.moji?.filters?.Transfer()
 
         if (filter) {
-            const result = await contracts.moji?.queryFilter(filter)
-            console.log(result)
-            setKaomojis(result?.map((x) => (
-                {
-                    id: x.args.id
-                }
-            )) ?? [])
+            const result: { id: BigNumber }[] = (await contracts.moji?.queryFilter(filter))
+                .reduce((items: any[], { args: item }) => {
+                    console.log("ITEM", item)
+                    if (!items.find(x => x.id.toString() == item.tokenId.toString())) {
+                        items.push({
+                            id: item.tokenId
+                        })
+                    }
+                    return items
+                }, [])
+            console.log('mojis', result)
+            setKaomojis(result)
         }
 
     }, [contracts])
