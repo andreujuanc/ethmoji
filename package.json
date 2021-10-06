@@ -6,8 +6,9 @@
   "scripts": {
     "test": "hardhat test",
     "local:node": "npx hardhat node",
-    "local:deploy": "npx hardhat --network localhost run scripts/deploy.ts",
+    "local:deploy:kao": "npx hardhat --network localhost run scripts/deploy.ts",
     "local:deploy:zora": "npx hardhat --network localhost run scripts/deploy-zora.ts",
+    "local:deploy":"npm run local:deploy:zora && npm run local:deploy:kao", 
     "build": "npm run clean && npm run compile",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile"
