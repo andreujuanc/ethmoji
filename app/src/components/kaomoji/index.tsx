@@ -1,5 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import { useEnhanceKaoMoji } from "../../hooks/useKaoMoji";
 import { KaoMojiItem } from "../../hooks/useKaoMojis";
 import Container from "../container";
 

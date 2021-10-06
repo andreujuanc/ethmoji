@@ -8,7 +8,7 @@ npm run local:deploy:zora --chainId=31337
 
 ### Faucet
  ```
- npx hardhat --network localhost faucet <ADDRESS>
+ npx hardhat --network localhost faucet <ADDRESS> <AMOUNT>
  ```
 
 

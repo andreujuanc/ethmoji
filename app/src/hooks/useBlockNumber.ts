@@ -8,7 +8,7 @@ export function useBlockNumber() {
 
     const updateBlockNumber = useCallback(async (block) => {
         setCurrentBlockNumber(block)
-    }, [provider])
+    }, [])
 
     useEffect(() => {
         provider?.on('block', updateBlockNumber)

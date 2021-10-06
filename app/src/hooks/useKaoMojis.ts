@@ -17,7 +17,7 @@ export default function useKaoMoji() {
             const result: { id: BigNumber }[] = (await contracts.moji?.queryFilter(filter))
                 .reduce((items: any[], { args: item }) => {
                     console.log("ITEM", item)
-                    if (!items.find(x => x.id.toString() == item.tokenId.toString())) {
+                    if (!items.find(x => x.id.toString() === item.tokenId.toString())) {
                         items.push({
                             id: item.tokenId
                         })

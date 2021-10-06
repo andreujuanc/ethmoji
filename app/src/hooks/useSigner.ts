@@ -2,7 +2,6 @@ import { useWeb3React } from "@web3-react/core";
 import { useEffect, useMemo, useState } from "react";
 import { Signer } from "ethers";
 
-
 export function useSigner() {
     const { connector, library, active } = useWeb3React()
     const [signer, setSigner] = useState<Signer>()
@@ -14,11 +13,11 @@ export function useSigner() {
 
         setSigner(signer)
 
-    }, [connector, library, active])
+    }, [connector, library])
 
     useEffect(() => {
         getSigner()
-    }, [connector, library, active])
+    }, [getSigner, connector, library, active])
 
 
     return signer

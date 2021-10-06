@@ -6,7 +6,6 @@ import Container from "../../../../components/container";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
-import { useProvider } from "../../../../hooks/useProvider";
 import { useSigner } from "../../../../hooks/useSigner";
 import './index.scss'
 
@@ -65,7 +64,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
         const { againstVotes, forVotes, abstainVotes } = await contracts.dao.proposalVotes(proposal.proposalId)
         setVotes({ againstVotes, forVotes, abstainVotes })
-    }, [contracts, provider])
+    }, [contracts, provider, proposal])
 
     const execute = async () => {
         if (!contracts) return
@@ -82,9 +81,9 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }
 
 
-    const getProposalVotes = async () => {
+    const getProposalVotes = useCallback(async () => {
         if (!contracts) return
-        const filter = contracts.dao?.filters?.VoteCast()
+        // const filter = contracts.dao?.filters?.VoteCast()
         // if (filter) {
         //     const votesList = (await contracts.dao?.queryFilter(filter))//.filter(x => x.proposalId == proposal.proposalId)
         //     if (votesList.length > 0)
@@ -93,12 +92,12 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
         //     //     ...x.args
         //     // })) ?? [])
         // }
-    }
+    }, [contracts])
 
     useEffect(() => {
         hasVoted()
         getProposalVotes()
-    }, [hasVoted, provider, contracts])
+    }, [hasVoted, getProposalVotes, provider, contracts])
 
     return (
         <Container>
@@ -112,7 +111,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                 {proposal.description.toString()}
             </div>
 
-            {(proposalState == ProposalState.Pending && currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
+            {(proposalState === ProposalState.Pending && currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
                 <div>Starts in {currentBlockNumber && proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
             ) :
                 (currentBlockNumber && proposal.endBlock.lt(currentBlockNumber)) ? (
@@ -120,7 +119,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                 ) : (<div>Voting ends in {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks</div>)
             }
             <br />
-            {(proposalState == ProposalState.Active) &&
+            {(proposalState === ProposalState.Active) &&
                 <div className={'voteOptions'}>
                     <Button disabled={voted} onClick={() => vote(VoteType.For)}>d=====(￣▽￣*)b</Button><br />
                     <Button disabled={voted} onClick={() => vote(VoteType.Against)}>(╯°□°）╯︵ ┻━┻</Button><br />
@@ -129,20 +128,20 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             }
 
             {
-                proposalState == ProposalState.Defeated && 'Rejected ಥ_ಥ'
+                proposalState === ProposalState.Defeated && 'Rejected ಥ_ಥ'
             }
 
             {
-                proposalState == ProposalState.Succeeded &&
+                proposalState === ProposalState.Succeeded &&
                 <Button onClick={execute}>Execute</Button>
             }
 
             {
-                proposalState == ProposalState.Queued && 'QUEUED'
+                proposalState === ProposalState.Queued && 'QUEUED'
             }
 
             {
-                proposalState == ProposalState.Executed && 'EXECUTED'
+                proposalState === ProposalState.Executed && 'EXECUTED'
             }
 
             {

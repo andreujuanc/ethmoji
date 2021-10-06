@@ -11,7 +11,7 @@ const injected = new InjectedConnector({
 })
 
 export default function Connect() {
-    const { activate, active, chainId, deactivate, account } = useWeb3React()
+    const { activate, active, deactivate, account } = useWeb3React()
     const connect = async () => {
         await activate(injected)
     }
