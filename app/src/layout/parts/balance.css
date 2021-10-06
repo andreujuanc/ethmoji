@@ -1,6 +1,8 @@
 .balanceContainer{
     display: flex;
     flex-direction: row;
+    padding: 0.25rem;
+    border: 3px solid black !important;
 }
 
 .kaoBalance{

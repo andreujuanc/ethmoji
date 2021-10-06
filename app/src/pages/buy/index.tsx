@@ -6,6 +6,7 @@ import { ParaSwap } from 'paraswap';
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "../../components/input";
 import './index.scss'
+import { useWeb3React } from "@web3-react/core";
 
 type OperationToken = {
     address: string
@@ -20,11 +21,19 @@ type SwapOperation = {
 }
 
 
+enum Networks {
+    MAINNET = 1,
+    RINKEBY = 4,
+    POLYGON = 137,
+    LOCAL = 31337
+}
+
 
 export default function BuyKaoPage() {
     const signer = useSigner()
+    const { chainId } = useWeb3React()
     const contracts = useContracts()
-    const paraSwap = useMemo(() => new ParaSwap(), []);
+    const paraSwap = useMemo(() => chainId && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, []);
     const [operation, setOperation] = useState<SwapOperation>()
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
@@ -36,7 +45,7 @@ export default function BuyKaoPage() {
     }
 
     const loadTokenList = useCallback(async () => {
-        const tokens = await paraSwap.getTokens()
+        const tokens = await paraSwap?.getTokens()
         if (tokens && Array.isArray(tokens)) {
 
             setTokenList(tokens.map(x => ({

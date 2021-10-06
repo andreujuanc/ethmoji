@@ -24,7 +24,7 @@ export default function Connect() {
     }, [account])
 
     return (
-        <Button onClick={active ? disconnect : connect}>
+        <Button onClick={active ? disconnect : connect} lineHeight={0.75}>
             {active ? "Disconnect: " + formattedAccount : "Connect"}
         </Button>
     )

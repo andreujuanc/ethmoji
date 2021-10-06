@@ -4,7 +4,7 @@ import Connect from './parts/connect'
 import './index.css'
 
 export function Layout({ children }: { children: any }) {
-    
+
     return (
         <div className="App">
             <header className="header">
@@ -26,11 +26,8 @@ export function Layout({ children }: { children: any }) {
                     </Link>
                 </nav>
                 <Balance />
-                <div style={{
-                    padding: '1rem',
-                }}>
-                    <Connect />
-                </div>
+
+                <Connect />
             </header>
             <main style={{
                 display: 'flex',
