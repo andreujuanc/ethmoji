@@ -245,9 +245,8 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
 
         
         // Otherwise, transfer the token to the winner and pay out the participants below
-        try IERC721(auctions[auctionId].tokenContract).safeTransferFrom(address(this), auctions[auctionId].bidder, auctions[auctionId].tokenId) {
-
-        } catch {
+        try IERC721(auctions[auctionId].tokenContract).safeTransferFrom(address(this), auctions[auctionId].bidder, auctions[auctionId].tokenId) {} 
+        catch {
             _handleOutgoingBid(auctions[auctionId].bidder, auctions[auctionId].amount, auctions[auctionId].auctionCurrency);
             _cancelAuction(auctionId);
             return;

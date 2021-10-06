@@ -74,6 +74,11 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
         await tx?.wait()
     }
 
+    const claim = async ()=>{
+        const tx = await contracts?.auction.endAuction(auction.auctionId)
+        await tx?.wait()
+    }
+
     return (
         <Container>
             <div>
@@ -89,7 +94,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
                 Amount {auction.amount?.toString()}
             </div>
             {
-                auction && (auction.firstBidTime.eq(0) || BigNumber.from(Date.now()).lt(auction.firstBidTime.add(auction.duration))) &&
+                (auction && (auction.firstBidTime.eq(0) || BigNumber.from(Date.now()).lt(auction.firstBidTime.add(auction.duration)))) &&
                 <div>
                     <Input type={"number"}
                         placeholder={auction.reservePrice?.toString()}
@@ -106,6 +111,9 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
                     {bidAmount && allowance?.gte(bidAmount)
                         && <Button onClick={placeBid} disabled={!bidAmount || !bidAmount?.gt(0)} >Place Bid</Button>}
                 </div>
+            }
+            {
+                <Button onClick={claim} >Claim</Button>
             }
         </Container>
     )
