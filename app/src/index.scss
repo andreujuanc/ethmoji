@@ -16,15 +16,19 @@ body {
   margin: 0;
 
   background-color: #333;
-  color: #CCC;
+  color: #ccc;
 }
 
-
-a:visited{
-  color: #CCC;
+a:visited {
+  color: #ccc;
 }
 
-nav a{
+nav a {
   margin-right: 1rem;
-  color: #CCC;
+  color: #ccc;
+}
+
+.white-shadow-1 {
+  border: 3px solid black !important;
+  box-shadow: 3px 3px black, 5px 5px white;
 }

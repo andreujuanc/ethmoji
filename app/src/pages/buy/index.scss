@@ -1,0 +1,43 @@
+.token-item-container {
+  width: 100%;
+  margin-top: 1rem;
+}
+.token-item {
+  display: flex;
+  flex-direction: row;
+  .button {
+    position: relative;
+  }
+}
+
+.selected-item {
+  display: flex;
+  flex-direction: row;
+}
+.select-popup {
+  position: absolute;
+  z-index: 20;
+  left: auto;
+  right: 0;
+  top: 50px; /* buttons height*/
+  bottom: auto;
+
+  width: 160px;
+  max-height: 50vh;
+  overflow-y: auto;
+
+  background-color: #fff;
+  cursor: pointer !important;
+}
+
+.button.open {
+    z-index: 2;
+}
+
+.select-popup-item{
+    text-align: left;
+    padding: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

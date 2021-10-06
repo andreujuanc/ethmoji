@@ -7,6 +7,7 @@ import Proposals from './pages/proposals'
 
 import './App.css'
 import Auctions from './pages/auctions'
+import BuyKaoPage from './pages/buy'
 
 function getLibrary(provider: any, connector: any) {
   return new ethers.providers.Web3Provider(provider)
@@ -29,6 +30,10 @@ export default function App() {
 
             <Route exact path="/auctions" >
               <Auctions />
+            </Route>
+
+            <Route exact path="/buy" >
+              <BuyKaoPage />
             </Route>
 
             <Route path="*" >

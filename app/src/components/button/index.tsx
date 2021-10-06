@@ -5,6 +5,7 @@ type ButtonProps = {
     children: any
     onClick: () => void | Promise<void>
     disabled?: boolean
+    className?: string
 }
 
 export default function Button(props: ButtonProps) {
@@ -27,7 +28,7 @@ export default function Button(props: ButtonProps) {
     }
 
     return (
-        <button disabled={props.disabled} className="button" onClick={onClick}>
+        <button disabled={props.disabled} className={"button white-shadow-1 " + (props.className ?? '')} onClick={onClick}>
             {props.children}
         </button>
     )
