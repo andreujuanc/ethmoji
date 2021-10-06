@@ -10,6 +10,7 @@ import Auctions from './pages/auctions'
 import BuyKaoPage from './pages/buy'
 
 function getLibrary(provider: any, connector: any) {
+  console.log('getLibrary', provider, connector)
   return new ethers.providers.Web3Provider(provider)
 }
 
@@ -37,7 +38,7 @@ export default function App() {
             </Route>
 
             <Route path="*" >
-              404
+              404 ಥ_ಥ
             </Route>
           </Switch>
         </Layout>

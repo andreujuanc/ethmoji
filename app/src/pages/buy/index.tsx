@@ -1,12 +1,13 @@
-import { ethers } from "ethers"
+import { BigNumber, ethers } from "ethers"
 import Button from "../../components/button"
 import { useContracts } from "../../hooks/useContracts"
 import { useSigner } from "../../hooks/useSigner"
-import { ParaSwap } from 'paraswap';
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "../../components/input";
 import './index.scss'
 import { useWeb3React } from "@web3-react/core";
+import { ParaSwap } from 'paraswap';
+import { OptimalRate } from "paraswap-core";
 
 type OperationToken = {
     address: string
@@ -17,12 +18,16 @@ type OperationToken = {
 type SwapOperation = {
     buy: boolean
     from?: OperationToken
+    fromAmount?: BigNumber
     to?: OperationToken
+    toAmount?: BigNumber
+    optimalRate?: OptimalRate
 }
 
 
 enum Networks {
     MAINNET = 1,
+    ROPSTEN = 3,
     RINKEBY = 4,
     POLYGON = 137,
     LOCAL = 31337
@@ -31,21 +36,47 @@ enum Networks {
 
 export default function BuyKaoPage() {
     const signer = useSigner()
-    const { chainId } = useWeb3React()
+    const { active, chainId } = useWeb3React()
     const contracts = useContracts()
-    const paraSwap = useMemo(() => chainId && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, []);
+    const paraSwap = useMemo(() => chainId && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, [active, chainId]);
     const [operation, setOperation] = useState<SwapOperation>()
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
-    const mint = async () => {
+    const swap = async () => {
+        console.log('operation', operation)
         const address = await signer?.getAddress()
-        if (!address) return
-        const data = ethers.utils.toUtf8Bytes('HOLA')
-        await contracts?.moji.mint(data)
+        if (!address || !paraSwap || !signer) return
+        if (!operation?.from?.address || !operation?.to?.address) return
+        if (!operation?.fromAmount || !operation.toAmount?.toString()) return
+        if (!operation.optimalRate) return
+
+        const srcToken = operation.from.address;
+        const destToken = operation.to.address;
+        const srcAmount = operation.fromAmount.toString();
+        const destAmount = operation.toAmount.toString();
+        const senderAddress = address;
+        const receiver = address;
+        const referrer = 'ethmoji';
+        console.log('SENDING')
+        const txParams = await paraSwap.buildTx(
+            srcToken,
+            destToken,
+            srcAmount,
+            destAmount,
+            operation.optimalRate,
+            senderAddress,
+            referrer,
+            receiver,
+        );
+
+        const tx = await signer.sendTransaction(txParams);
+        await tx.wait()
+        console.log('SENT')
     }
 
     const loadTokenList = useCallback(async () => {
         const tokens = await paraSwap?.getTokens()
+        console.log('tokens', tokens)
         if (tokens && Array.isArray(tokens)) {
 
             setTokenList(tokens.map(x => ({
@@ -56,22 +87,24 @@ export default function BuyKaoPage() {
         } else {
             setTokenList([])
         }
-    }, [])
+    }, [paraSwap, chainId])
 
     useEffect(() => {
         loadTokenList()
         setOperation({
             buy: true
         })
-    }, [])
-
+    }, [paraSwap, chainId])
 
     const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO' }
 
     const onSourceTokenSelected = (selected?: OperationToken) => {
+        // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
+        // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
+
         if (operation?.from?.address === selected?.address) return
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, from: selected, to: kaoToken })
+            setOperation({ ...operation, buy: true, from: selected, /* to: kaoToken*/ })
         } else {
             setOperation({ ...operation, buy: false, from: selected, to: undefined })
         }
@@ -80,12 +113,37 @@ export default function BuyKaoPage() {
     const onDestinationTokenSelected = (selected?: OperationToken) => {
         if (operation?.to?.address === selected?.address) return
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, to: selected, from: kaoToken })
+            setOperation({ ...operation, buy: true, to: selected, /* from: kaoToken */ })
         } else {
             setOperation({ ...operation, buy: false, to: selected, from: undefined })
         }
     }
 
+    const calculateRate = useCallback(async () => {
+        if (!operation?.from?.address ||
+            !operation?.to?.address ||
+            !operation?.fromAmount ||
+            !paraSwap) return
+        const priceRoute = await paraSwap?.getRate(
+            operation.from.address,
+            operation.to.address,
+            operation.fromAmount.toString(),
+        );
+        console.log('Prices', priceRoute)
+    }, [])
+
+    useEffect(() => {
+        calculateRate()
+    }, [operation?.fromAmount])
+
+    const onSourceAmountChanged = (value?: BigNumber) => {
+        if (!operation) return
+        setOperation({ ...operation, fromAmount: value })
+    }
+
+    const onDestinationAmountChanged = (value?: BigNumber) => {
+
+    }
 
 
     return (
@@ -93,14 +151,14 @@ export default function BuyKaoPage() {
             maxWidth: '600px',
             minWidth: '600px',
         }}>
-            <div>
-                (o゜▽゜)o☆
-            </div>
-            <TokenItem token={operation?.from} label={"You'll pay"} tokenList={operation?.buy ? tokenList : [kaoToken]} tokenSelected={onSourceTokenSelected} />
-            <TokenItem token={operation?.to} label={"You'll receive"} tokenList={operation?.buy ? [kaoToken] : tokenList} tokenSelected={onDestinationTokenSelected} />
+            <h3>
+                Buy Kao (o゜▽゜)o☆
+            </h3>
+            <TokenItem token={operation?.from} label={"You pay"} tokenList={tokenList} tokenSelected={onSourceTokenSelected} amount={operation?.fromAmount} amountChanged={onSourceAmountChanged} />
+            <TokenItem token={operation?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={onDestinationTokenSelected} amount={operation?.toAmount} amountChanged={onDestinationAmountChanged} />
 
             <div>
-                <Button onClick={mint}  >
+                <Button onClick={swap}  >
                     Buy
                 </Button>
             </div>
@@ -108,10 +166,15 @@ export default function BuyKaoPage() {
     )
 }
 
-function TokenItem({ token, label, tokenList, tokenSelected }: { token?: OperationToken, label: string, tokenList: OperationToken[], tokenSelected: (selected?: OperationToken) => void }) {
-    const selectToken = () => {
-
-    }
+function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amount }:
+    {
+        token?: OperationToken,
+        label: string,
+        tokenList: OperationToken[],
+        tokenSelected: (selected?: OperationToken) => void,
+        amount?: BigNumber,
+        amountChanged: (value?: BigNumber) => void
+    }) {
 
 
     return (<div className={'token-item-container'}>
@@ -120,7 +183,7 @@ function TokenItem({ token, label, tokenList, tokenSelected }: { token?: Operati
             {label}
         </div>
         <div className={'token-item'}>
-            <Input onChange={() => { }} placeholder={"0"} type={"number"} value={"0"} />
+            <Input onChange={(value) => amountChanged(value ? BigNumber.from(value) : undefined)} placeholder={"0"} type={"number"} value={amount?.toString() ?? ''} />
             <Select
                 items={tokenList}
                 onChange={tokenSelected}
