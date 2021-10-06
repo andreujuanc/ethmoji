@@ -14,8 +14,9 @@ type OperationToken = {
 }
 
 type SwapOperation = {
-    from: OperationToken
-    to: OperationToken
+    buy: boolean
+    from?: OperationToken
+    to?: OperationToken
 }
 
 
@@ -50,7 +51,33 @@ export default function BuyKaoPage() {
 
     useEffect(() => {
         loadTokenList()
+        setOperation({
+            buy: true
+        })
     }, [])
+
+
+    const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO' }
+
+    const onSourceTokenSelected = (selected?: OperationToken) => {
+        if (operation?.from?.address === selected?.address) return
+        if (kaoToken.address !== selected?.address) {
+            setOperation({ ...operation, buy: true, from: selected, to: kaoToken })
+        } else {
+            setOperation({ ...operation, buy: false, from: selected, to: undefined })
+        }
+    }
+
+    const onDestinationTokenSelected = (selected?: OperationToken) => {
+        if (operation?.to?.address === selected?.address) return
+        if (kaoToken.address !== selected?.address) {
+            setOperation({ ...operation, buy: true, to: selected, from: kaoToken })
+        } else {
+            setOperation({ ...operation, buy: false, to: selected, from: undefined })
+        }
+    }
+
+
 
     return (
         <div style={{
@@ -60,8 +87,8 @@ export default function BuyKaoPage() {
             <div>
                 (o゜▽゜)o☆
             </div>
-            <TokenItem token={operation?.from} label={"You'll pay"} tokenList={tokenList} />
-            <TokenItem token={operation?.to} label={"You'll receive"} tokenList={[{ address: contracts?.token.address ?? '', symbol: 'KAO', icon: ':D' }]} />
+            <TokenItem token={operation?.from} label={"You'll pay"} tokenList={operation?.buy ? tokenList : [kaoToken]} tokenSelected={onSourceTokenSelected} />
+            <TokenItem token={operation?.to} label={"You'll receive"} tokenList={operation?.buy ? [kaoToken] : tokenList} tokenSelected={onDestinationTokenSelected} />
 
             <div>
                 <Button onClick={mint}  >
@@ -72,7 +99,7 @@ export default function BuyKaoPage() {
     )
 }
 
-function TokenItem({ token, label, tokenList }: { token?: OperationToken, label: string, tokenList: OperationToken[] }) {
+function TokenItem({ token, label, tokenList, tokenSelected }: { token?: OperationToken, label: string, tokenList: OperationToken[], tokenSelected: (selected?: OperationToken) => void }) {
     const selectToken = () => {
 
     }
@@ -87,26 +114,26 @@ function TokenItem({ token, label, tokenList }: { token?: OperationToken, label:
             <Input onChange={() => { }} placeholder={"0"} type={"number"} value={"0"} />
             <Select
                 items={tokenList}
-                onChange={() => { }}
+                onChange={tokenSelected}
                 value={token}
                 renderValue={(value) => (
-                    <div style={{ width: '100px' }}>
-                        {value?.icon ?? ':D'}
+                    <div className={'token-component'}>
+                        {value?.icon ? <img height={"25"} src={value.icon} /> : <span>:D</span>}
                         {value?.symbol.toUpperCase() ?? '---'}
                     </div>
                 )}
                 renderSelectItem={(item) => (
-                    <>
-                        {item?.icon ?  <img height={"25"} src={item.icon} /> : ':D'}
+                    <div className={'token-component'}>
+                        {item?.icon ? <img height={"25"} src={item.icon} /> : <span>:D</span>}
                         {item?.symbol.toUpperCase() ?? '---'}
-                    </>
+                    </div>
                 )}
             />
         </div>
     </div>)
 }
 
-function Select<T>({ value, items, renderValue, renderSelectItem }: {
+function Select<T>({ value, items, renderValue, renderSelectItem, onChange }: {
     items: T[],
     value: T,
     onChange: (item: T) => void,
@@ -117,24 +144,24 @@ function Select<T>({ value, items, renderValue, renderSelectItem }: {
 
     return (
         <>
-            <Button disabled={open} className={open ? 'open' : ''} onClick={items && items.length > 0 ? () => setOpen(true) : () => { }} >
-                {!open && (
-                    <div className={'selected-item'}>
-                        {renderValue(value)}
-                        ⛛
+            <Button className={open ? 'open active' : ''} onClick={items && items.length > 0 ? () => setOpen(!open) : () => { }} >
+
+                <div className={'selected-item'}>
+                    {renderValue(value)}
+                    ⛛
+                </div>
+
+                {open && (
+                    <div className="select-popup white-shadow-1">
+                        {items.map((item, index) => (
+                            <div className={'select-popup-item'} key={`selector-key-${index}`} onClick={() => { onChange(item); setOpen(false); }}>
+                                {renderSelectItem(item)}
+                            </div>
+                        ))}
                     </div>
                 )}
-                {open && (
-                <div className="select-popup white-shadow-1">
-                    {items.map((item, index) => (
-                        <div className={'select-popup-item'} key={`selector-key-${index}`} onClick={() => setOpen(false)}>
-                            {renderSelectItem(item)}
-                        </div>
-                    ))}
-                </div>
-            )}
             </Button>
-            
+
         </>
     )
 }
