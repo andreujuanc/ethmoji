@@ -8,6 +8,8 @@ import './index.scss'
 import { useWeb3React } from "@web3-react/core";
 import { ParaSwap } from 'paraswap';
 import { OptimalRate } from "paraswap-core";
+import { Select } from "../../components/select";
+import { Networks } from "../../core/networks";
 
 type OperationToken = {
     address: string
@@ -24,17 +26,8 @@ type SwapOperation = {
     optimalRate?: OptimalRate
 }
 
-
-enum Networks {
-    MAINNET = 1,
-    ROPSTEN = 3,
-    RINKEBY = 4,
-    POLYGON = 137,
-    LOCAL = 31337
-}
-
-
 export default function BuyKaoPage() {
+    const KAOTOKEN_ONLY = true
     const signer = useSigner()
     const { active, chainId } = useWeb3React()
     const contracts = useContracts()
@@ -104,7 +97,7 @@ export default function BuyKaoPage() {
 
         if (operation?.from?.address === selected?.address) return
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, from: selected, /* to: kaoToken*/ })
+            setOperation({ ...operation, buy: true, from: selected, to: KAOTOKEN_ONLY ? kaoToken : undefined })
         } else {
             setOperation({ ...operation, buy: false, from: selected, to: undefined })
         }
@@ -113,7 +106,7 @@ export default function BuyKaoPage() {
     const onDestinationTokenSelected = (selected?: OperationToken) => {
         if (operation?.to?.address === selected?.address) return
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, to: selected, /* from: kaoToken */ })
+            setOperation({ ...operation, buy: true, to: selected, from: KAOTOKEN_ONLY ? kaoToken : undefined })
         } else {
             setOperation({ ...operation, buy: false, to: selected, from: undefined })
         }
@@ -205,35 +198,3 @@ function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amou
     </div>)
 }
 
-function Select<T>({ value, items, renderValue, renderSelectItem, onChange }: {
-    items: T[],
-    value: T,
-    onChange: (item: T) => void,
-    renderValue: (value: T) => React.ReactElement
-    renderSelectItem: (item: T) => React.ReactElement
-}) {
-    const [open, setOpen] = useState(false)
-
-    return (
-        <>
-            <Button className={open ? 'open active' : ''} onClick={items && items.length > 0 ? () => setOpen(!open) : () => { }} >
-
-                <div className={'selected-item'}>
-                    {renderValue(value)}
-                    ⛛
-                </div>
-
-                {open && (
-                    <div className="select-popup white-shadow-1">
-                        {items.map((item, index) => (
-                            <div className={'select-popup-item'} key={`selector-key-${index}`} onClick={() => { onChange(item); setOpen(false); }}>
-                                {renderSelectItem(item)}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </Button>
-
-        </>
-    )
-}
