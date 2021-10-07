@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import Button from "../../components/button";
 import Container from "../../components/container";
 import { Input } from "../../components/input";
-import KaoMojiFrame from "../../components/kaomoji";
+import { KaoMojiFrame } from "../../components/kaomoji";
 import useAuctions, { Auction } from "../../hooks/useAuctions";
 import { useContracts } from "../../hooks/useContracts";
-import { KaoMoji } from "../../hooks/useKaoMoji";
+import { KaoMojiItem } from "../../hooks/useKaoMoji";
 import { useSigner } from "../../hooks/useSigner";
 
 export default function Auctions() {
@@ -38,7 +38,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
     const signer = useSigner()
     const [bidAmount, setBidAmount] = useState<BigNumber>()
     const [allowance, setAllowance] = useState<BigNumber>()
-    const [kaomoji, setKaomoji] = useState<KaoMoji>()
+    const [kaomoji, setKaomoji] = useState<KaoMojiItem>()
 
     const nowTimeStamp = BigNumber.from(Math.round((Date.now() / 1000)))
     const endOfAuction = auction?.firstBidTime?.add(auction.duration)
@@ -118,7 +118,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
             <div>
                 Amount {auction.amount?.toString()}
             </div>
-            
+
             <div>
                 <KaoMojiFrame data={kaomoji?.data && ethers.utils.toUtf8String(kaomoji?.data)} />
             </div>

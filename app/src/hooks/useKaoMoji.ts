@@ -1,18 +1,18 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useContracts } from "./useContracts";
-import { KaoMojiItem } from "./useKaoMojis";
+import { KaoMojiId } from "./useKaoMojis";
 import { useSigner } from "./useSigner";
 
-export type KaoMoji = KaoMojiItem & {
+export type KaoMojiItem = KaoMojiId & {
     owned?: boolean
     data?: string
 }
 
-export function useEnhanceKaoMoji(item: KaoMojiItem) {
+export function useEnhanceKaoMoji(item: KaoMojiId) {
     const contracts = useContracts()
     const signer = useSigner()
-    const [kaoMoji, setKaoMoji] = useState<KaoMoji>({
+    const [kaoMoji, setKaoMoji] = useState<KaoMojiItem>({
         id: item.id
     })
 
@@ -20,11 +20,12 @@ export function useEnhanceKaoMoji(item: KaoMojiItem) {
         const account = await signer?.getAddress()
         if (!account) return
         const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() == account.toLowerCase()
-        // //const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
-        // //const data = ethers.utils.toUtf8String(bytesToData)
+        const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
+        const data = ethers.utils.toUtf8String(bytesToData)
         setKaoMoji({
             ...kaoMoji,
-            owned//, data
+            owned,
+            data
         })
     }
 

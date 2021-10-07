@@ -1,6 +1,8 @@
+import { KaoMojiItem, useEnhanceKaoMoji } from "../../hooks/useKaoMoji";
+import { KaoMojiId } from "../../hooks/useKaoMojis";
 import Container from "../container";
 
-export default function KaoMojiFrame({ data }: { data?: string }) {
+export function KaoMojiFrame({ data }: { data?: string }) {
 
     return (
         <div
@@ -23,5 +25,17 @@ export default function KaoMojiFrame({ data }: { data?: string }) {
 
     )
 }
+
+export function KaoMojiCard({ item }: { item: KaoMojiItem }) {
+    const kao = useEnhanceKaoMoji(item)
+
+    return (
+        <Container>
+            <KaoMojiFrame data={kao.data} />
+        </Container>
+
+    )
+}
+
 
 

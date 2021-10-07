@@ -2,12 +2,12 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContracts } from "./useContracts";
 
-export type KaoMojiItem = {
+export type KaoMojiId = {
     id: BigNumber
 }
 
 export default function useKaoMoji() {
-    const [kaomojis, setKaomojis] = useState<KaoMojiItem[]>([])
+    const [kaomojis, setKaomojis] = useState<KaoMojiId[]>([])
     const contracts = useContracts()
     const getKaoDao = useMemo(() => async () => {
         if (!contracts) return

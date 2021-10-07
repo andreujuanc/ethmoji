@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import Container from "../../../../components/container";
-import KaoMojiFrame from "../../../../components/kaomoji";
+import { KaoMojiFrame } from "../../../../components/kaomoji";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
