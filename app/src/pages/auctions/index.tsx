@@ -1,10 +1,13 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../components/button";
 import Container from "../../components/container";
 import { Input } from "../../components/input";
+import KaoMojiCard from "../../components/kaomoji";
 import useAuctions, { Auction } from "../../hooks/useAuctions";
 import { useContracts } from "../../hooks/useContracts";
+import { KaoMoji } from "../../hooks/useKaoMoji";
 import { useSigner } from "../../hooks/useSigner";
 
 export default function Auctions() {
@@ -35,6 +38,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
     const signer = useSigner()
     const [bidAmount, setBidAmount] = useState<BigNumber>()
     const [allowance, setAllowance] = useState<BigNumber>()
+    const [kaomoji, setKaomoji] = useState<KaoMoji>()
 
     const nowTimeStamp = BigNumber.from(Math.round((Date.now() / 1000)))
     const endOfAuction = auction?.firstBidTime?.add(auction.duration)
@@ -43,11 +47,23 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
 
     const getAuction = useCallback(async () => {
         const auctionData = await contracts?.auction.auctions(props.auction.auctionId)
+        if (!auctionData) return
 
+        //const kaoFilter = contracts?.moji?.filters?.Transfer(ethers.constants.AddressZero, undefined, auctionData.tokenId)
+        const tokenData = await contracts?.moji.getDataOf(auctionData.tokenId)
+        // const kao = (await contracts?.moji?.queryFilter(kaoFilter))?.map(x=>x.args)?.find(x => x.tokenId.toString().toLowerCase() == auctionData.tokenId?.toString().toLowerCase())
+        // console.log('KAO', kao)
+        // tokenId: auctionData?.tokenId ?? BigNumber.from('0'),
+        // tokenContract: auctionData?.tokenContract ?? ''
+        setKaomoji({
+            id: auctionData.tokenId,
+            data: tokenData
+        })
         setAuction({
             ...auction,
             amount: auctionData?.amount ?? BigNumber.from('0'),
             firstBidTime: auctionData?.firstBidTime ?? BigNumber.from('0'),
+
         })
 
     }, [auction, contracts, props.auction.auctionId])
@@ -101,6 +117,10 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
             </div>}
             <div>
                 Amount {auction.amount?.toString()}
+            </div>
+            
+            <div>
+                <KaoMojiCard data={kaomoji?.data && ethers.utils.toUtf8String(kaomoji?.data)} />
             </div>
             {
                 auction && started &&

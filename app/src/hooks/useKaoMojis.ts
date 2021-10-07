@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContracts } from "./useContracts";
 
@@ -11,8 +11,7 @@ export default function useKaoMoji() {
     const contracts = useContracts()
     const getKaoDao = useMemo(() => async () => {
         if (!contracts) return
-        const filter = contracts.moji?.filters?.Transfer()
-
+        const filter = contracts.moji?.filters?.Transfer(ethers.constants.AddressZero)
         if (filter) {
             const result: { id: BigNumber }[] = (await contracts.moji?.queryFilter(filter))
                 .reduce((items: any[], { args: item }) => {

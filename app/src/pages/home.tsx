@@ -30,9 +30,9 @@ export default function HomePage() {
             </div>
             <br />
             <div>
-                {
+                {/* {
                     kaoMojis.map(x => (<KaoMoji key={x.id.toString()} item={x} />))
-                }
+                } */}
             </div>
         </div>
     )
