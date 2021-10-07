@@ -1,6 +1,6 @@
 import Container from "../container";
 
-export default function KaoMojiCard({ data }: { data?: string }) {
+export default function KaoMojiFrame({ data }: { data?: string }) {
 
     return (
         <div

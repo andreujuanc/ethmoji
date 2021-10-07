@@ -1,5 +1,6 @@
 import { ethers } from "ethers"
 import Button from "../components/button"
+import KaoMojiFrame from "../components/kaomoji"
 import KaoMoji from "../components/kaomoji"
 import { useContracts } from "../hooks/useContracts"
 import useKaoMoji from "../hooks/useKaoMojis"
@@ -31,7 +32,7 @@ export default function HomePage() {
             <br />
             <div>
                 {/* {
-                    kaoMojis.map(x => (<KaoMoji key={x.id.toString()} item={x} />))
+                    kaoMojis.map(x => (<KaoMojiCard key={x.id.toString()} item={x} />))
                 } */}
             </div>
         </div>

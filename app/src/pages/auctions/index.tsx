@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Button from "../../components/button";
 import Container from "../../components/container";
 import { Input } from "../../components/input";
-import KaoMojiCard from "../../components/kaomoji";
+import KaoMojiFrame from "../../components/kaomoji";
 import useAuctions, { Auction } from "../../hooks/useAuctions";
 import { useContracts } from "../../hooks/useContracts";
 import { KaoMoji } from "../../hooks/useKaoMoji";
@@ -120,7 +120,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
             </div>
             
             <div>
-                <KaoMojiCard data={kaomoji?.data && ethers.utils.toUtf8String(kaomoji?.data)} />
+                <KaoMojiFrame data={kaomoji?.data && ethers.utils.toUtf8String(kaomoji?.data)} />
             </div>
             {
                 auction && started &&

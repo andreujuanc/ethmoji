@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import Container from "../../../../components/container";
-import KaoMojiCard from "../../../../components/kaomoji";
+import KaoMojiFrame from "../../../../components/kaomoji";
 import { useBlockNumber } from "../../../../hooks/useBlockNumber";
 import { useContracts } from "../../../../hooks/useContracts";
 import { Proposal } from "../../../../hooks/useProposals";
@@ -109,7 +109,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                 fontSize: '2rem',
                 textAlign: 'center'
             }}>
-                <KaoMojiCard data={proposal.description.toString()} />
+                <KaoMojiFrame data={proposal.description.toString()} />
             </div>
 
             {(proposalState === ProposalState.Pending && currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
