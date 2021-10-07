@@ -10,6 +10,7 @@ import { useSigner } from "../../hooks/useSigner";
 export default function Auctions() {
     const auctions = useAuctions()
 
+
     return (
         <div style={{
             maxWidth: '600px',
@@ -34,6 +35,11 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
     const signer = useSigner()
     const [bidAmount, setBidAmount] = useState<BigNumber>()
     const [allowance, setAllowance] = useState<BigNumber>()
+
+    const nowTimeStamp = BigNumber.from(Math.round((Date.now() / 1000)))
+    const endOfAuction = auction?.firstBidTime?.add(auction.duration)
+    const started = auction?.firstBidTime?.eq(0) || (endOfAuction && nowTimeStamp.lt(endOfAuction))
+    const ended = auction?.firstBidTime?.gt(0) && (endOfAuction && nowTimeStamp.gt(endOfAuction))
 
     const getAuction = useCallback(async () => {
         const auctionData = await contracts?.auction.auctions(props.auction.auctionId)
@@ -74,7 +80,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
         await tx?.wait()
     }
 
-    const claim = async ()=>{
+    const claim = async () => {
         const tx = await contracts?.auction.endAuction(auction.auctionId)
         await tx?.wait()
     }
@@ -87,14 +93,17 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
             <div>
                 Token Id {auction.tokenId?.toString()}
             </div>
-            <div>
-                Duration {auction.duration?.toString()}
-            </div>
+            {started && !ended && <div>
+                Ends in {endOfAuction && endOfAuction.sub(nowTimeStamp).div(60).toString() + 'min'}
+            </div>}
+            {ended && <div>
+                Auction Ended!
+            </div>}
             <div>
                 Amount {auction.amount?.toString()}
             </div>
             {
-                (auction && (auction.firstBidTime.eq(0) || BigNumber.from(Date.now()).lt(auction.firstBidTime.add(auction.duration)))) &&
+                auction && started &&
                 <div>
                     <Input type={"number"}
                         placeholder={auction.reservePrice?.toString()}
@@ -108,13 +117,13 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
                         }}
                         value={bidAmount?.toString() ?? ""} />
                     {bidAmount && bidAmount?.gt(0) && allowance && allowance?.lt(bidAmount) && <Button onClick={increaseAllowance} >Increase allowance</Button>}
-                    {bidAmount && allowance?.gte(bidAmount)
-                        && <Button onClick={placeBid} disabled={!bidAmount || !bidAmount?.gt(0)} >Place Bid</Button>}
+                    {
+                        (!bidAmount || (bidAmount && allowance?.gte(bidAmount)))
+                        && <Button onClick={placeBid} disabled={!bidAmount || !bidAmount?.gt(0)} >Place Bid</Button>
+                    }
                 </div>
             }
-            {
-                <Button onClick={claim} >Claim</Button>
-            }
+            {ended && <Button onClick={claim} >Claim</Button>}
         </Container>
     )
 }
