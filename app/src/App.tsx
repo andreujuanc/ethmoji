@@ -3,11 +3,12 @@ import { ethers } from 'ethers'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { Layout } from './layout'
 import HomePage from './pages/home'
-import Proposals from './pages/proposals'
+import ProposalsPage from './pages/proposals'
 
 import './App.css'
 import Auctions from './pages/auctions'
 import BuyKaoPage from './pages/buy'
+import GalleryPage from './pages/gallery'
 
 function getLibrary(provider: any, connector: any) {
   console.log('getLibrary', provider, connector)
@@ -25,8 +26,13 @@ export default function App() {
             <Route exact path="/" >
               <HomePage />
             </Route>
+
+            <Route exact path="/gallery" >
+              <GalleryPage />
+            </Route>
+
             <Route exact path="/proposals" >
-              <Proposals />
+              <ProposalsPage />
             </Route>
 
             <Route exact path="/auctions" >

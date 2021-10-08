@@ -2,7 +2,7 @@ import ProposalItem from "./parts/item";
 import useProposals from "../../hooks/useProposals";
 import Propose from './parts/propose';
 
-export default function Proposals() {
+export default function ProposalsPage() {
     const proposals = useProposals()
 
     return (
