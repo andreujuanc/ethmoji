@@ -4,6 +4,7 @@ import { KaoMojiCard } from "../components/kaomoji"
 import { useContracts } from "../hooks/useContracts"
 import useKaoMoji from "../hooks/useKaoMojis"
 import { useSigner } from "../hooks/useSigner"
+import { Logo } from "../components/logo"
 
 export default function HomePage() {
     const kaoMojis = useKaoMoji()
@@ -20,13 +21,7 @@ export default function HomePage() {
     console.log("kaoMojis", kaoMojis)
     return (
         <div>
-            <h1 style={{
-                fontWeight: 'normal',
-                fontSize: '6rem',
-                textAlign: 'center'
-            }}>
-                Eth Moji
-            </h1>
+            <Logo />
             <div>
                 <Button onClick={mint}  >
                     Test Mint
@@ -43,3 +38,5 @@ export default function HomePage() {
         </div>
     )
 }
+
+
