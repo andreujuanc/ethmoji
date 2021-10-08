@@ -79,7 +79,7 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
     useEffect(() => {
         getAuction()
         getAllowance()
-    }, [signer])
+    }, [signer, getAuction, getAllowance])
 
     const placeBid = async () => {
         if (!bidAmount) return

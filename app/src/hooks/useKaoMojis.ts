@@ -39,7 +39,7 @@ export default function useKaoMojis(ownedOnly: boolean) {
                 }, [])
 
             if (ownedOnly ) {
-                setKaomojis(tokens.filter(x => x.owner.toLowerCase() == address))
+                setKaomojis(tokens.filter(x => x.owner.toLowerCase() === address))
             }
             else {
                 setKaomojis(tokens)
@@ -47,7 +47,7 @@ export default function useKaoMojis(ownedOnly: boolean) {
 
         }
 
-    }, [contracts])
+    }, [contracts, ownedOnly, signer])
 
     useEffect(() => {
         getKaoDao()

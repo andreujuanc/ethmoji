@@ -23,10 +23,6 @@ export default function Connect() {
         await deactivate()
     }
 
-    const onChainChanged = () => {
-
-    }
-
     const formattedAccount = useMemo(() => {
         return `${account?.substr(0, 6)}...${account?.substr(account.length - 4, 4)}`
     }, [account])

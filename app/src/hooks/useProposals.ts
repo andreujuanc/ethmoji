@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ProposalCreatedEvent } from "../contracts/KaoDao";
 import { useContracts } from "./useContracts";
 
 export type Proposal = {
@@ -27,22 +28,26 @@ export default function useProposals() {
                 ...x.args
             })) ?? []
 
-                
+
             setProposals(proposals.sort((a, b) => b?.startBlock.toNumber() - a?.startBlock?.toNumber()))
         }
 
     }, [contracts])
 
-    const subscribeToProposalCreated = ()=>{
-        return ()=>{
+    const subscribeToProposalCreated = useCallback(() => {
+        getKaoDao()
+        contracts?.dao.on('ProposalCreated', (e: ProposalCreatedEvent) => {
+            console.log('proposalId', e.proposalId)
+            getKaoDao()
+        })
+        return () => {
             console.log('CLEANUP')
         }
-    }
+    }, [contracts, getKaoDao])
 
     useEffect(() => {
-        getKaoDao()
         return subscribeToProposalCreated()
-    }, [contracts, getKaoDao])
+    }, [contracts, subscribeToProposalCreated])
 
     return proposals
 }

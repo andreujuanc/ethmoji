@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers"
+import { BigNumber } from "ethers"
 import Button from "../../components/button"
 import { useContracts } from "../../hooks/useContracts"
 import { useSigner } from "../../hooks/useSigner"
@@ -31,7 +31,7 @@ export default function BuyKaoPage() {
     const signer = useSigner()
     const { active, chainId } = useWeb3React()
     const contracts = useContracts()
-    const paraSwap = useMemo(() => chainId && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, [active, chainId]);
+    const paraSwap = useMemo(() => (chainId && active) && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, [active, chainId]);
     const [operation, setOperation] = useState<SwapOperation>()
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
@@ -63,13 +63,13 @@ export default function BuyKaoPage() {
 
         const tx = await signer.sendTransaction(txParams);
         await tx.wait()
-        
+
     }
 
     const loadTokenList = useCallback(async () => {
         const tokens = await paraSwap?.getTokens()
-        
-        if (tokens && Array.isArray(tokens)) {
+
+        if (tokens && Array.isArray(tokens) && chainId) {
 
             setTokenList(tokens.map(x => ({
                 address: x.address,
@@ -86,7 +86,7 @@ export default function BuyKaoPage() {
         setOperation({
             buy: true
         })
-    }, [paraSwap, chainId])
+    }, [paraSwap, chainId, loadTokenList])
 
     const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO' }
 
@@ -122,11 +122,11 @@ export default function BuyKaoPage() {
             operation.fromAmount.toString(),
         );
         console.log('Prices', priceRoute)
-    }, [])
+    }, [operation?.from?.address, operation?.fromAmount, operation?.to?.address, paraSwap])
 
     useEffect(() => {
         calculateRate()
-    }, [operation?.fromAmount])
+    }, [operation?.fromAmount, calculateRate])
 
     const onSourceAmountChanged = (value?: BigNumber) => {
         if (!operation) return
@@ -182,13 +182,13 @@ function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amou
                 value={token}
                 renderValue={(value) => (
                     <div className={'token-component'}>
-                        {value?.icon ? <img height={"25"} src={value.icon} /> : <span>:D</span>}
+                        {value?.icon ? <img height={"25"} src={value.icon} alt={value.symbol} /> : <span>:D</span>}
                         {value?.symbol.toUpperCase() ?? '---'}
                     </div>
                 )}
                 renderSelectItem={(item) => (
                     <div className={'token-component'}>
-                        {item?.icon ? <img height={"25"} src={item.icon} /> : <span>:D</span>}
+                        {item?.icon ? <img height={"25"} src={item.icon} alt={item.symbol} /> : <span>:D</span>}
                         {item?.symbol.toUpperCase() ?? '---'}
                     </div>
                 )}

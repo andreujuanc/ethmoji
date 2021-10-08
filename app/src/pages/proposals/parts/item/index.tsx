@@ -64,7 +64,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
         const { againstVotes, forVotes, abstainVotes } = await contracts.dao.proposalVotes(proposal.proposalId)
         setVotes({ againstVotes, forVotes, abstainVotes })
-    }, [contracts, provider, proposal, currentBlockNumber])
+    }, [contracts, provider, proposal])
 
     const execute = async () => {
         if (!contracts) return

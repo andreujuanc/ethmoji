@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useContracts } from "./useContracts";
 import { KaoMojiId } from "./useKaoMojis";
 import { useSigner } from "./useSigner";
@@ -17,10 +17,10 @@ export function useEnhanceKaoMoji(item: KaoMojiId) {
         owner: item.owner
     })
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         const account = await signer?.getAddress()
         if (!account) return
-        const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() == account.toLowerCase()
+        const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() === account.toLowerCase()
         const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
         const data = ethers.utils.toUtf8String(bytesToData)
         setKaoMoji({
@@ -28,7 +28,7 @@ export function useEnhanceKaoMoji(item: KaoMojiId) {
             owned,
             data
         })
-    }
+    }, [contracts?.moji, item.id, kaoMoji, signer])
 
     useEffect(() => {
         getData()

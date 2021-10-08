@@ -1,10 +1,5 @@
-import { ethers } from "ethers"
-import Button from "../../components/button"
 import { KaoMojiCard } from "../../components/kaomoji"
-import { useContracts } from "../../hooks/useContracts"
 import useKaoMojis from "../../hooks/useKaoMojis"
-import { useSigner } from "../../hooks/useSigner"
-import { Logo } from "../../components/logo"
 
 export default function GalleryPage() {
     const kaoMojis = useKaoMojis(false)

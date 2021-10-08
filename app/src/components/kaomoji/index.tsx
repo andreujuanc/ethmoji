@@ -1,5 +1,4 @@
 import { KaoMojiItem, useEnhanceKaoMoji } from "../../hooks/useKaoMoji";
-import { KaoMojiId } from "../../hooks/useKaoMojis";
 import Container from "../container";
 
 export function KaoMojiFrame({ data }: { data?: string }) {
