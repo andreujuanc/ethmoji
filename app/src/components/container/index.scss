@@ -1,7 +1,7 @@
 .container {
   margin-bottom: 1.25rem;
   margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-right: calc(0.5rem + 5px);
   border: solid 5px #181818;
   padding: 1rem;
   background-color: #444;

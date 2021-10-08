@@ -19,6 +19,12 @@ export default function Propose() {
     }
 
     const proposeKao = async () => {
+        const delay = () => new Promise(function (resolve) {
+            setTimeout(resolve, 50000);
+        })
+
+        await delay()
+        if (1 - 1 === 0) return
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
         const data = ethers.utils.toUtf8Bytes(proposalData)
@@ -37,7 +43,10 @@ export default function Propose() {
 
     // Check if holding tokens but voting power is zero to show the self delegate button
     return (
-        <div>
+        <div style={{
+            margin: '0 calc(0.5rem + 0px)',
+            display: 'flex'
+        }}>
             <Input value={proposalData} onChange={setProposalData} placeholder={'ಠ╭╮ಠ'} type="text" />
             <Button onClick={proposeKao} >Propose Kao</Button>
             <Button onClick={selfDelegate} >SelfDelegate</Button>

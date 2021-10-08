@@ -29,8 +29,14 @@ export default function Button(props: ButtonProps) {
     }
 
     return (
-        <button disabled={props.disabled} style={{lineHeight: props.lineHeight ?? '1.5'}} className={"button white-shadow-1 " + (props.className ?? '')} onClick={onClick}>
+        <button
+            disabled={props.disabled}
+            style={{ lineHeight: props.lineHeight ?? '1.5' }}
+            className={"button white-shadow-1 " + (props.className ?? '') + (clicking ? ' clicking' : "")} onClick={onClick}
+        >
             {props.children}
+
+            { clicking && <><span className="dot one">.</span><span className="dot two">.</span><span className="dot three">.</span></> }
         </button>
     )
 }

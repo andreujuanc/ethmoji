@@ -1,6 +1,5 @@
 import { BigNumber } from "ethers";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ProposalCreatedEvent } from "../contracts/KaoDao";
 import { useContracts } from "./useContracts";
 
 export type Proposal = {
