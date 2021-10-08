@@ -13,23 +13,29 @@ export default function HomePage() {
     const mint = async () => {
         const address = await signer?.getAddress()
         if (!address) return
-        const data = ethers.utils.toUtf8Bytes('HOLA')
+        const data = ethers.utils.toUtf8Bytes('(＃°Д°)')
         await contracts?.moji.mint(data)
 
     }
     console.log("kaoMojis", kaoMojis)
     return (
         <div>
-            <div>
-                Home Page
-            </div>
+            <h1 style={{
+                fontWeight: 'normal',
+                fontSize: '6rem',
+                textAlign: 'center'
+            }}>
+                Eth Moji
+            </h1>
             <div>
                 <Button onClick={mint}  >
                     Test Mint
                 </Button>
             </div>
             <br />
-            <div>
+            <div style={{
+                display: 'flex'
+            }}>
                 {
                     kaoMojis.map(x => (<KaoMojiCard key={x.id.toString()} item={x} />))
                 }

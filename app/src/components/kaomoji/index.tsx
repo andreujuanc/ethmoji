@@ -10,7 +10,7 @@ export function KaoMojiFrame({ data }: { data?: string }) {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'center',
-                padding: '1.5rem'
+                padding: '1rem'
             }}
         >
             <Container style={{
@@ -30,7 +30,11 @@ export function KaoMojiCard({ item }: { item: KaoMojiItem }) {
     const kao = useEnhanceKaoMoji(item)
 
     return (
-        <Container>
+        <Container style={{
+            width: '250px',
+            height: '230px'
+        }}>
+            <div>#{item.id.toString()}</div>
             <KaoMojiFrame data={kao.data} />
         </Container>
 
