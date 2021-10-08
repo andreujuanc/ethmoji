@@ -52,7 +52,6 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
         //const kaoFilter = contracts?.moji?.filters?.Transfer(ethers.constants.AddressZero, undefined, auctionData.tokenId)
         const tokenData = await contracts?.moji.getDataOf(auctionData.tokenId)
         // const kao = (await contracts?.moji?.queryFilter(kaoFilter))?.map(x=>x.args)?.find(x => x.tokenId.toString().toLowerCase() == auctionData.tokenId?.toString().toLowerCase())
-        // console.log('KAO', kao)
         // tokenId: auctionData?.tokenId ?? BigNumber.from('0'),
         // tokenContract: auctionData?.tokenContract ?? ''
         setKaomoji({
@@ -74,7 +73,6 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
         if (!account) return
 
         const allowance = await contracts?.token.allowance(account, contracts.auction.address)
-        console.log('allowance', allowance)
         setAllowance(allowance)
     }, [signer, contracts])
 

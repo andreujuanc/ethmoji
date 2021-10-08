@@ -33,8 +33,15 @@ export default function useProposals() {
 
     }, [contracts])
 
+    const subscribeToProposalCreated = ()=>{
+        return ()=>{
+            console.log('CLEANUP')
+        }
+    }
+
     useEffect(() => {
         getKaoDao()
+        return subscribeToProposalCreated()
     }, [contracts, getKaoDao])
 
     return proposals

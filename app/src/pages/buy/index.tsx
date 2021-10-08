@@ -36,7 +36,6 @@ export default function BuyKaoPage() {
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
     const swap = async () => {
-        console.log('operation', operation)
         const address = await signer?.getAddress()
         if (!address || !paraSwap || !signer) return
         if (!operation?.from?.address || !operation?.to?.address) return
@@ -50,7 +49,7 @@ export default function BuyKaoPage() {
         const senderAddress = address;
         const receiver = address;
         const referrer = 'ethmoji';
-        console.log('SENDING')
+
         const txParams = await paraSwap.buildTx(
             srcToken,
             destToken,
@@ -64,12 +63,12 @@ export default function BuyKaoPage() {
 
         const tx = await signer.sendTransaction(txParams);
         await tx.wait()
-        console.log('SENT')
+        
     }
 
     const loadTokenList = useCallback(async () => {
         const tokens = await paraSwap?.getTokens()
-        console.log('tokens', tokens)
+        
         if (tokens && Array.isArray(tokens)) {
 
             setTokenList(tokens.map(x => ({
