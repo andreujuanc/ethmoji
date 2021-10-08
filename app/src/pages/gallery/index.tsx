@@ -7,9 +7,7 @@ import { useSigner } from "../../hooks/useSigner"
 import { Logo } from "../../components/logo"
 
 export default function GalleryPage() {
-    const kaoMojis = useKaoMojis(true)
-    const signer = useSigner()
-    const contracts = useContracts()
+    const kaoMojis = useKaoMojis(false)
 
     return (
         <div>
