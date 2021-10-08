@@ -41,7 +41,7 @@
   background-color: #CCC;
   transform: translateX(3px) translateY(3px);
   text-align: center;
-  
+  cursor: not-allowed;
   .dot {
     animation: showHideDot 1s cubic-bezier(1,-1,1,-1) infinite;
 
