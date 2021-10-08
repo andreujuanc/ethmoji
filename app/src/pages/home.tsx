@@ -18,15 +18,10 @@ export default function HomePage() {
         await contracts?.moji.mint(data)
 
     }
-    console.log("kaoMojis", kaoMojis)
+    
     return (
         <div>
             <Logo />
-            <div>
-                <Button onClick={mint}  >
-                    Test Mint
-                </Button>
-            </div>
             <br />
             <div style={{
                 display: 'flex'
