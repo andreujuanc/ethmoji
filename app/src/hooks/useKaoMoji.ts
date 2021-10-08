@@ -13,7 +13,8 @@ export function useEnhanceKaoMoji(item: KaoMojiId) {
     const contracts = useContracts()
     const signer = useSigner()
     const [kaoMoji, setKaoMoji] = useState<KaoMojiItem>({
-        id: item.id
+        id: item.id,
+        owner: item.owner
     })
 
     const getData = async () => {

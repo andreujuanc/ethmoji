@@ -57,7 +57,8 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
         // tokenContract: auctionData?.tokenContract ?? ''
         setKaomoji({
             id: auctionData.tokenId,
-            data: tokenData
+            data: tokenData,
+            owner: ''
         })
         setAuction({
             ...auction,
