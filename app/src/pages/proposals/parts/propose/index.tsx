@@ -19,12 +19,12 @@ export default function Propose() {
     }
 
     const proposeKao = async () => {
-        const delay = () => new Promise(function (resolve) {
-            setTimeout(resolve, 50000);
-        })
+        // const delay = () => new Promise(function (resolve) {
+        //     setTimeout(resolve, 50000);
+        // })
 
-        await delay()
-        if (1 - 1 === 0) return
+        // await delay()
+        // if (1 - 1 === 0) return
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
         const data = ethers.utils.toUtf8Bytes(proposalData)

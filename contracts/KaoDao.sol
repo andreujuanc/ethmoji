@@ -14,8 +14,7 @@ contract KaoDao is Governor, GovernorCountingSimple, GovernorVotes, GovernorVote
     {}
 
     function votingDelay() public pure override returns (uint256) {
-        return  20; //
-            //273; // 1 hour
+        return 273; // 1 hour
     }
 
     function votingPeriod() public pure override returns (uint256) {

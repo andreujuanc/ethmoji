@@ -34,7 +34,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     const provider = useSigner()
     const currentBlockNumber = useBlockNumber()
     const [voted, setVoted] = useState<boolean>()
-    const [proposalState, setState] = useState<ProposalState>()
+    const [proposalState, setProposalState] = useState<ProposalState>()
     const [votes, setVotes] = useState<{ againstVotes: BigNumber, forVotes: BigNumber, abstainVotes: BigNumber }>()
 
     const vote = async (support: VoteType) => {
@@ -50,8 +50,8 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
         }
     }
 
-    const hasVoted = useCallback(async () => {
-        if (!contracts) return
+    const hasVoted = useCallback(async (currentBlockNumber?: number) => {
+        if (!contracts || !currentBlockNumber) return
         const account = await provider?.getAddress()
 
         if (!account) return
@@ -60,7 +60,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
         setVoted(hasVoted)
 
         const state = await contracts.dao.state(proposal.proposalId) as ProposalState
-        setState(state)
+        setProposalState(state)
 
         const { againstVotes, forVotes, abstainVotes } = await contracts.dao.proposalVotes(proposal.proposalId)
         setVotes({ againstVotes, forVotes, abstainVotes })
@@ -68,7 +68,6 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
     const execute = async () => {
         if (!contracts) return
-        debugger;
         const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(proposal.description))
         // TODO: For some reason values comes empty array in the prop
         const executionTx = await contracts.dao.execute(
@@ -95,12 +94,25 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
     }, [contracts])
 
     useEffect(() => {
-        hasVoted()
+        hasVoted(currentBlockNumber)
         getProposalVotes()
-    }, [hasVoted, getProposalVotes, provider, contracts])
+    }, [hasVoted, getProposalVotes, provider, contracts, currentBlockNumber])
+
+    const ProposalStateComponent = (currentBlockNumber?: number, state?: ProposalState) => {
+        if (currentBlockNumber && proposal.startBlock.gt(currentBlockNumber))
+            return <div>Starts in {currentBlockNumber && proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
+        if (currentBlockNumber && state === ProposalState.Active)
+            return <div>Voting ends in {proposal.endBlock.sub(currentBlockNumber).toString()} blocks</div>
+        if (currentBlockNumber && proposal.endBlock.lt(currentBlockNumber))
+            return <div>Ended  {proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
+        return null
+    }
 
     return (
         <Container>
+            {/* <div>{proposalState}</div>
+            <div>{proposal.startBlock.toString()}</div>
+            <div>{currentBlockNumber}</div> */}
             <div>Proposal: {proposal.proposalId.toString().substring(0, 5)}...{proposal.proposalId.toString().substr(proposal.proposalId.toString().length - 5, 5)}</div>
             {/* <div>{proposal.proposer.toString()}</div> */}
             <div style={{
@@ -110,14 +122,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             }}>
                 <KaoMojiFrame data={proposal.description.toString()} />
             </div>
-
-            {(proposalState === ProposalState.Pending && currentBlockNumber && proposal.startBlock.gt(currentBlockNumber)) ? (
-                <div>Starts in {currentBlockNumber && proposal.startBlock.sub(currentBlockNumber).toString()} blocks</div>
-            ) :
-                (currentBlockNumber && proposal.endBlock.lt(currentBlockNumber)) ? (
-                    <div>Ended  {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
-                ) : (<div>Voting ends in {currentBlockNumber && proposal.endBlock.sub(currentBlockNumber).toString()} blocks</div>)
-            }
+            {ProposalStateComponent(currentBlockNumber, proposalState)}
             <br />
             {(proposalState === ProposalState.Active) &&
                 <div className={'voteOptions'}>
@@ -146,9 +151,9 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
             {
                 votes && (<div>
-                    <div>For: {votes.forVotes.toString()}</div>
-                    <div>Against: {votes.againstVotes.toString()}</div>
-                    <div>Abstain: {votes.abstainVotes.toString()}</div>
+                    <div>For: {ethers.utils.formatUnits(votes.forVotes.toString(), 18)}</div>
+                    <div>Against: {ethers.utils.formatUnits(votes.againstVotes.toString(), 18)}</div>
+                    <div>Abstain: {ethers.utils.formatUnits(votes.abstainVotes.toString(), 18)}</div>
                 </div>)
             }
         </Container>
