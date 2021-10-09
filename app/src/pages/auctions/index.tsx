@@ -152,12 +152,12 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
                         marginTop: '1rem',
                         textAlign: 'center'
                     }}>
-                        {auction?.isSelf === true && '(⌐■_■) You are the top bidder'}
+                        {auction?.isSelf === true && '( $ _ $ ) You are the top bidder'}
                         {auction?.isSelf === false && 'ಠ╭╮ಠ You are not the top bidder'}
                     </div>
                 </div>
             }
-            {ended && <Button onClick={claim} >Claim</Button>}
+            {ended && auction?.isSelf && <Button onClick={claim} >Claim</Button>}
         </Container>
     )
 }
