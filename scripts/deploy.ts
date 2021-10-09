@@ -24,7 +24,8 @@ async function main() {
   const KaoDao = await ethers.getContractFactory("KaoDao");
   const kaoDao = await KaoDao.deploy(kaoToken.address);
   await kaoDao.deployed();
-
+  
+  await kaoDao.setKaoMojiAddress(kaoMoji.address);
 
   const minterRole = await kaoMoji.MINTER_ROLE()
   await kaoMoji.grantRole(minterRole, kaoDao.address)
