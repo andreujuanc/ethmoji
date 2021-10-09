@@ -22,25 +22,16 @@ npm run start
 - Should we burn the auction winning bid?
 - Check data for invalid characters \n\r\t
 
-# Utils
-```
-npm run local:deploy:zora --chainId=31337
-```
-
 ### Faucet
  ```
  npx hardhat --network localhost faucet <ADDRESS> <AMOUNT>
  ```
 
-
- ### Cool things to see if fit
+ ### Cool things I managed to integrate
  - Auction
     - Zora https://github.com/ourzora/auction-house
- 
- - Storage 
-    - IPFS
-    - Textile https://eth.storage/docs/
+      - Copied the AuctionHouse contract into the repo and used it.
 
- - AMM with sdks (time is of the essence )
+ - AMM with sdks
     - Paraswap
-    - Uniswap
+      - Used SDK to build a swap feature for KAO pairs 
