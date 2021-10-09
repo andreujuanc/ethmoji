@@ -22,13 +22,18 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface KaoDaoInterface extends ethers.utils.Interface {
   functions: {
+    "ADDRESS_UPDATER()": FunctionFragment;
     "BALLOT_TYPEHASH()": FunctionFragment;
     "COUNTING_MODE()": FunctionFragment;
+    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "castVote(uint256,uint8)": FunctionFragment;
     "castVoteBySig(uint256,uint8,uint8,bytes32,bytes32)": FunctionFragment;
     "castVoteWithReason(uint256,uint8,string)": FunctionFragment;
     "execute(address[],uint256[],bytes[],bytes32)": FunctionFragment;
+    "getRoleAdmin(bytes32)": FunctionFragment;
     "getVotes(address,uint256)": FunctionFragment;
+    "grantRole(bytes32,address)": FunctionFragment;
+    "hasRole(bytes32,address)": FunctionFragment;
     "hasVoted(uint256,address)": FunctionFragment;
     "hashProposal(address[],uint256[],bytes[],bytes32)": FunctionFragment;
     "name()": FunctionFragment;
@@ -39,6 +44,9 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "quorum(uint256)": FunctionFragment;
     "quorumDenominator()": FunctionFragment;
     "quorumNumerator()": FunctionFragment;
+    "renounceRole(bytes32,address)": FunctionFragment;
+    "revokeRole(bytes32,address)": FunctionFragment;
+    "setKaoMojiAddress(address)": FunctionFragment;
     "state(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "token()": FunctionFragment;
@@ -49,11 +57,19 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(
+    functionFragment: "ADDRESS_UPDATER",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "BALLOT_TYPEHASH",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "COUNTING_MODE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -73,8 +89,20 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     values: [string[], BigNumberish[], BytesLike[], BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRoleAdmin",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getVotes",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRole",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRole",
+    values: [BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "hasVoted",
@@ -113,6 +141,18 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "quorumNumerator",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "renounceRole",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeRole",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setKaoMojiAddress",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "state", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -134,11 +174,19 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "ADDRESS_UPDATER",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "BALLOT_TYPEHASH",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "COUNTING_MODE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "castVote", data: BytesLike): Result;
@@ -151,7 +199,13 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasVoted", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "hashProposal",
@@ -180,6 +234,15 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "quorumNumerator",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceRole",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setKaoMojiAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
@@ -205,6 +268,9 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)": EventFragment;
     "ProposalExecuted(uint256)": EventFragment;
     "QuorumNumeratorUpdated(uint256,uint256)": EventFragment;
+    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
+    "RoleGranted(bytes32,address,address)": EventFragment;
+    "RoleRevoked(bytes32,address,address)": EventFragment;
     "VoteCast(address,uint256,uint8,uint256,string)": EventFragment;
   };
 
@@ -212,6 +278,9 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ProposalCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "QuorumNumeratorUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteCast"): EventFragment;
 }
 
@@ -252,6 +321,22 @@ export type QuorumNumeratorUpdatedEvent = TypedEvent<
     oldQuorumNumerator: BigNumber;
     newQuorumNumerator: BigNumber;
   }
+>;
+
+export type RoleAdminChangedEvent = TypedEvent<
+  [string, string, string] & {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
+>;
+
+export type RoleGrantedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type RoleRevokedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
 >;
 
 export type VoteCastEvent = TypedEvent<
@@ -308,9 +393,13 @@ export class KaoDao extends BaseContract {
   interface: KaoDaoInterface;
 
   functions: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<[string]>;
+
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<[string]>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     castVote(
       proposalId: BigNumberish,
@@ -342,11 +431,25 @@ export class KaoDao extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+
     getVotes(
       account: string,
       blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     hasVoted(
       proposalId: BigNumberish,
@@ -402,6 +505,23 @@ export class KaoDao extends BaseContract {
 
     quorumNumerator(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setKaoMojiAddress(
+      kaoMoji: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     state(
       proposalId: BigNumberish,
       overrides?: CallOverrides
@@ -426,9 +546,13 @@ export class KaoDao extends BaseContract {
     votingPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
+  ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
+
   BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
   COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
+
+  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   castVote(
     proposalId: BigNumberish,
@@ -460,11 +584,25 @@ export class KaoDao extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
   getVotes(
     account: string,
     blockNumber: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  grantRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  hasRole(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   hasVoted(
     proposalId: BigNumberish,
@@ -520,6 +658,23 @@ export class KaoDao extends BaseContract {
 
   quorumNumerator(overrides?: CallOverrides): Promise<BigNumber>;
 
+  renounceRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  revokeRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setKaoMojiAddress(
+    kaoMoji: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   state(proposalId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
   supportsInterface(
@@ -541,9 +696,13 @@ export class KaoDao extends BaseContract {
   votingPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
+
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     castVote(
       proposalId: BigNumberish,
@@ -575,11 +734,25 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
     getVotes(
       account: string,
       blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     hasVoted(
       proposalId: BigNumberish,
@@ -634,6 +807,23 @@ export class KaoDao extends BaseContract {
     quorumDenominator(overrides?: CallOverrides): Promise<BigNumber>;
 
     quorumNumerator(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setKaoMojiAddress(
+      kaoMoji: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     state(proposalId: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
@@ -759,6 +949,60 @@ export class KaoDao extends BaseContract {
       { oldQuorumNumerator: BigNumber; newQuorumNumerator: BigNumber }
     >;
 
+    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
+    >;
+
+    RoleAdminChanged(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
+    >;
+
+    "RoleGranted(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    RoleGranted(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    "RoleRevoked(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    RoleRevoked(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
     "VoteCast(address,uint256,uint8,uint256,string)"(
       voter?: string | null,
       proposalId?: null,
@@ -795,9 +1039,13 @@ export class KaoDao extends BaseContract {
   };
 
   estimateGas: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<BigNumber>;
+
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     castVote(
       proposalId: BigNumberish,
@@ -829,9 +1077,26 @@ export class KaoDao extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getVotes(
       account: string,
       blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -883,6 +1148,23 @@ export class KaoDao extends BaseContract {
 
     quorumNumerator(overrides?: CallOverrides): Promise<BigNumber>;
 
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setKaoMojiAddress(
+      kaoMoji: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     state(
       proposalId: BigNumberish,
       overrides?: CallOverrides
@@ -908,9 +1190,15 @@ export class KaoDao extends BaseContract {
   };
 
   populateTransaction: {
+    ADDRESS_UPDATER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    DEFAULT_ADMIN_ROLE(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     castVote(
       proposalId: BigNumberish,
@@ -942,9 +1230,26 @@ export class KaoDao extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getVotes(
       account: string,
       blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -995,6 +1300,23 @@ export class KaoDao extends BaseContract {
     quorumDenominator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     quorumNumerator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setKaoMojiAddress(
+      kaoMoji: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     state(
       proposalId: BigNumberish,

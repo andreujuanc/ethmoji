@@ -48,11 +48,7 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
     {
 
         uint256 id = _totalSupply;
-        _safeMint(
-            //msg.sender,
-            address(this),
-            //address(_auctionHouse),
-             id, data);
+        _safeMint(address(this), id, data);
         _tokenData[id] = data;
 
         _approve(address(_auctionHouse), id);
