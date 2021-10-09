@@ -39,7 +39,7 @@ export default function useKaoMojis(ownedOnly: boolean) {
                 }, [])
 
             if (ownedOnly ) {
-                setKaomojis(tokens.filter(x => x.owner.toLowerCase() === address))
+                setKaomojis(tokens.filter(x => x.owner.toLowerCase() === address?.toLowerCase()))
             }
             else {
                 setKaomojis(tokens)
