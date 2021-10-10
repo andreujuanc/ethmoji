@@ -5,7 +5,8 @@ export function Input(props: {
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
-    type: "text" | "number"
+    type: "text" | "number",
+    readonly?: boolean
 }) {
     const [value, setValue] = useState(props.value)
 
@@ -21,6 +22,7 @@ export function Input(props: {
     }, [props.value])
 
     return <input className={'input'}
+        readOnly={props.readonly}
         value={value}
         type={props.type}
         onChange={(e) => {

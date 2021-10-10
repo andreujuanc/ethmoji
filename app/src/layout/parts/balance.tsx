@@ -1,6 +1,6 @@
 import { BigNumber, formatFixed } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useContracts } from "../../hooks/useContracts"
 import { useSigner } from "../../hooks/useSigner"
 import './balance.css'
@@ -28,7 +28,6 @@ export default function Balance() {
         getBalance()
         //const filter = contracts?.token.filters["Transfer(address,address,uint256)"]
         contracts?.token.on("Transfer(address,address,uint256)", getBalance)
-        console.log('BALANCE SUBSCRIBE')
         return () => {
             contracts?.token.off("Transfer(address,address,uint256)", getBalance)
         }

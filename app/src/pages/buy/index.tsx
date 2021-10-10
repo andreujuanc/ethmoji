@@ -78,6 +78,8 @@ export default function BuyKaoPage() {
         });
         await tx.wait()
 
+        setDestinationAmount(undefined)
+
     }
 
     const loadTokenList = useCallback(async () => {
@@ -118,7 +120,6 @@ export default function BuyKaoPage() {
 
 
     const calculateRate = useCallback(async () => {
-        console.log('calculateRate')
         if (!sourceOperation?.address ||
             !sourceAmount ||
             !destinationOperation?.address ||
@@ -150,7 +151,7 @@ export default function BuyKaoPage() {
 
         setDestinationAmount((priceRoute as OptimalRate)?.destAmount ? BigNumber.from((priceRoute as OptimalRate)?.destAmount) : undefined)
 
-    }, [sourceAmount, sourceOperation?.address, destinationOperation?.address, paraSwap])
+    }, [sourceAmount, sourceOperation?.address, destinationOperation?.address, paraSwap, destinationOperation?.decimals, sourceOperation?.decimals, signer])
 
     useEffect(() => {
         calculateRate()
@@ -192,12 +193,12 @@ export default function BuyKaoPage() {
                 Buy Kao (o゜▽゜)o☆
             </h3>
             <TokenItem token={sourceOperation} label={"You pay"} tokenList={tokenList} tokenSelected={(token) => onSourceTokenSelected(token)} amount={sourceAmount} amountChanged={(amount) => onSourceAmountChanged(amount)} />
-            <TokenItem token={destinationOperation} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} />
+            <TokenItem token={destinationOperation} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} readonly />
 
             <div style={{
                 marginTop: '1rem'
             }}>
-                <Button onClick={swap} disabled={!!operation?.error} >
+                <Button onClick={swap} disabled={!!operation?.error || !destinationAmount || destinationAmount.eq(0)} >
                     Buy
                 </Button>
                 <span style={{
@@ -210,7 +211,7 @@ export default function BuyKaoPage() {
     )
 }
 
-function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amount }:
+function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amount, readonly }:
     {
         token?: OperationToken,
         label: string,
@@ -218,6 +219,7 @@ function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amou
         tokenSelected: (selected?: OperationToken) => void,
         amount?: BigNumber,
         amountChanged: (value?: BigNumber) => void
+        readonly?: boolean
     }) {
 
 
@@ -227,7 +229,11 @@ function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amou
             {label}
         </div>
         <div className={'token-item'}>
-            <Input onChange={(value) => amountChanged(value ? BigNumber.from(parseUnits(value, token?.decimals ?? 18)) : undefined)} placeholder={"0"} type={"number"} value={amount ? formatUnits(amount.toString(), token?.decimals ?? 18) : ''} />
+            <Input onChange={(value) => amountChanged(value ? BigNumber.from(parseUnits(value, token?.decimals ?? 18)) : undefined)}
+                placeholder={"0"} type={"number"}
+                value={amount ? formatUnits(amount.toString(), token?.decimals ?? 18) : ''}
+                readonly={readonly}
+            />
             <Select
                 items={tokenList}
                 onChange={tokenSelected}

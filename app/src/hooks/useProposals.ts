@@ -37,7 +37,7 @@ export default function useProposals() {
         getKaoDao()
         contracts?.dao.on('ProposalCreated', getKaoDao)
         return () => {
-            //contracts?.dao.off('ProposalCreated', getKaoDao)
+            contracts?.dao.off('ProposalCreated', getKaoDao)
         }
     }, [contracts, getKaoDao])
 

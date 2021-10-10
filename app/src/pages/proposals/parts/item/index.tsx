@@ -64,7 +64,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
 
         const { againstVotes, forVotes, abstainVotes } = await contracts.dao.proposalVotes(proposal.proposalId)
         setVotes({ againstVotes, forVotes, abstainVotes })
-    }, [contracts, provider, proposal])
+    }, [contracts, provider, proposal, currentBlockNumber])
 
     const execute = async () => {
         if (!contracts) return
@@ -107,7 +107,8 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             return <div>Ended  {proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
         return null
     }
-
+    console.log('currentBlockNumber', currentBlockNumber)
+    console.log('proposalState', proposalState)
     return (
         <Container>
             {/* <div>{proposalState}</div>
