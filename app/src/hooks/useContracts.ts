@@ -30,7 +30,7 @@ export function useContracts() {
 
         setContracts({ dao, moji, token, auction })
 
-    }, [connector, library, active])
+    }, [connector, library, active, addresses])
 
     useEffect(() => {
         getKaoDao()

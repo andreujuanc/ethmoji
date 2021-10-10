@@ -10,7 +10,7 @@ import { APIError, ParaSwap } from 'paraswap';
 import { OptimalRate, SwapSide } from "paraswap-core";
 import { Select } from "../../components/select";
 import { Networks } from "../../core/networks";
-import { formatEther, formatUnits, parseUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
 
 type OperationToken = {
     address: string
@@ -94,7 +94,7 @@ export default function BuyKaoPage() {
 
 
         if (tokens && Array.isArray(tokens) && chainId) {
-            if (chainId == Networks.ROPSTEN) {
+            if (chainId === Networks.ROPSTEN) {
                 tokens.push({
                     address: '0x0D9C8723B343A8368BebE0B5E89273fF8D712e3C',
                     decimals: 6,

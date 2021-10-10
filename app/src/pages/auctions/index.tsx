@@ -68,10 +68,10 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
             amount: auctionData?.amount ?? BigNumber.from('0'),
             firstBidTime: auctionData?.firstBidTime ?? BigNumber.from('0'),
             bidder: auctionData?.bidder,
-            isSelf: auctionData.bidder?.toLowerCase() == account.toLowerCase()
+            isSelf: auctionData.bidder?.toLowerCase() === account.toLowerCase()
         })
 
-    }, [auction, contracts, props.auction.auctionId])
+    }, [signer, auction, contracts, props.auction.auctionId])
 
     const getAllowance = useCallback(async () => {
         const account = await signer?.getAddress()

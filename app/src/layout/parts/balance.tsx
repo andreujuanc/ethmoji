@@ -1,6 +1,5 @@
 import { BigNumber, formatFixed } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
-import { ethers } from "ethers"
 import { useCallback, useEffect, useState } from "react"
 import { useContracts } from "../../hooks/useContracts"
 import { useSigner } from "../../hooks/useSigner"
@@ -31,7 +30,7 @@ export default function Balance() {
             console.log('BALANCE CLEANUP')
             contracts?.dao.off(filter, getBalance)
         }
-    }, [getBalance, contracts, signer])
+    }, [getBalance, contracts, signer, account])
 
     const format = (value: BigNumber) => {
         if (!value) return value
