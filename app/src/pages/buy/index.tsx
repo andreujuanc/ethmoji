@@ -19,16 +19,6 @@ type OperationToken = {
     icon?: string
 }
 
-type SourceOperationData = {
-    from?: OperationToken
-    fromAmount?: BigNumber
-}
-
-type DestinationOperationData = {
-    to?: OperationToken
-    toAmount?: BigNumber
-}
-
 
 type SwapOperation = {
     optimalRate?: OptimalRate
@@ -40,23 +30,26 @@ export default function BuyKaoPage() {
     const { active, chainId } = useWeb3React()
     const contracts = useContracts()
     const paraSwap = useMemo(() => (chainId && active) && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, [active, chainId]);
-    const [sourceOperationData, setSourceOperationData] = useState<SourceOperationData>()
-    const [destinationOperationData, setDestinationOperationData] = useState<DestinationOperationData>()
+    const [sourceOperation, setSourceOperation] = useState<OperationToken>()
+    const [destinationOperation, setDestinationOperation] = useState<OperationToken>()
+    const [sourceAmount, setSourceAmount] = useState<BigNumber>()
+    const [destinationAmount, setDestinationAmount] = useState<BigNumber>()
+
     const [operation, setOperation] = useState<SwapOperation>()
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
     const swap = async () => {
         const address = await signer?.getAddress()
         if (!address || !paraSwap || !signer) return
-        if (!sourceOperationData?.from?.address || !destinationOperationData?.to?.address) return
-        if (!sourceOperationData?.fromAmount || !destinationOperationData.toAmount?.toString()) return
+        if (!sourceOperation?.address || !destinationOperation?.address) return
+        if (!sourceAmount || !destinationAmount?.toString()) return
         if (!operation?.optimalRate) return
         if (operation?.error) return
 
-        const srcToken = sourceOperationData.from.address;
-        const destToken = destinationOperationData.to.address;
-        const srcAmount = sourceOperationData.fromAmount.toString();
-        const destAmount = destinationOperationData.toAmount.toString();
+        const srcToken = sourceOperation.address;
+        const destToken = destinationOperation.address;
+        const srcAmount = sourceAmount.toString();
+        const destAmount = destinationAmount.toString();
         const senderAddress = address;
         const receiver = address;
         const referrer = 'ethmoji';
@@ -125,17 +118,18 @@ export default function BuyKaoPage() {
 
 
     const calculateRate = useCallback(async () => {
-        if (!sourceOperationData?.from?.address ||
-            !sourceOperationData?.fromAmount ||
-            !destinationOperationData?.to?.address ||
+        console.log('calculateRate')
+        if (!sourceOperation?.address ||
+            !sourceAmount ||
+            !destinationOperation?.address ||
             !paraSwap) return
 
         const address = await signer?.getAddress()
         if (!address) return
         const priceRoute = await paraSwap?.getRate(
-            sourceOperationData.from.address,
-            destinationOperationData.to.address,
-            sourceOperationData.fromAmount.toString(),
+            sourceOperation.address,
+            destinationOperation.address,
+            sourceAmount.toString(),
             address,
             SwapSide.SELL,
             {
@@ -144,8 +138,8 @@ export default function BuyKaoPage() {
                 // maxImpact: 100,
                 includeDEXS: 'UniswapV2' //'Uniswap, Kyber, Bancor, Oasis, Compound, Fulcrum, 0x, MakerDAO, Chai, ParaSwapPool, Aave, Aave2, MultiPath, MegaPath, Curve, Curve3, Saddle, IronV2, BDai, idle, Weth, Beth, UniswapV2, Balancer, 0xRFQt, ParaSwapPool2, ParaSwapPool3, ParaSwapPool4, ParaSwapPool5, ParaSwapPool6, SushiSwap, LINKSWAP, Synthetix, DefiSwap, Swerve, CoFiX, Shell, DODOV1, DODOV2, OnChainPricing, PancakeSwap, PancakeSwapV2, ApeSwap, Wbnb, acryptos, streetswap, bakeryswap, julswap, vswap, vpegswap, beltfi, ellipsis, QuickSwap, COMETH, Wmatic, Nerve, Dfyn, UniswapV3, Smoothy, PantherSwap, OMM1, OneInchLP, CurveV2, mStable, WaultFinance, MDEX, ShibaSwap, CoinSwap, SakeSwap, JetSwap, Biswap, BProtocol'
             },
-            sourceOperationData.from.decimals,
-            destinationOperationData.to.decimals
+            sourceOperation.decimals,
+            destinationOperation.decimals
         );
 
 
@@ -153,20 +147,17 @@ export default function BuyKaoPage() {
             optimalRate: (priceRoute as OptimalRate).contractMethod ? priceRoute as any : undefined,
             error: (priceRoute as APIError).message ? priceRoute as any : undefined
         })
-        setDestinationOperationData({
-            to: destinationOperationData.to,
-            toAmount: (priceRoute as OptimalRate)?.destAmount ? BigNumber.from((priceRoute as OptimalRate)?.destAmount) : undefined
-        })
 
-    }, [sourceOperationData?.from?.address, destinationOperationData?.to?.address, sourceOperationData?.fromAmount, paraSwap])
+        setDestinationAmount((priceRoute as OptimalRate)?.destAmount ? BigNumber.from((priceRoute as OptimalRate)?.destAmount) : undefined)
+
+    }, [sourceAmount, sourceOperation?.address, destinationOperation?.address, paraSwap])
 
     useEffect(() => {
         calculateRate()
-    }, [sourceOperationData, calculateRate])
+    }, [sourceAmount, sourceOperation?.address, destinationOperation?.address, calculateRate])
 
     function onSourceAmountChanged(value?: BigNumber) {
-        if (!sourceOperationData) return
-        setSourceOperationData({ ...sourceOperationData, fromAmount: value })
+        setSourceAmount(value)
     }
 
     function onDestinationAmountChanged(value?: BigNumber) {
@@ -177,21 +168,20 @@ export default function BuyKaoPage() {
     function onSourceTokenSelected(selected?: OperationToken) {
         // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
         // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
-        if (sourceOperationData?.from?.address === selected?.address) return
-        setSourceOperationData({ ...sourceOperationData, from: selected })
+        if (sourceOperation?.address === selected?.address) return
+        setSourceOperation(selected)
         if (kaoToken.address !== selected?.address) {
-            setDestinationOperationData({ to: kaoToken })
+            setDestinationOperation(kaoToken)
         }
     }
 
     function onDestinationTokenSelected(selected?: OperationToken) {
-        if (destinationOperationData?.to?.address === selected?.address) return
-        setDestinationOperationData({ to: selected })
+        if (destinationOperation?.address === selected?.address) return
+        setDestinationOperation(selected)
         if (kaoToken.address !== selected?.address) {
-            setSourceOperationData({ from: kaoToken })
+            setSourceOperation(kaoToken)
         }
     }
-
 
     return (
         <div style={{
@@ -201,8 +191,8 @@ export default function BuyKaoPage() {
             <h3>
                 Buy Kao (o゜▽゜)o☆
             </h3>
-            <TokenItem token={sourceOperationData?.from} label={"You pay"} tokenList={tokenList} tokenSelected={(token) => onSourceTokenSelected(token)} amount={sourceOperationData?.fromAmount} amountChanged={(amount) => onSourceAmountChanged(amount)} />
-            <TokenItem token={destinationOperationData?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationOperationData?.toAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} />
+            <TokenItem token={sourceOperation} label={"You pay"} tokenList={tokenList} tokenSelected={(token) => onSourceTokenSelected(token)} amount={sourceAmount} amountChanged={(amount) => onSourceAmountChanged(amount)} />
+            <TokenItem token={destinationOperation} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} />
 
             <div style={{
                 marginTop: '1rem'

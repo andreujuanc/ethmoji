@@ -26,6 +26,7 @@ export default function Balance() {
         getBalance()
         const filter = contracts?.token.filters.Transfer(undefined, account)
         contracts?.dao.on(filter, getBalance)
+        console.log('BALANCE SUBSCRIBE')
         return () => {
             console.log('BALANCE CLEANUP')
             contracts?.dao.off(filter, getBalance)
