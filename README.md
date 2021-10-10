@@ -21,6 +21,7 @@ npm run start
 - Would be nice to set the curator as the proposal creator so it gets a cut
 - Should we burn the auction winning bid?
 - Check data for invalid characters \n\r\t
+- Fix delegation, or validate if vote has weight before sending TX. Otherwise 0 power is send.
 
 ### Faucet
  ```
