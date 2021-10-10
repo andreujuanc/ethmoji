@@ -125,7 +125,6 @@ export default function BuyKaoPage() {
 
 
     const calculateRate = useCallback(async () => {
-        console.log('calculateRate')
         if (!sourceOperationData?.from?.address ||
             !sourceOperationData?.fromAmount ||
             !destinationOperationData?.to?.address ||
@@ -133,8 +132,6 @@ export default function BuyKaoPage() {
 
         const address = await signer?.getAddress()
         if (!address) return
-        
-        console.log('getting rate')
         const priceRoute = await paraSwap?.getRate(
             sourceOperationData.from.address,
             destinationOperationData.to.address,
@@ -168,7 +165,6 @@ export default function BuyKaoPage() {
     }, [sourceOperationData, calculateRate])
 
     function onSourceAmountChanged(value?: BigNumber) {
-        console.log('onSourceAmountChanged', value, sourceOperationData)
         if (!sourceOperationData) return
         setSourceOperationData({ ...sourceOperationData, fromAmount: value })
     }
@@ -181,7 +177,6 @@ export default function BuyKaoPage() {
     function onSourceTokenSelected(selected?: OperationToken) {
         // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
         // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
-        console.log('sourceOperationData', sourceOperationData)
         if (sourceOperationData?.from?.address === selected?.address) return
         setSourceOperationData({ ...sourceOperationData, from: selected })
         if (kaoToken.address !== selected?.address) {
