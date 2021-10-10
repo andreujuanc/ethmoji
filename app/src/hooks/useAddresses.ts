@@ -18,5 +18,5 @@ type AddressBook = {
 export function useAddresses (): KaoAddresses{
     const { chainId } = useWeb3React()
     const network =  chainId && Networks[chainId] ? Networks[chainId] : "Invalid Network"
-    return addresses && (addresses as AddressBook)[network]
+    return addresses && (addresses as AddressBook)[network.toLowerCase()]
 }

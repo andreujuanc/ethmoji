@@ -25,6 +25,8 @@ export default function Balance() {
         getBalance()
     }, [getBalance, contracts, signer])
 
+    console.log('contracts?.token',contracts?.token)
+
     return (
         <div className="balanceContainer">
             <div className={'kaoBalance'}>
