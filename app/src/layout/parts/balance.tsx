@@ -11,27 +11,28 @@ export default function Balance() {
     const signer = useSigner()
     const [balance, setBalance] = useState<{ kao?: BigNumber, eth?: BigNumber }>()
 
-    const getBalance = useCallback(async () => {
-        const address = await signer?.getAddress()
-        if (!address) return
-        const kaoBalance = await contracts?.token.balanceOf(address)
-        const ethBalance = await signer?.getBalance()
-        setBalance({
-            kao: kaoBalance,
-            eth: ethBalance
-        })
-    }, [contracts, signer])
+
 
     useEffect(() => {
+        const getBalance = async () => {
+            const address = await signer?.getAddress()
+            if (!address) return
+            const kaoBalance = await contracts?.token.balanceOf(address)
+            const ethBalance = await signer?.getBalance()
+            setBalance({
+                kao: kaoBalance,
+                eth: ethBalance
+            })
+        }
+
         getBalance()
-        const filter = contracts?.token.filters.Transfer(undefined, account)
-        contracts?.dao.on(filter, getBalance)
+        //const filter = contracts?.token.filters["Transfer(address,address,uint256)"]
+        contracts?.token.on("Transfer(address,address,uint256)", getBalance)
         console.log('BALANCE SUBSCRIBE')
         return () => {
-            console.log('BALANCE CLEANUP')
-            contracts?.dao.off(filter, getBalance)
+            contracts?.token.off("Transfer(address,address,uint256)", getBalance)
         }
-    }, [getBalance, contracts, signer, account])
+    }, [contracts, signer, account])
 
     const format = (value: BigNumber) => {
         if (!value) return value
