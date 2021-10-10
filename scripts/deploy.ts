@@ -15,10 +15,12 @@ async function main() {
   }
 
   const KaoToken = await ethers.getContractFactory("KaoToken");
+  console.log('Deploying KaoToken')
   const kaoToken = await KaoToken.deploy();
   await kaoToken.deployed();
 
   const KaoMoji = await ethers.getContractFactory("KaoMoji");
+  console.log('Deploying KaoMoji')
   const kaoMoji = await KaoMoji.deploy();
   await kaoMoji.deployed();
 
@@ -27,6 +29,7 @@ async function main() {
 
 
   const KaoDao = await ethers.getContractFactory("KaoDao");
+  console.log('Deploying KaoDao')
   const kaoDao = await KaoDao.deploy(kaoToken.address);
   await kaoDao.deployed();
   await kaoDao.setKaoMojiAddress(kaoMoji.address);
@@ -36,7 +39,7 @@ async function main() {
 
   await saveFrontendFiles(networkName, kaoDao.address, kaoMoji.address, kaoToken.address)
 
-  console.log("KaoToken deployed to:", kaoToken.address);
+  console.log("Done!");
 }
 
 main()
