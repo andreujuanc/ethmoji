@@ -4,6 +4,6 @@ export enum Networks {
 }
 
 export const isValidNetwork = (networkName: string): networkName is Networks => {
-    if (!Object.keys(Networks).indexOf(networkName)) throw new Error(`Network not supported: ${networkName}`);
+    if (!Object.values(Networks).includes(networkName as any)) throw new Error(`Network not supported: ${networkName}`);
     return true
 }
