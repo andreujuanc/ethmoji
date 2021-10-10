@@ -19,8 +19,11 @@ body {
   color: #ccc;
 }
 
-a:visited {
-  color: #ccc;
+a,
+a:visited,
+a:-webkit-any-link,
+a:any-link {
+  color: #ccc !important;
 }
 
 nav a {
