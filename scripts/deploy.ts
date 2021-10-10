@@ -1,11 +1,15 @@
-import { run, ethers } from "hardhat";
+import { run, ethers, network } from "hardhat";
 import { getAddresses } from "./utils/getAddresses";
+import { isValidNetwork, Networks } from "./utils/networks";
 import { saveFrontendFiles } from "./utils/saveFrontendFiles";
 
 async function main() {
   await run("compile");
-  const { addresses } = getAddresses();
-  if(!addresses.AuctionHouse){
+  const networkName = network.name
+  if (!isValidNetwork(networkName)) throw new Error(`Network not supported: ${networkName}`);
+
+  const { addresses } = getAddresses(networkName);
+  if (!addresses.AuctionHouse) {
     throw new Error('Auction house must be deployed first')
   }
 
@@ -29,7 +33,7 @@ async function main() {
   const minterRole = await kaoMoji.MINTER_ROLE()
   await kaoMoji.grantRole(minterRole, kaoDao.address)
 
-  await saveFrontendFiles(kaoDao.address, kaoMoji.address, kaoToken.address)
+  await saveFrontendFiles(networkName, kaoDao.address, kaoMoji.address, kaoToken.address)
 
   console.log("KaoToken deployed to:", kaoToken.address);
 }

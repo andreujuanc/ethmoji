@@ -6,9 +6,19 @@
   "scripts": {
     "test": "hardhat test",
     "local:node": "npx hardhat node",
-    "local:deploy:kao": "npx hardhat --network localhost run scripts/deploy.ts",
-    "local:deploy:zora": "npx hardhat --network localhost run scripts/deploy-zora.ts",
+
+    "local:deploy:kao": "npm run deploy:kao -- --network localhost",
+    "local:deploy:zora": "npm run deploy:zora -- --network localhost",
     "local:deploy":"npm run local:deploy:zora && npm run local:deploy:kao", 
+    
+    "ropsten:deploy:kao": "npm run deploy:deploy -- --network ropsten",
+    "ropsten:deploy:zora": "npm run deploy:zora -- --network ropsten",
+    "ropsten:deploy":"npm run ropsten:deploy:zora && npm run ropsten:deploy:kao", 
+
+    "deploy:kao": "npx hardhat run scripts/deploy.ts",
+    "deploy:zora": "npx hardhat run scripts/deploy-zora.ts",
+    
+
     "build": "npm run clean && npm run compile",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile"

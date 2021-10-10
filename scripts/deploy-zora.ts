@@ -1,7 +1,8 @@
 // @ts-ignore
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import fs from "fs-extra";
 import { getAddresses } from "./utils/getAddresses";
+import { isValidNetwork, Networks } from "./utils/networks";
 
 async function main() {
     const WETH = await ethers.getContractFactory("WETH9");
@@ -20,19 +21,23 @@ async function main() {
 
     console.log("Auction House contracts deployed 📿");
 
-
+    const networkName = network.name
+    if (!isValidNetwork(networkName)) throw new Error(`Network not supported: ${networkName}`);
 
     /**
      * SAVING ADDRESSES
      */
-    const { addresses, addressesFile } = getAddresses();
-    addresses.WETH = weth.address
-    addresses.AuctionHouse = auctionHouse.address
+    const { addressesFile } = getAddresses(networkName);
 
+    const addressJson = fs.readFileSync(addressesFile);
+    const addresses = JSON.parse(addressJson.toString());
 
-    fs.writeFileSync(addressesFile,
-        JSON.stringify(addresses, undefined, 2)
-    );
+    const file = {
+        ...addresses,
+        [networkName]: { ...addresses[networkName], WETH: weth.address, AuctionHouse: auctionHouse.address }
+    }
+
+    fs.writeFileSync(addressesFile, JSON.stringify(file, undefined, 2));
 
 }
 

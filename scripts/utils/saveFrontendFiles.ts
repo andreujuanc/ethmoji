@@ -1,7 +1,8 @@
 import { artifacts } from "hardhat";
 import fs from 'fs';
+import { Networks } from "./networks";
 
-export async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
+export async function saveFrontendFiles(network: Networks, kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
   const contractsDir = __dirname + "/../../app/src/contracts";
   const typesDir = __dirname + "/../../typechain";
   const addressesFile = contractsDir + "/contract-address.json";
@@ -20,10 +21,12 @@ export async function saveFrontendFiles(kaoDaoAddress: string, kaoMojiAddress: s
   const addressJson = fs.readFileSync(addressesFile);
   const addresses = JSON.parse(addressJson.toString());
 
-  fs.writeFileSync(
-    addressesFile,
-    JSON.stringify({ ...addresses, KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }, undefined, 2)
-  );
+  const file = {
+    ...addresses,
+    [network]: { ...addresses[network], KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }
+  }
+
+  fs.writeFileSync(addressesFile, JSON.stringify(file, undefined, 2));
 
   if (!fs.existsSync(`${contractsDir}/factories`)) {
     fs.mkdirSync(`${contractsDir}/factories`);
