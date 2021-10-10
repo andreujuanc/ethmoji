@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/ethmoji/static/css/main.3349b53c.chunk.css",
-    "main.js": "/ethmoji/static/js/main.f6a1e99f.chunk.js",
-    "main.js.map": "/ethmoji/static/js/main.f6a1e99f.chunk.js.map",
+    "main.css": "/ethmoji/static/css/main.2309aebd.chunk.css",
+    "main.js": "/ethmoji/static/js/main.1d326be0.chunk.js",
+    "main.js.map": "/ethmoji/static/js/main.1d326be0.chunk.js.map",
     "runtime-main.js": "/ethmoji/static/js/runtime-main.6b422800.js",
     "runtime-main.js.map": "/ethmoji/static/js/runtime-main.6b422800.js.map",
-    "static/js/2.b107b9a4.chunk.js": "/ethmoji/static/js/2.b107b9a4.chunk.js",
-    "static/js/2.b107b9a4.chunk.js.map": "/ethmoji/static/js/2.b107b9a4.chunk.js.map",
+    "static/js/2.06548be1.chunk.js": "/ethmoji/static/js/2.06548be1.chunk.js",
+    "static/js/2.06548be1.chunk.js.map": "/ethmoji/static/js/2.06548be1.chunk.js.map",
     "static/js/3.5d7263b7.chunk.js": "/ethmoji/static/js/3.5d7263b7.chunk.js",
     "static/js/3.5d7263b7.chunk.js.map": "/ethmoji/static/js/3.5d7263b7.chunk.js.map",
     "index.html": "/ethmoji/index.html",
-    "static/css/main.3349b53c.chunk.css.map": "/ethmoji/static/css/main.3349b53c.chunk.css.map",
-    "static/js/2.b107b9a4.chunk.js.LICENSE.txt": "/ethmoji/static/js/2.b107b9a4.chunk.js.LICENSE.txt"
+    "static/css/main.2309aebd.chunk.css.map": "/ethmoji/static/css/main.2309aebd.chunk.css.map",
+    "static/js/2.06548be1.chunk.js.LICENSE.txt": "/ethmoji/static/js/2.06548be1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6b422800.js",
-    "static/js/2.b107b9a4.chunk.js",
-    "static/css/main.3349b53c.chunk.css",
-    "static/js/main.f6a1e99f.chunk.js"
+    "static/js/2.06548be1.chunk.js",
+    "static/css/main.2309aebd.chunk.css",
+    "static/js/main.1d326be0.chunk.js"
   ]
 }
