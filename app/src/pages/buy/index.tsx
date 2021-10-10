@@ -123,26 +123,9 @@ export default function BuyKaoPage() {
 
     const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO', decimals: 18 }
 
-    const onSourceTokenSelected = (selected?: OperationToken) => {
-        // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
-        // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
-
-        if (sourceOperationData?.from?.address === selected?.address) return
-        setSourceOperationData({ ...sourceOperationData, from: selected })
-        if (kaoToken.address !== selected?.address) {
-            setDestinationOperationData({ to: kaoToken })
-        }
-    }
-
-    const onDestinationTokenSelected = (selected?: OperationToken) => {
-        if (destinationOperationData?.to?.address === selected?.address) return
-        setDestinationOperationData({ to: selected })
-        if (kaoToken.address !== selected?.address) {
-            setSourceOperationData({ from: kaoToken })
-        }
-    }
 
     const calculateRate = useCallback(async () => {
+        console.log('calculateRate')
         if (!sourceOperationData?.from?.address ||
             !sourceOperationData?.fromAmount ||
             !destinationOperationData?.to?.address ||
@@ -150,7 +133,8 @@ export default function BuyKaoPage() {
 
         const address = await signer?.getAddress()
         if (!address) return
-
+        
+        console.log('getting rate')
         const priceRoute = await paraSwap?.getRate(
             sourceOperationData.from.address,
             destinationOperationData.to.address,
@@ -177,20 +161,40 @@ export default function BuyKaoPage() {
             toAmount: (priceRoute as OptimalRate)?.destAmount ? BigNumber.from((priceRoute as OptimalRate)?.destAmount) : undefined
         })
 
-    }, [sourceOperationData?.from?.address, sourceOperationData?.fromAmount, destinationOperationData?.to?.address, paraSwap])
+    }, [sourceOperationData?.from?.address, destinationOperationData?.to?.address, sourceOperationData?.fromAmount, paraSwap])
 
     useEffect(() => {
         calculateRate()
-    }, [sourceOperationData?.fromAmount, calculateRate])
+    }, [sourceOperationData, calculateRate])
 
-    const onSourceAmountChanged = (value?: BigNumber) => {
-        console.log('onSourceAmountChanged', value)
+    function onSourceAmountChanged(value?: BigNumber) {
+        console.log('onSourceAmountChanged', value, sourceOperationData)
         if (!sourceOperationData) return
         setSourceOperationData({ ...sourceOperationData, fromAmount: value })
     }
 
-    const onDestinationAmountChanged = (value?: BigNumber) => {
+    function onDestinationAmountChanged(value?: BigNumber) {
 
+    }
+
+
+    function onSourceTokenSelected(selected?: OperationToken) {
+        // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
+        // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
+        console.log('sourceOperationData', sourceOperationData)
+        if (sourceOperationData?.from?.address === selected?.address) return
+        setSourceOperationData({ ...sourceOperationData, from: selected })
+        if (kaoToken.address !== selected?.address) {
+            setDestinationOperationData({ to: kaoToken })
+        }
+    }
+
+    function onDestinationTokenSelected(selected?: OperationToken) {
+        if (destinationOperationData?.to?.address === selected?.address) return
+        setDestinationOperationData({ to: selected })
+        if (kaoToken.address !== selected?.address) {
+            setSourceOperationData({ from: kaoToken })
+        }
     }
 
 
@@ -202,8 +206,8 @@ export default function BuyKaoPage() {
             <h3>
                 Buy Kao (o゜▽゜)o☆
             </h3>
-            <TokenItem token={sourceOperationData?.from} label={"You pay"} tokenList={tokenList} tokenSelected={onSourceTokenSelected} amount={sourceOperationData?.fromAmount} amountChanged={onSourceAmountChanged} />
-            <TokenItem token={destinationOperationData?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={onDestinationTokenSelected} amount={destinationOperationData?.toAmount} amountChanged={onDestinationAmountChanged} />
+            <TokenItem token={sourceOperationData?.from} label={"You pay"} tokenList={tokenList} tokenSelected={(token) => onSourceTokenSelected(token)} amount={sourceOperationData?.fromAmount} amountChanged={(amount) => onSourceAmountChanged(amount)} />
+            <TokenItem token={destinationOperationData?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationOperationData?.toAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} />
 
             <div style={{
                 marginTop: '1rem'

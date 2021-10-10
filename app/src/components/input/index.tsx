@@ -13,12 +13,18 @@ export function Input(props: {
         props.onChange(newValue)
     }, 1000)
 
+    useEffect(() => {
+        if (props.value !== value)
+            setValue(props.value)
+    }, [value, props.value])
+
     return <input className={'input'}
         value={value}
         type={props.type}
         onChange={(e) => {
             setValue(e.target.value)
-            debounce(e.target.value)
+            //debounce(e.target.value)
+            props.onChange(e.target.value)
             e.preventDefault();
         }} placeholder={props.placeholder} />;
 }
