@@ -6,24 +6,33 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "../../components/input";
 import './index.scss'
 import { useWeb3React } from "@web3-react/core";
-import { ParaSwap } from 'paraswap';
-import { OptimalRate } from "paraswap-core";
+import { APIError, ParaSwap } from 'paraswap';
+import { OptimalRate, SwapSide } from "paraswap-core";
 import { Select } from "../../components/select";
 import { Networks } from "../../core/networks";
+import { formatEther, formatUnits, parseUnits } from "@ethersproject/units";
 
 type OperationToken = {
     address: string
     symbol: string
+    decimals: number
     icon?: string
 }
 
-type SwapOperation = {
-    buy: boolean
+type SourceOperationData = {
     from?: OperationToken
     fromAmount?: BigNumber
+}
+
+type DestinationOperationData = {
     to?: OperationToken
     toAmount?: BigNumber
+}
+
+
+type SwapOperation = {
     optimalRate?: OptimalRate
+    error?: APIError
 }
 
 export default function BuyKaoPage() {
@@ -32,20 +41,23 @@ export default function BuyKaoPage() {
     const { active, chainId } = useWeb3React()
     const contracts = useContracts()
     const paraSwap = useMemo(() => (chainId && active) && Object.values(Networks).includes(chainId) ? new ParaSwap(chainId as any) : undefined, [active, chainId]);
+    const [sourceOperationData, setSourceOperationData] = useState<SourceOperationData>()
+    const [destinationOperationData, setDestinationOperationData] = useState<DestinationOperationData>()
     const [operation, setOperation] = useState<SwapOperation>()
     const [tokenList, setTokenList] = useState<OperationToken[]>([])
 
     const swap = async () => {
         const address = await signer?.getAddress()
         if (!address || !paraSwap || !signer) return
-        if (!operation?.from?.address || !operation?.to?.address) return
-        if (!operation?.fromAmount || !operation.toAmount?.toString()) return
-        if (!operation.optimalRate) return
+        if (!sourceOperationData?.from?.address || !destinationOperationData?.to?.address) return
+        if (!sourceOperationData?.fromAmount || !destinationOperationData.toAmount?.toString()) return
+        if (!operation?.optimalRate) return
+        if (operation?.error) return
 
-        const srcToken = operation.from.address;
-        const destToken = operation.to.address;
-        const srcAmount = operation.fromAmount.toString();
-        const destAmount = operation.toAmount.toString();
+        const srcToken = sourceOperationData.from.address;
+        const destToken = destinationOperationData.to.address;
+        const srcAmount = sourceOperationData.fromAmount.toString();
+        const destAmount = destinationOperationData.toAmount.toString();
         const senderAddress = address;
         const receiver = address;
         const referrer = 'ethmoji';
@@ -61,7 +73,17 @@ export default function BuyKaoPage() {
             receiver,
         );
 
-        const tx = await signer.sendTransaction(txParams);
+        if ('message' in txParams) throw txParams
+
+        const tx = await signer.sendTransaction({
+            from: txParams.from,
+            to: txParams.to,
+            value: BigNumber.from(txParams.value),
+            gasPrice: BigNumber.from((txParams as any).gasPrice),
+            gasLimit: BigNumber.from((txParams as any).gas),
+            chainId: txParams.chainId,
+            data: txParams.data
+        });
         await tx.wait()
 
     }
@@ -69,12 +91,27 @@ export default function BuyKaoPage() {
     const loadTokenList = useCallback(async () => {
         const tokens = await paraSwap?.getTokens()
 
-        if (tokens && Array.isArray(tokens) && chainId) {
+        // ROPSTEN WETH: 0xc778417E063141139Fce010982780140Aa0cD5Ab
 
+
+        if (tokens && Array.isArray(tokens) && chainId) {
+            if (chainId == Networks.ROPSTEN) {
+                tokens.push({
+                    address: '0x0D9C8723B343A8368BebE0B5E89273fF8D712e3C',
+                    decimals: 6,
+                    symbol: 'USDC',
+                    network: 3,
+                    tokenType: 'ERC20',
+                    connectors: [],
+                    mainConnector: '',
+                    img: 'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389'
+                })
+            }
             setTokenList(tokens.map(x => ({
                 address: x.address,
                 symbol: x.symbol ?? 'No Symbol :/',
-                icon: x.img
+                icon: x.img,
+                decimals: x.decimals
             })))
         } else {
             setTokenList([])
@@ -83,54 +120,73 @@ export default function BuyKaoPage() {
 
     useEffect(() => {
         loadTokenList()
-        setOperation({
-            buy: true
-        })
     }, [paraSwap, chainId, loadTokenList])
 
-    const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO' }
+    const kaoToken = { address: contracts?.token.address ?? '', symbol: 'KAO', decimals: 18 }
 
     const onSourceTokenSelected = (selected?: OperationToken) => {
         // TODO: const allowance = await paraSwap.getAllowance(userAddress, tokenAddress);
         // TODO: const txHash = await paraSwap.approveToken(amount, userAddress, tokenAddress);
 
-        if (operation?.from?.address === selected?.address) return
+        if (sourceOperationData?.from?.address === selected?.address) return
+        setSourceOperationData({ ...sourceOperationData, from: selected })
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, from: selected, to: KAOTOKEN_ONLY ? kaoToken : undefined })
-        } else {
-            setOperation({ ...operation, buy: false, from: selected, to: undefined })
+            setDestinationOperationData({ to: kaoToken })
         }
     }
 
     const onDestinationTokenSelected = (selected?: OperationToken) => {
-        if (operation?.to?.address === selected?.address) return
+        if (destinationOperationData?.to?.address === selected?.address) return
+        setDestinationOperationData({ to: selected })
         if (kaoToken.address !== selected?.address) {
-            setOperation({ ...operation, buy: true, to: selected, from: KAOTOKEN_ONLY ? kaoToken : undefined })
-        } else {
-            setOperation({ ...operation, buy: false, to: selected, from: undefined })
+            setSourceOperationData({ from: kaoToken })
         }
     }
 
     const calculateRate = useCallback(async () => {
-        if (!operation?.from?.address ||
-            !operation?.to?.address ||
-            !operation?.fromAmount ||
+        if (!sourceOperationData?.from?.address ||
+            !sourceOperationData?.fromAmount ||
+            !destinationOperationData?.to?.address ||
             !paraSwap) return
+
+        const address = await signer?.getAddress()
+        if (!address) return
+
         const priceRoute = await paraSwap?.getRate(
-            operation.from.address,
-            operation.to.address,
-            operation.fromAmount.toString(),
+            sourceOperationData.from.address,
+            destinationOperationData.to.address,
+            sourceOperationData.fromAmount.toString(),
+            address,
+            SwapSide.SELL,
+            {
+                partner: 'ethmoji',
+                // maxUSDImpact: 100000000,
+                // maxImpact: 100,
+                includeDEXS: 'UniswapV2' //'Uniswap, Kyber, Bancor, Oasis, Compound, Fulcrum, 0x, MakerDAO, Chai, ParaSwapPool, Aave, Aave2, MultiPath, MegaPath, Curve, Curve3, Saddle, IronV2, BDai, idle, Weth, Beth, UniswapV2, Balancer, 0xRFQt, ParaSwapPool2, ParaSwapPool3, ParaSwapPool4, ParaSwapPool5, ParaSwapPool6, SushiSwap, LINKSWAP, Synthetix, DefiSwap, Swerve, CoFiX, Shell, DODOV1, DODOV2, OnChainPricing, PancakeSwap, PancakeSwapV2, ApeSwap, Wbnb, acryptos, streetswap, bakeryswap, julswap, vswap, vpegswap, beltfi, ellipsis, QuickSwap, COMETH, Wmatic, Nerve, Dfyn, UniswapV3, Smoothy, PantherSwap, OMM1, OneInchLP, CurveV2, mStable, WaultFinance, MDEX, ShibaSwap, CoinSwap, SakeSwap, JetSwap, Biswap, BProtocol'
+            },
+            sourceOperationData.from.decimals,
+            destinationOperationData.to.decimals
         );
-        console.log('Prices', priceRoute)
-    }, [operation?.from?.address, operation?.fromAmount, operation?.to?.address, paraSwap])
+
+
+        setOperation({
+            optimalRate: (priceRoute as OptimalRate).contractMethod ? priceRoute as any : undefined,
+            error: (priceRoute as APIError).message ? priceRoute as any : undefined
+        })
+        setDestinationOperationData({
+            to: destinationOperationData.to,
+            toAmount: (priceRoute as OptimalRate)?.destAmount ? BigNumber.from((priceRoute as OptimalRate)?.destAmount) : undefined
+        })
+
+    }, [sourceOperationData?.from?.address, sourceOperationData?.fromAmount, destinationOperationData?.to?.address, paraSwap])
 
     useEffect(() => {
         calculateRate()
-    }, [operation?.fromAmount, calculateRate])
+    }, [sourceOperationData?.fromAmount, calculateRate])
 
     const onSourceAmountChanged = (value?: BigNumber) => {
-        if (!operation) return
-        setOperation({ ...operation, fromAmount: value })
+        if (!sourceOperationData) return
+        setSourceOperationData({ ...sourceOperationData, fromAmount: value })
     }
 
     const onDestinationAmountChanged = (value?: BigNumber) => {
@@ -146,13 +202,20 @@ export default function BuyKaoPage() {
             <h3>
                 Buy Kao (o゜▽゜)o☆
             </h3>
-            <TokenItem token={operation?.from} label={"You pay"} tokenList={tokenList} tokenSelected={onSourceTokenSelected} amount={operation?.fromAmount} amountChanged={onSourceAmountChanged} />
-            <TokenItem token={operation?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={onDestinationTokenSelected} amount={operation?.toAmount} amountChanged={onDestinationAmountChanged} />
+            <TokenItem token={sourceOperationData?.from} label={"You pay"} tokenList={tokenList} tokenSelected={onSourceTokenSelected} amount={sourceOperationData?.fromAmount} amountChanged={onSourceAmountChanged} />
+            <TokenItem token={destinationOperationData?.to} label={"You'll receive"} tokenList={tokenList} tokenSelected={onDestinationTokenSelected} amount={destinationOperationData?.toAmount} amountChanged={onDestinationAmountChanged} />
 
-            <div>
-                <Button onClick={swap}  >
+            <div style={{
+                marginTop: '1rem'
+            }}>
+                <Button onClick={swap} disabled={!!operation?.error} >
                     Buy
                 </Button>
+                <span style={{
+                    marginLeft: '1rem'
+                }}>
+                    {operation?.error?.message}
+                </span>
             </div>
         </div>
     )
@@ -175,7 +238,7 @@ function TokenItem({ token, label, tokenList, tokenSelected, amountChanged, amou
             {label}
         </div>
         <div className={'token-item'}>
-            <Input onChange={(value) => amountChanged(value ? BigNumber.from(value) : undefined)} placeholder={"0"} type={"number"} value={amount?.toString() ?? ''} />
+            <Input onChange={(value) => amountChanged(value ? BigNumber.from(parseUnits(value, token?.decimals ?? 18)) : undefined)} placeholder={"0"} type={"number"} value={amount ? formatUnits(amount.toString(), token?.decimals ?? 18) : ''} />
             <Select
                 items={tokenList}
                 onChange={tokenSelected}
