@@ -48,7 +48,7 @@ export default function Propose() {
             margin: '0 calc(0.5rem + 0px)',
             display: 'flex'
         }}>
-            <Input value={proposalData} onChange={setProposalData} placeholder={'ಠ╭╮ಠ'} type="text" />
+            <Input value={proposalData} onChange={setProposalData} placeholder={'✪ ω ✪'} type="text" />
             <Button onClick={proposeKao} >Propose Kao</Button>
             <Button onClick={selfDelegate} >SelfDelegate</Button>
         </div>

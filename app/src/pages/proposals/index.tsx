@@ -10,9 +10,12 @@ export default function ProposalsPage() {
             maxWidth: '600px',
             minWidth: '600px',
         }}>
-            <h1>
-                Proposals
-            </h1>
+            <header>
+                <h1>
+                    Proposals
+                </h1>
+                <sub>Imagine the possibilities!</sub>
+            </header>
             <Propose />
             <br />
             <section>

@@ -189,9 +189,12 @@ export default function BuyKaoPage() {
             maxWidth: '600px',
             minWidth: '600px',
         }}>
-            <h3>
-                Buy Kao (o゜▽゜)o☆
-            </h3>
+            <header>
+                <h1>
+                    Buy Kao
+                </h1>
+                <sub>Powered by Paraswap</sub>
+            </header>
             <TokenItem token={sourceOperation} label={"You pay"} tokenList={tokenList} tokenSelected={(token) => onSourceTokenSelected(token)} amount={sourceAmount} amountChanged={(amount) => onSourceAmountChanged(amount)} />
             <TokenItem token={destinationOperation} label={"You'll receive"} tokenList={tokenList} tokenSelected={(token) => onDestinationTokenSelected(token)} amount={destinationAmount} amountChanged={(amount) => onDestinationAmountChanged(amount)} readonly />
 

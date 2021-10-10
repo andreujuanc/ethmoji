@@ -20,9 +20,12 @@ export default function Auctions() {
             maxWidth: '600px',
             minWidth: '600px',
         }}>
-            <h3>
-                Auctions
-            </h3>
+            <header>
+                <h1>
+                    Auctions
+                </h1>
+                <sub>Powered by Zora's Auction House</sub>
+            </header>
             <br />
             <section>
                 {

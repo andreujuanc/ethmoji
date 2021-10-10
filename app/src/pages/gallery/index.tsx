@@ -6,7 +6,12 @@ export default function GalleryPage() {
 
     return (
         <div>
-            <h1>Gallery</h1>
+            <header>
+                <h1>
+                    Gallery
+                </h1>
+                <sub>The Kaoverse (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</sub>
+            </header>
             <br />
             <div style={{
                 display: 'flex'
