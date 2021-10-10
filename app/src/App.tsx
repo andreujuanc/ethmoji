@@ -1,6 +1,6 @@
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import { Route, Switch, HashRouter } from 'react-router-dom'
 import { Layout } from './layout'
 import HomePage from './pages/home'
 import ProposalsPage from './pages/proposals'
@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <BrowserRouter>
+      <HashRouter>
         <Layout>
           <Switch  >
 
@@ -47,7 +47,7 @@ export default function App() {
             </Route>
           </Switch>
         </Layout>
-      </BrowserRouter>
+      </HashRouter>
     </Web3ReactProvider>
   )
 }
