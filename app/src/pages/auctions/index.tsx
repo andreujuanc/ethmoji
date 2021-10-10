@@ -104,7 +104,9 @@ function AuctionItem(props: { auction: Auction }): JSX.Element {
     }
 
     const claim = async () => {
-        const tx = await contracts?.auction.endAuction(auction.auctionId)
+        const tx = await contracts?.auction.endAuction(auction.auctionId, {
+            gasLimit: 1500000
+        })
         await tx?.wait()
     }
 

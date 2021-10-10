@@ -27,14 +27,15 @@ task("faucet", "Sends ETH and tokens to an address")
 
     const tx = await token.transfer(receiver, ethers.utils.parseUnits(amount, 18).toString())
     await tx.wait();
-
+    console.log(`Transferred ${amount} Kao Tokens to ${receiver}`);
+    
     if (networkName === "hardhat" || networkName === "localhost") {
       const tx2 = await sender.sendTransaction({
         to: receiver,
         value: ethers.constants.WeiPerEther,
       });
       await tx2.wait();
-      console.log(`Transferred 1 ETH and 100 tokens to ${receiver}`);
+      console.log(`Transferred 1 ETH  to ${receiver}`);
     }
     console.log('DONE')
   });
