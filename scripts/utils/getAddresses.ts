@@ -24,5 +24,5 @@ export function getAddresses(network: Networks): AddressBook {
     }
     const addressJson = fs.readFileSync(addressesFile);
     const fileContent = JSON.parse(addressJson.toString());
-    return { addresses: fileContent, addressesFile } as any;
+    return { ...fileContent, addressesFile } as any;
 }

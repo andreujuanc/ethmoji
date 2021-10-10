@@ -8,8 +8,9 @@ async function main() {
   const networkName = network.name
   if (!isValidNetwork(networkName)) throw new Error(`Network not supported: ${networkName}`);
 
-  const { addresses } = getAddresses(networkName);
-  if (!addresses.AuctionHouse) {
+  const addresses = getAddresses(networkName);
+  const auctionHouseAddress = addresses[networkName].AuctionHouse
+  if (!auctionHouseAddress) {
     throw new Error('Auction house must be deployed first')
   }
 
@@ -22,7 +23,7 @@ async function main() {
   await kaoMoji.deployed();
 
   await kaoMoji.setKaoToken(kaoToken.address)
-  await kaoMoji.setAuctionAddress(addresses.AuctionHouse)
+  await kaoMoji.setAuctionAddress(auctionHouseAddress)
 
 
   const KaoDao = await ethers.getContractFactory("KaoDao");
