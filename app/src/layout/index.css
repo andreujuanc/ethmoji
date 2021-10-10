@@ -5,3 +5,12 @@
   align-items: center;
   margin: 9px 1rem;
 }
+
+@media (max-width: 1240px) {
+  .header {
+    /* display: flex;
+    justify-content: space-between; */
+    flex-direction: column;
+    height: 140px;
+  }
+}
