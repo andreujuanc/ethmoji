@@ -1,3 +1,5 @@
+import addresses from '../contracts/contract-address.json'
+
 export enum Networks {
     MAINNET = 1,
     ROPSTEN = 3,

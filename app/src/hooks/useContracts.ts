@@ -10,16 +10,16 @@ import { KaoDao } from "../contracts/KaoDao";
 import { KaoMoji } from "../contracts/KaoMoji";
 import { KaoToken } from "../contracts/KaoToken";
 import { AuctionHouse } from "../contracts/AuctionHouse";
-
-import addresses from '../contracts/contract-address.json'
+import { useAddresses } from "./useAddresses";
 
 
 export function useContracts() {
     const { connector, library, active } = useWeb3React()
     const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji, token: KaoToken, auction: AuctionHouse }>()
+    const addresses = useAddresses()
 
     const getKaoDao = useMemo(() => async () => {
-        if (!active || !connector || !library) return
+        if (!active || !connector || !library || !addresses) return
         const account = await connector?.getAccount()
         const signer = library && await library.getSigner(account).connectUnchecked()
 
