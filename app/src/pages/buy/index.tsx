@@ -184,6 +184,7 @@ export default function BuyKaoPage() {
     }, [sourceOperationData?.fromAmount, calculateRate])
 
     const onSourceAmountChanged = (value?: BigNumber) => {
+        console.log('onSourceAmountChanged', value)
         if (!sourceOperationData) return
         setSourceOperationData({ ...sourceOperationData, fromAmount: value })
     }
