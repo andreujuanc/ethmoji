@@ -107,8 +107,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             return <div>Ended  {proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
         return null
     }
-    console.log('currentBlockNumber', currentBlockNumber)
-    console.log('proposalState', proposalState)
+    
     return (
         <Container>
             {/* <div>{proposalState}</div>

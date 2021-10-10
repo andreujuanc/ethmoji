@@ -13,15 +13,18 @@ export function useBlockNumber() {
             setCurrentBlockNumber(block)
         }
         (async () => {
-            if (provider)
-                updateBlockNumber(await provider.getBlockNumber())
+            if (provider) {
+                const latestBlock = await provider.getBlockNumber()
+                if (latestBlock !== currentBlockNumber)
+                    updateBlockNumber(latestBlock)
+            }
         })()
-        
+
         provider?.on('block', updateBlockNumber)
         return () => {
             provider?.off('block', updateBlockNumber)
         }
-    }, [provider])
+    }, [provider, currentBlockNumber])
 
 
     return currentBlockNumber
