@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import { Networks } from "./networks";
 
-type AddressBook = {
+export type AddressBook = {
     [network: string]: {
         KaoDao?: string,
         KaoMoji?: string,
