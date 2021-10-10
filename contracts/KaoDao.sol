@@ -24,7 +24,7 @@ contract KaoDao is Governor, GovernorCountingSimple, GovernorVotes, GovernorVote
     }
 
     function votingPeriod() public pure override returns (uint256) {
-        return 80; // TODO: back to 1 week before deploy
+        return 80; // TODO: back to 1 week before deploy to mainnet
             //45818; // 1 week
     }
 

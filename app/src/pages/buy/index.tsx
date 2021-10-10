@@ -36,7 +36,6 @@ type SwapOperation = {
 }
 
 export default function BuyKaoPage() {
-    const KAOTOKEN_ONLY = true
     const signer = useSigner()
     const { active, chainId } = useWeb3React()
     const contracts = useContracts()

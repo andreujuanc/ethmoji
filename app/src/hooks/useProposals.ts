@@ -35,11 +35,9 @@ export default function useProposals() {
 
     const subscribeToProposalCreated = useCallback(() => {
         getKaoDao()
-        contracts?.dao.on('ProposalCreated', (_: any) => {
-            getKaoDao()
-        })
+        contracts?.dao.on('ProposalCreated', getKaoDao)
         return () => {
-            console.log('CLEANUP')
+            contracts?.dao.off('ProposalCreated', getKaoDao)
         }
     }, [contracts, getKaoDao])
 

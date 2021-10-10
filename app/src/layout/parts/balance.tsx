@@ -1,4 +1,5 @@
 import { BigNumber, formatFixed } from "@ethersproject/bignumber"
+import { useWeb3React } from "@web3-react/core"
 import { ethers } from "ethers"
 import { useCallback, useEffect, useState } from "react"
 import { useContracts } from "../../hooks/useContracts"
@@ -7,6 +8,7 @@ import './balance.css'
 
 export default function Balance() {
     const contracts = useContracts()
+    const { account } = useWeb3React()
     const signer = useSigner()
     const [balance, setBalance] = useState<{ kao?: BigNumber, eth?: BigNumber }>()
 
@@ -23,15 +25,19 @@ export default function Balance() {
 
     useEffect(() => {
         getBalance()
+        const filter = contracts?.token.filters.Transfer(undefined, account)
+        contracts?.dao.on(filter, getBalance)
+        return () => {
+            console.log('BALANCE CLEANUP')
+            contracts?.dao.off(filter, getBalance)
+        }
     }, [getBalance, contracts, signer])
-
-    console.log('contracts?.token', contracts?.token)
 
     const format = (value: BigNumber) => {
         if (!value) return value
         const parts = formatFixed(value, 18).split('.')
 
-        return `${parts[0]}.${(parts[1]??'').substr(0, 4)}`
+        return `${parts[0]}.${(parts[1] ?? '').substr(0, 4)}`
     }
 
     return (

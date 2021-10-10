@@ -11,7 +11,6 @@ import BuyKaoPage from './pages/buy'
 import GalleryPage from './pages/gallery'
 
 function getLibrary(provider: any, connector: any) {
-  console.log('getLibrary', provider, connector)
   return new ethers.providers.Web3Provider(provider)
 }
 

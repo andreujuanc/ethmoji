@@ -12,8 +12,6 @@ import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
 
 import { IAuctionHouse } from "./interfaces/IAuctionHouse.sol";
 
-import "hardhat/console.sol";
-
 interface IWETH {
     function deposit() external payable;
     function withdraw(uint wad) external;
@@ -111,8 +109,6 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
         if(auctions[auctionId].curator == address(0) || curator == tokenOwner) {
             _approveAuction(auctionId, true);
         }
-
-        console.log("Auction created %s", auctionId);
 
         return auctionId;
     }
