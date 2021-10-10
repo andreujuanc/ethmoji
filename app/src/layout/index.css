@@ -8,8 +8,6 @@
 
 @media (max-width: 1240px) {
   .header {
-    /* display: flex;
-    justify-content: space-between; */
     flex-direction: column;
     height: 140px;
   }
