@@ -24,6 +24,7 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   functions: {
     "ADDRESS_UPDATER()": FunctionFragment;
     "BALLOT_TYPEHASH()": FunctionFragment;
+    "CONTRACT_UPGRADER()": FunctionFragment;
     "COUNTING_MODE()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "castVote(uint256,uint8)": FunctionFragment;
@@ -36,6 +37,7 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "hasVoted(uint256,address)": FunctionFragment;
     "hashProposal(address[],uint256[],bytes[],bytes32)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "name()": FunctionFragment;
     "proposalDeadline(uint256)": FunctionFragment;
     "proposalSnapshot(uint256)": FunctionFragment;
@@ -51,6 +53,8 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "supportsInterface(bytes4)": FunctionFragment;
     "token()": FunctionFragment;
     "updateQuorumNumerator(uint256)": FunctionFragment;
+    "upgradeTo(address)": FunctionFragment;
+    "upgradeToAndCall(address,bytes)": FunctionFragment;
     "version()": FunctionFragment;
     "votingDelay()": FunctionFragment;
     "votingPeriod()": FunctionFragment;
@@ -62,6 +66,10 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "BALLOT_TYPEHASH",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "CONTRACT_UPGRADER",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -112,6 +120,7 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "hashProposal",
     values: [string[], BigNumberish[], BytesLike[], BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "proposalDeadline",
@@ -163,6 +172,11 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "updateQuorumNumerator",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "upgradeTo", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [string, BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "votingDelay",
@@ -179,6 +193,10 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "BALLOT_TYPEHASH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "CONTRACT_UPGRADER",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -211,6 +229,7 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "hashProposal",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proposalDeadline",
@@ -253,6 +272,11 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     functionFragment: "updateQuorumNumerator",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "votingDelay",
@@ -264,6 +288,8 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "AdminChanged(address,address)": EventFragment;
+    "BeaconUpgraded(address)": EventFragment;
     "ProposalCanceled(uint256)": EventFragment;
     "ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)": EventFragment;
     "ProposalExecuted(uint256)": EventFragment;
@@ -271,9 +297,12 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
+    "Upgraded(address)": EventFragment;
     "VoteCast(address,uint256,uint8,uint256,string)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalCanceled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalExecuted"): EventFragment;
@@ -281,8 +310,15 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VoteCast"): EventFragment;
 }
+
+export type AdminChangedEvent = TypedEvent<
+  [string, string] & { previousAdmin: string; newAdmin: string }
+>;
+
+export type BeaconUpgradedEvent = TypedEvent<[string] & { beacon: string }>;
 
 export type ProposalCanceledEvent = TypedEvent<
   [BigNumber] & { proposalId: BigNumber }
@@ -338,6 +374,8 @@ export type RoleGrantedEvent = TypedEvent<
 export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
 >;
+
+export type UpgradedEvent = TypedEvent<[string] & { implementation: string }>;
 
 export type VoteCastEvent = TypedEvent<
   [string, BigNumber, number, BigNumber, string] & {
@@ -396,6 +434,8 @@ export class KaoDao extends BaseContract {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<[string]>;
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
+
+    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<[string]>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<[string]>;
 
@@ -464,6 +504,11 @@ export class KaoDao extends BaseContract {
       descriptionHash: BytesLike,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    initialize(
+      _token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -539,6 +584,17 @@ export class KaoDao extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    upgradeTo(
+      newImplementation: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    upgradeToAndCall(
+      newImplementation: string,
+      data: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     version(overrides?: CallOverrides): Promise<[string]>;
 
     votingDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -549,6 +605,8 @@ export class KaoDao extends BaseContract {
   ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
 
   BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+  CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<string>;
 
   COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
 
@@ -617,6 +675,11 @@ export class KaoDao extends BaseContract {
     descriptionHash: BytesLike,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  initialize(
+    _token: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -689,6 +752,17 @@ export class KaoDao extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  upgradeTo(
+    newImplementation: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  upgradeToAndCall(
+    newImplementation: string,
+    data: BytesLike,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   version(overrides?: CallOverrides): Promise<string>;
 
   votingDelay(overrides?: CallOverrides): Promise<BigNumber>;
@@ -699,6 +773,8 @@ export class KaoDao extends BaseContract {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
+
+    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<string>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
 
@@ -767,6 +843,8 @@ export class KaoDao extends BaseContract {
       descriptionHash: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    initialize(_token: string, overrides?: CallOverrides): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -839,6 +917,17 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    upgradeTo(
+      newImplementation: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    upgradeToAndCall(
+      newImplementation: string,
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     version(overrides?: CallOverrides): Promise<string>;
 
     votingDelay(overrides?: CallOverrides): Promise<BigNumber>;
@@ -847,6 +936,30 @@ export class KaoDao extends BaseContract {
   };
 
   filters: {
+    "AdminChanged(address,address)"(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): TypedEventFilter<
+      [string, string],
+      { previousAdmin: string; newAdmin: string }
+    >;
+
+    AdminChanged(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): TypedEventFilter<
+      [string, string],
+      { previousAdmin: string; newAdmin: string }
+    >;
+
+    "BeaconUpgraded(address)"(
+      beacon?: string | null
+    ): TypedEventFilter<[string], { beacon: string }>;
+
+    BeaconUpgraded(
+      beacon?: string | null
+    ): TypedEventFilter<[string], { beacon: string }>;
+
     "ProposalCanceled(uint256)"(
       proposalId?: null
     ): TypedEventFilter<[BigNumber], { proposalId: BigNumber }>;
@@ -1003,6 +1116,14 @@ export class KaoDao extends BaseContract {
       { role: string; account: string; sender: string }
     >;
 
+    "Upgraded(address)"(
+      implementation?: string | null
+    ): TypedEventFilter<[string], { implementation: string }>;
+
+    Upgraded(
+      implementation?: string | null
+    ): TypedEventFilter<[string], { implementation: string }>;
+
     "VoteCast(address,uint256,uint8,uint256,string)"(
       voter?: string | null,
       proposalId?: null,
@@ -1042,6 +1163,8 @@ export class KaoDao extends BaseContract {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<BigNumber>;
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<BigNumber>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1114,6 +1237,11 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    initialize(
+      _token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposalDeadline(
@@ -1182,6 +1310,17 @@ export class KaoDao extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    upgradeTo(
+      newImplementation: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    upgradeToAndCall(
+      newImplementation: string,
+      data: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     version(overrides?: CallOverrides): Promise<BigNumber>;
 
     votingDelay(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1193,6 +1332,8 @@ export class KaoDao extends BaseContract {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     COUNTING_MODE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1267,6 +1408,11 @@ export class KaoDao extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    initialize(
+      _token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proposalDeadline(
@@ -1333,6 +1479,17 @@ export class KaoDao extends BaseContract {
     updateQuorumNumerator(
       newQuorumNumerator: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    upgradeTo(
+      newImplementation: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    upgradeToAndCall(
+      newImplementation: string,
+      data: BytesLike,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
