@@ -58,8 +58,8 @@ contract KaoMoji is ERC721, AccessControl, IERC721Receiver {
         _auctionHouse.createAuction(
             id, 
             address(this), // We have the balance
-            10 minutes, //duration 
-            1 * 10**decimals,
+            1 minutes, //duration 
+            1 * 10 ** decimals,
             payable(address(this)), // curator
             0, // curatorFeePercentages 
             _kaoToken
