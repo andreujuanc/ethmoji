@@ -1,6 +1,11 @@
 import { ethers, upgrades } from "hardhat";
+import { KaoDao, KaoMoji, KaoToken } from "../typechain";
 
-export default async function deployCore(auctionHouseAddress: string) {
+export default async function deployCore(auctionHouseAddress: string): Promise<{
+    kaoToken: KaoToken
+    kaoMoji: KaoMoji
+    kaoDao: KaoDao
+}> {
     const KaoToken = await ethers.getContractFactory("KaoToken");
     console.log('Deploying KaoToken')
     const kaoToken = await KaoToken.deploy();
@@ -24,13 +29,13 @@ export default async function deployCore(auctionHouseAddress: string) {
     });
     await kaoDao.deployed();
     await kaoDao.setKaoMojiAddress(kaoMoji.address);
-
+    
     const minterRole = await kaoMoji.MINTER_ROLE()
     await kaoMoji.grantRole(minterRole, kaoDao.address)
 
     return {
-        kaoToken,
-        kaoMoji,
-        kaoDao
+        kaoToken: kaoToken as any,
+        kaoMoji: kaoMoji as any,
+        kaoDao: kaoDao as any
     }
 }

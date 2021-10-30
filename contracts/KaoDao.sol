@@ -18,6 +18,7 @@ contract KaoDao is Initializable,
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+    bytes32 public constant ADMIN_PROPOSE_ROLE = keccak256("ADMIN_PROPOSE_ROLE");
     
     address private _kaoMoji;
 
@@ -29,6 +30,8 @@ contract KaoDao is Initializable,
         __GovernorVotesQuorumFraction_init(25);
         __UUPSUpgradeable_init();
         _setupRole(ADDRESS_UPDATER, msg.sender);
+        _setupRole(UPGRADER_ROLE, msg.sender);
+        _setupRole(ADMIN_PROPOSE_ROLE, msg.sender);
     }
 
     function votingDelay() public pure override returns (uint256) {
@@ -48,6 +51,7 @@ contract KaoDao is Initializable,
 
     function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
         public
+        onlyRole(ADMIN_PROPOSE_ROLE)
         override(GovernorUpgradeable)
         returns (uint256)
     {

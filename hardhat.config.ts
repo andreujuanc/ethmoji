@@ -29,10 +29,10 @@ module.exports = {
   networks: {
     hardhat: {
       initialBaseFeePerGas: 0, // workaround from https://github.com/sc-forks/solidity-coverage/issues/652#issuecomment-896330136 . Remove when that issue is closed.
-      mining: {
-        auto: false,
-        interval: [500, 1000]
-      }
+      // mining: { // just for testing
+      //   auto: false,
+      //   interval: [500, 1000]
+      // }
     },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
@@ -47,5 +47,7 @@ module.exports = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
-
+  mocha: {
+    timeout: 40000
+  }
 };
