@@ -9,6 +9,8 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
+import "./KaoMoji.sol";
+
 /// @custom:security-contact me@something.com
 contract KaoDao is Initializable, 
     GovernorUpgradeable,  GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable,
@@ -20,7 +22,7 @@ contract KaoDao is Initializable,
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant ADMIN_PROPOSE_ROLE = keccak256("ADMIN_PROPOSE_ROLE");
     
-    address private _kaoMoji;
+    KaoMoji private _kaoMoji;
 
     function initialize(ERC20VotesUpgradeable _token) public initializer 
     {
@@ -45,7 +47,8 @@ contract KaoDao is Initializable,
     }
 
     function setKaoMojiAddress(address kaoMoji) public onlyRole(ADDRESS_UPDATER) {
-        _kaoMoji = kaoMoji;
+        require(kaoMoji != address(0));
+        _kaoMoji = KaoMoji(kaoMoji);
     }
 
 
@@ -55,11 +58,27 @@ contract KaoDao is Initializable,
         override(GovernorUpgradeable)
         returns (uint256)
     {
-        require(targets.length == 1, "targets.length != 1");
-        require(_kaoMoji != address(0), "kaoMoji == 0");
-        require(targets[0] == _kaoMoji, "target != kaomoji");
-
         return super.propose(targets, values, calldatas, description);
+    }
+
+    function proposeKao(bytes memory data, string memory description)
+        public
+        returns (uint256)
+    {
+        require(address(_kaoMoji) != address(0), "kaoMoji == 0");
+        require(data.length > 0, "data > 0");
+
+     
+        address[] memory targets = new address[](1);
+        targets[0] = address(_kaoMoji);
+
+        uint256[] memory values = new uint256[](1);
+        values[0] = 0;
+
+        bytes[] memory proposals = new bytes[](1);
+        proposals[0] = abi.encodeWithSelector(_kaoMoji.mint.selector, data);
+
+        return super.propose(targets, values , proposals, description);
     }
 
 

@@ -10,11 +10,10 @@ describe("KapDao", function () {
 
     const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9')
 
-    // Should have a create proposal specific for kaomojis. and a separate for governance
     const result = await core.kaoDao.propose([core.kaoMoji.address], [0], ["0x"], "Test")
     expect(getProposalIdFromReceipt(await result.wait())).to.have.lengthOf(77)
 
-    try {      
+    try {
       const result2 = await core.kaoDao.connect(user1).propose([core.kaoMoji.address], [0], ["0x01"], "Test")
       await result2.wait()
       throw new Error('This should not execute')
@@ -23,6 +22,18 @@ describe("KapDao", function () {
     }
 
   });
+
+  it("Should allow to propose kaomojis securely", async function () {
+    const [owner, user1] = await ethers.getSigners();
+
+    const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9')
+
+    const kaoData = ethers.utils.toUtf8Bytes(":D")
+    const result = await core.kaoDao.proposeKao(kaoData, "Happy face")
+    expect(getProposalIdFromReceipt(await result.wait())).to.have.lengthOf(77)
+
+  });
+
 });
 
 function getProposalIdFromReceipt(receipt: ContractReceipt) {

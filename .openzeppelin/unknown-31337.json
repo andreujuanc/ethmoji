@@ -8,7 +8,17 @@
     },
     {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x8c0deb7249efd02f19d7dc5e0862dc9f75d4abaf2da1399c01236beb0eccf657",
+      "txHash": "0xaf34a67584c230bbb9ff9a3fe7e990d4a4e6778049594281762f9fd8027f4537",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0xa3342bfb040a539fbb69ee6f87487d6da60bc5c371be5db613b3e8d88c82dfa9",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0x7046cc828cd46fc4f79b3c792e5b48786dfbe49eaf44a4c7159278da1210bf4f",
       "kind": "uups"
     }
   ],
@@ -123,7 +133,7 @@
           {
             "contract": "KaoMoji",
             "label": "_auctionHouse",
-            "type": "t_contract(IAuctionHouse)13545",
+            "type": "t_contract(IAuctionHouse)13630",
             "src": "contracts/KaoMoji.sol:31"
           },
           {
@@ -143,7 +153,7 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IAuctionHouse)13545": {
+          "t_contract(IAuctionHouse)13630": {
             "label": "contract IAuctionHouse"
           },
           "t_address": {
@@ -198,9 +208,9 @@
         }
       }
     },
-    "27142d325fab19b1e9661180bc88d8140b0e19d7c1453efb9a101694676fb803": {
+    "cf8111970927e1db4cfa411ef9ce30c8f76fb426b5e54274b23661d543a39676": {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xfd4fb1c59c51f1afb4abc8f0b3098d67c5a8473cd2c44e2b3541b8013fade292",
+      "txHash": "0x3294ea295f2b524580e4120330f0b4b5c3c3b5d08d65ceb54275acd64945e776",
       "layout": {
         "storage": [
           {
@@ -332,13 +342,13 @@
           {
             "contract": "KaoDao",
             "label": "_kaoMoji",
-            "type": "t_address",
-            "src": "contracts/KaoDao.sol:23"
+            "type": "t_contract(KaoMoji)12172",
+            "src": "contracts/KaoDao.sol:25"
           }
         ],
         "types": {
-          "t_address": {
-            "label": "address"
+          "t_contract(KaoMoji)12172": {
+            "label": "contract KaoMoji"
           },
           "t_mapping(t_bytes32,t_struct(RoleData)43_storage)": {
             "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)"
@@ -361,6 +371,9 @@
           },
           "t_mapping(t_address,t_bool)": {
             "label": "mapping(address => bool)"
+          },
+          "t_address": {
+            "label": "address"
           },
           "t_bool": {
             "label": "bool"
