@@ -66,7 +66,8 @@ contract KaoDao is Initializable,
         returns (uint256)
     {
         require(address(_kaoMoji) != address(0), "kaoMoji == 0");
-        require(data.length > 0, "data > 0");
+        require(data.length > 0, "data == 0");
+        // TODO: trim string to ensure uniqueness
 
      
         address[] memory targets = new address[](1);
