@@ -17,7 +17,7 @@ contract KaoDao is Initializable,
     constructor() initializer {}
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
-    bytes32 public constant CONTRACT_UPGRADER = keccak256("CONTRACT_UPGRADER");
+    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     
     address private _kaoMoji;
 
@@ -88,7 +88,7 @@ contract KaoDao is Initializable,
 
     function _authorizeUpgrade(address newImplementation)
         internal
-        onlyRole(CONTRACT_UPGRADER)
+        onlyRole(UPGRADER_ROLE)
         override
     {}
 

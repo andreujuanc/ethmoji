@@ -24,9 +24,9 @@ interface KaoDaoInterface extends ethers.utils.Interface {
   functions: {
     "ADDRESS_UPDATER()": FunctionFragment;
     "BALLOT_TYPEHASH()": FunctionFragment;
-    "CONTRACT_UPGRADER()": FunctionFragment;
     "COUNTING_MODE()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
+    "UPGRADER_ROLE()": FunctionFragment;
     "castVote(uint256,uint8)": FunctionFragment;
     "castVoteBySig(uint256,uint8,uint8,bytes32,bytes32)": FunctionFragment;
     "castVoteWithReason(uint256,uint8,string)": FunctionFragment;
@@ -69,15 +69,15 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "CONTRACT_UPGRADER",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "COUNTING_MODE",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "UPGRADER_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -196,15 +196,15 @@ interface KaoDaoInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "CONTRACT_UPGRADER",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "COUNTING_MODE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "UPGRADER_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "castVote", data: BytesLike): Result;
@@ -435,11 +435,11 @@ export class KaoDao extends BaseContract {
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
-    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<[string]>;
-
     COUNTING_MODE(overrides?: CallOverrides): Promise<[string]>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
+    UPGRADER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     castVote(
       proposalId: BigNumberish,
@@ -606,11 +606,11 @@ export class KaoDao extends BaseContract {
 
   BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-  CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<string>;
-
   COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
+  UPGRADER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   castVote(
     proposalId: BigNumberish,
@@ -774,11 +774,11 @@ export class KaoDao extends BaseContract {
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<string>;
-
     COUNTING_MODE(overrides?: CallOverrides): Promise<string>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    UPGRADER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     castVote(
       proposalId: BigNumberish,
@@ -1164,11 +1164,11 @@ export class KaoDao extends BaseContract {
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
-    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<BigNumber>;
-
     COUNTING_MODE(overrides?: CallOverrides): Promise<BigNumber>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    UPGRADER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     castVote(
       proposalId: BigNumberish,
@@ -1333,13 +1333,13 @@ export class KaoDao extends BaseContract {
 
     BALLOT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    CONTRACT_UPGRADER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     COUNTING_MODE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     DEFAULT_ADMIN_ROLE(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    UPGRADER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     castVote(
       proposalId: BigNumberish,

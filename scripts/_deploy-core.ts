@@ -1,6 +1,6 @@
 import { ethers, upgrades } from "hardhat";
 
-export default async function deployCore(auctionHouseAddress: string){
+export default async function deployCore(auctionHouseAddress: string) {
     const KaoToken = await ethers.getContractFactory("KaoToken");
     console.log('Deploying KaoToken')
     const kaoToken = await KaoToken.deploy();
@@ -8,7 +8,9 @@ export default async function deployCore(auctionHouseAddress: string){
 
     const KaoMoji = await ethers.getContractFactory("KaoMoji");
     console.log('Deploying KaoMoji')
-    const kaoMoji = await KaoMoji.deploy();
+    const kaoMoji = await upgrades.deployProxy(KaoMoji, undefined, {
+        kind: 'uups'
+    });
     await kaoMoji.deployed();
 
     await kaoMoji.setKaoToken(kaoToken.address)
