@@ -55,17 +55,19 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         _kaoToken = kaoToken;
     }
 
-    function mint(bytes memory data)
+    function mint(bytes memory _data, address _proposer)
         public
         onlyRole(MINTER_ROLE)
     {
 
         uint256 id = _totalSupply;
-        _safeMint(address(this), id, data);
-        _tokenData[id] = data;
+        
+        _totalSupply++;
+        _safeMint(address(this), id, _data);
+
+        _tokenData[id] = _data;
 
         _approve(address(_auctionHouse), id);
-
 
         uint8 decimals = IERC20MetadataUpgradeable(_kaoToken).decimals();
         _auctionHouse.createAuction(
@@ -73,14 +75,12 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
             address(this), // We have the balance
             1 minutes, //duration 
             1 * 10 ** decimals,
-            payable(address(this)), // curator
+            payable(_proposer), // proposer curator
             0, // curatorFeePercentages 
             _kaoToken
         );
 
-        _approve(address(0), id);
-        _totalSupply++;
-        
+        _approve(address(0), id);    
     }
     
     // The following functions are overrides required by Solidity.

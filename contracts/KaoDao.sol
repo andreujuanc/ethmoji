@@ -77,7 +77,7 @@ contract KaoDao is Initializable,
         values[0] = 0;
 
         bytes[] memory proposals = new bytes[](1);
-        proposals[0] = abi.encodeWithSelector(_kaoMoji.mint.selector, data);
+        proposals[0] = abi.encodeWithSelector(_kaoMoji.mint.selector, data, msg.sender); // mint(data, proposer)
 
         return super.propose(targets, values , proposals, description);
     }

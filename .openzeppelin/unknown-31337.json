@@ -23,9 +23,9 @@
     }
   ],
   "impls": {
-    "514f3dddf7c58118b5b1e545a5c250734ca9c3c790339fffed6194b63713d6be": {
+    "1a59d7b05a2ec6dade03068e886ffadecbac27a60be7fdf7ec97e50927804b9b": {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xd2f697434e985dcdea6dfdacc0f7dfe25412e49b41067eb25474420f8757e4e3",
+      "txHash": "0xac3b2735285e7d49605ff66a9b5ff59061f46243f7bb3957274ba99b863a5714",
       "layout": {
         "storage": [
           {
@@ -133,7 +133,7 @@
           {
             "contract": "KaoMoji",
             "label": "_auctionHouse",
-            "type": "t_contract(IAuctionHouse)13630",
+            "type": "t_contract(IAuctionHouse)13631",
             "src": "contracts/KaoMoji.sol:31"
           },
           {
@@ -153,7 +153,7 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IAuctionHouse)13630": {
+          "t_contract(IAuctionHouse)13631": {
             "label": "contract IAuctionHouse"
           },
           "t_address": {
@@ -208,9 +208,9 @@
         }
       }
     },
-    "cf8111970927e1db4cfa411ef9ce30c8f76fb426b5e54274b23661d543a39676": {
+    "ceef5430fd182f57dc16f17ff6cc80947242eb18228668b3a59e885b5677671e": {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x3294ea295f2b524580e4120330f0b4b5c3c3b5d08d65ceb54275acd64945e776",
+      "txHash": "0xd29edd19a51f9520149b7ccafdf27660da7280bc87ac9c8cc992916b0065228e",
       "layout": {
         "storage": [
           {
@@ -342,12 +342,12 @@
           {
             "contract": "KaoDao",
             "label": "_kaoMoji",
-            "type": "t_contract(KaoMoji)12172",
+            "type": "t_contract(KaoMoji)12173",
             "src": "contracts/KaoDao.sol:25"
           }
         ],
         "types": {
-          "t_contract(KaoMoji)12172": {
+          "t_contract(KaoMoji)12173": {
             "label": "contract KaoMoji"
           },
           "t_mapping(t_bytes32,t_struct(RoleData)43_storage)": {
