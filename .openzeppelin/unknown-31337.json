@@ -60,7 +60,7 @@
   "impls": {
     "6eee0a591af18f1bf4a4209abaf1b4eae774ee74f08ef0c3bbfd02d6689c33ae": {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x1fb9002834141670a750c267852821b5949d59cef5c813121b5b541a0ea3f0e2",
+      "txHash": "0x1f6f0ea0da1aeadede3609e1313be1959ffab5a0245b01d2cb093a75363f2be0",
       "layout": {
         "storage": [
           {
@@ -198,7 +198,7 @@
           {
             "contract": "KaoDao",
             "label": "_staking",
-            "type": "t_contract(KaoStaking)13412",
+            "type": "t_contract(KaoStaking)13416",
             "src": "contracts/KaoDao.sol:28"
           },
           {
@@ -218,7 +218,7 @@
           "t_contract(KaoMoji)12970": {
             "label": "contract KaoMoji"
           },
-          "t_contract(KaoStaking)13412": {
+          "t_contract(KaoStaking)13416": {
             "label": "contract KaoStaking"
           },
           "t_uint256": {
@@ -332,7 +332,7 @@
     },
     "7b3d38ab481488d04ab7ce3cec1e3289a8765db4d43d0b932c8260bf9677cc03": {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0x7be2ec1d008d79a9ee809325a028426993f9b63f05eea3a5fa9bbdf594252fb7",
+      "txHash": "0xb7ae884019d22e460e0f1c88bca758273df37f8a162b2c5da095f2feac3ca469",
       "layout": {
         "storage": [
           {
@@ -440,19 +440,19 @@
           {
             "contract": "KaoMoji",
             "label": "_auctionHouse",
-            "type": "t_contract(IAuctionHouse)14884",
+            "type": "t_contract(IAuctionHouse)14888",
             "src": "contracts/KaoMoji.sol:31"
           },
           {
             "contract": "KaoMoji",
             "label": "_kaoToken",
-            "type": "t_contract(KaoToken)13582",
+            "type": "t_contract(KaoToken)13586",
             "src": "contracts/KaoMoji.sol:32"
           },
           {
             "contract": "KaoMoji",
             "label": "_kaoStaking",
-            "type": "t_contract(KaoStaking)13412",
+            "type": "t_contract(KaoStaking)13416",
             "src": "contracts/KaoMoji.sol:33"
           }
         ],
@@ -466,13 +466,13 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IAuctionHouse)14884": {
+          "t_contract(IAuctionHouse)14888": {
             "label": "contract IAuctionHouse"
           },
-          "t_contract(KaoToken)13582": {
+          "t_contract(KaoToken)13586": {
             "label": "contract KaoToken"
           },
-          "t_contract(KaoStaking)13412": {
+          "t_contract(KaoStaking)13416": {
             "label": "contract KaoStaking"
           },
           "t_mapping(t_bytes32,t_struct(RoleData)43_storage)": {
@@ -527,9 +527,9 @@
         }
       }
     },
-    "2afbf6ce4e12c12b482b1967e6d837135838a1c587a16b5fc345365678dfe68f": {
+    "32c707bb960f3eccfe0ec61d98716f390a879b0d1c9c238ca49b6db658fc4f92": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0x7de30fb9439a29282b6914f8d30c8b53eff6aa01b6edba5b840a26ddbf09586f",
+      "txHash": "0x106a86c0af3983eed579e0100ffd5a822fc8d2309dc972eae364e739ab151d07",
       "layout": {
         "storage": [
           {

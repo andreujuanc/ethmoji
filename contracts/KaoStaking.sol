@@ -71,9 +71,10 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
 
     /* ========== MUTATIVE FUNCTIONS ========== */
     function stake(uint256 amount) external nonReentrant {
-
+        _stakeRaw(msg.sender, amount);
     }
-    function _stakeRaw(address account, uint256 amount) external nonReentrant {
+
+    function _stakeRaw(address account, uint256 amount) internal {
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
 
