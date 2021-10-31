@@ -74,6 +74,13 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
         _stakeRaw(msg.sender, amount);
     }
 
+
+    function withdraw(uint256 amount) public nonReentrant  {
+        _burnRaw(msg.sender, amount);
+    }
+
+
+
     function _stakeRaw(address account, uint256 amount) internal {
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
@@ -102,19 +109,33 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
         emit Staked(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) public nonReentrant  {
-        require(amount > 0, "Cannot withdraw 0");
+
+    function _burnRaw(
+        address account,
+        uint256 amount
+    ) internal {
+        require(account != address(0), "ERC20: burn from zero address");
+        // 1. Get and update current balance
+        Balance memory oldBalance = _balances[account];
+
+        // 1.2. Update
+        require(oldBalance.raw >= amount, "ERC20: burn amount > balance");
+
         _totalSupply = _totalSupply.sub(amount);
-        
-        Balance memory balance = _balances[msg.sender];
 
-        balance.raw = balance.raw - amount;
-
-        _balances[msg.sender] = balance;
+        // 3. Set back scaled time
+        // e.g. stake 10 for 100 seconds, withdraw 5.
+        //      secondsHeld = (100 - 0) * (10 - 0.625) = 937.5
+        uint256 secondsHeld = (block.timestamp - oldBalance.weightedTimestamp) * (oldBalance.raw - (amount / 8));
+        //      newWeightedTs = 937.5 / 100 = 93.75
+        uint256 newSecondsHeld = secondsHeld / oldBalance.raw ;
+        uint256 newWeightedTs = block.timestamp - newSecondsHeld;
+        _balances[account].weightedTimestamp = newWeightedTs;
 
         stakingToken.safeTransfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
+
 
     // Added to support recovering LP Rewards from other systems such as BAL to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyRole(OWNER_ROLE) {

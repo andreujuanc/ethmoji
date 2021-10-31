@@ -21,8 +21,21 @@ describe("KapStaking", function () {
             expect(await core.kaoStaking.totalSupply()).to.be.equal(expectedTotal.toString())
         }
 
-        await transferAndStake(user1, USER_1_BALANCE, USER_1_BALANCE)
-        await transferAndStake(user2, USER_2_BALANCE, BigNumber.from(USER_1_BALANCE).add(USER_2_BALANCE))
+        const withdraw = async (user: SignerWithAddress, amount: BigNumberish, expectedTotal: BigNumberish) => {
+            await expect(() => core.kaoStaking.connect(user).withdraw(amount)).to.changeTokenBalance(core.kaoToken, user, BigNumber.from(amount))
+            expect(await core.kaoStaking.totalSupply()).to.be.equal(expectedTotal.toString(), 'Incorrect total supply')
+        }
+
+
+        await transferAndStake(user1, parseUnits('10', 'ether'), parseUnits('10', 'ether'))
+        await transferAndStake(user2, parseUnits('20', 'ether'), parseUnits('30', 'ether'))
+
+        await withdraw(user1, parseUnits('5', 'ether'), parseUnits('25', 'ether'))
+        await withdraw(user2, parseUnits('10', 'ether'), parseUnits('15', 'ether'))
+
+        await withdraw(user1, parseUnits('5', 'ether'), parseUnits('10', 'ether'));
+
+        await expect(withdraw(user2, parseUnits('1000', 'ether'), parseUnits('10', 'ether'))).to.be.revertedWith('ERC20: burn amount > balance')
 
     });
 
