@@ -17,19 +17,19 @@ import "hardhat/console.sol";
 
 import "./zora/interfaces/IAuctionHouse.sol";
 
-contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  {
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
-    
+import "./KaoToken.sol";
+
+contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  {    
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+    uint8  public constant PROPORSER_PERCENTAGE = 50;
 
 
     mapping(uint256 => bytes) private _tokenData;
     uint256 private _totalSupply;
     IAuctionHouse private _auctionHouse;
-    address private _kaoToken;    
+    KaoToken private _kaoToken;    
 
 
     function initialize() initializer public {
@@ -52,7 +52,7 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
     }
 
     function setKaoToken(address kaoToken) public onlyRole(ADDRESS_UPDATER) {
-        _kaoToken = kaoToken;
+        _kaoToken = KaoToken(kaoToken);
     }
 
     function mint(bytes memory _data, address _proposer)
@@ -69,15 +69,15 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
 
         _approve(address(_auctionHouse), id);
 
-        uint8 decimals = IERC20MetadataUpgradeable(_kaoToken).decimals();
+        uint8 decimals = _kaoToken.decimals();
         _auctionHouse.createAuction(
             id, 
-            address(this), // We have the balance
+            address(this), // token contract
             1 minutes, //duration 
             1 * 10 ** decimals,
             payable(_proposer), // proposer curator
-            0, // curatorFeePercentages 
-            _kaoToken
+            PROPORSER_PERCENTAGE, // curatorFeePercentage => proproser is the curator
+            address(_kaoToken)
         );
 
         _approve(address(0), id);    
@@ -124,5 +124,12 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         onlyRole(UPGRADER_ROLE)
         override
     {}
+
+    /*
+     * 100 - PROPORSER_PERCENTAGE of the bid amount is sent to this contract to be burnt
+     */
+    function burn() external {
+        _kaoToken.burn(_kaoToken.balanceOf(address(this)));
+    }
 
 }
