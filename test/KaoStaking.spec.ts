@@ -14,21 +14,28 @@ describe("KapStaking", function () {
         const USER_1_BALANCE = parseUnits('10', 'ether')
         const USER_2_BALANCE = parseUnits('20', 'ether')
 
-        const transferAndStake = async (user: SignerWithAddress, amount: BigNumberish, expectedTotal: BigNumberish) => {
+        const transfer = async (user: SignerWithAddress, amount: BigNumberish, stakedTotalSupply: BigNumberish) => {
             await expect(() => core.kaoToken.transfer(user.address, amount)).to.changeTokenBalance(core.kaoToken, user, amount)
+            expect(await core.kaoStaking.totalSupply()).to.be.equal(stakedTotalSupply.toString())
+        }
+
+        const stake = async (user: SignerWithAddress, amount: BigNumberish, stakedTotalSupply: BigNumberish) => {
             await expect(() => core.kaoToken.connect(user).approve(core.kaoStaking.address, amount)).to.changeTokenBalance(core.kaoToken, user, '0')
             await expect(() => core.kaoStaking.connect(user).stake(amount)).to.changeTokenBalance(core.kaoToken, user, BigNumber.from(amount).mul(-1))
-            expect(await core.kaoStaking.totalSupply()).to.be.equal(expectedTotal.toString())
+            expect(await core.kaoStaking.totalSupply()).to.be.equal(stakedTotalSupply.toString())
         }
 
-        const withdraw = async (user: SignerWithAddress, amount: BigNumberish, expectedTotal: BigNumberish) => {
+        const withdraw = async (user: SignerWithAddress, amount: BigNumberish, stakedTotalSupply: BigNumberish) => {
             await expect(() => core.kaoStaking.connect(user).withdraw(amount)).to.changeTokenBalance(core.kaoToken, user, BigNumber.from(amount))
-            expect(await core.kaoStaking.totalSupply()).to.be.equal(expectedTotal.toString(), 'Incorrect total supply')
+            expect(await core.kaoStaking.totalSupply()).to.be.equal(stakedTotalSupply.toString(), 'Incorrect total supply')
         }
 
 
-        await transferAndStake(user1, parseUnits('10', 'ether'), parseUnits('10', 'ether'))
-        await transferAndStake(user2, parseUnits('20', 'ether'), parseUnits('30', 'ether'))
+        await transfer(user1, parseUnits('10', 'ether'), parseUnits('0', 'ether'))
+        await transfer(user2, parseUnits('20', 'ether'), parseUnits('0', 'ether'))
+
+        await stake(user1, parseUnits('10', 'ether'), parseUnits('10', 'ether'))
+        await stake(user2, parseUnits('20', 'ether'), parseUnits('30', 'ether'))
 
         await withdraw(user1, parseUnits('5', 'ether'), parseUnits('25', 'ether'))
         await withdraw(user2, parseUnits('10', 'ether'), parseUnits('15', 'ether'))
@@ -36,6 +43,8 @@ describe("KapStaking", function () {
         await withdraw(user1, parseUnits('5', 'ether'), parseUnits('10', 'ether'));
 
         await expect(withdraw(user2, parseUnits('1000', 'ether'), parseUnits('10', 'ether'))).to.be.revertedWith('ERC20: burn amount > balance')
+        await expect(stake(user2, parseUnits('1000', 'ether'), parseUnits('10', 'ether'))).to.be.revertedWith('ERC20: transfer amount exceeds balance')
+
 
     });
 
