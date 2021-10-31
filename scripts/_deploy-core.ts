@@ -28,10 +28,10 @@ export default async function deployCore(auctionHouseAddress: string, voteDelay:
     });
     await kaoMoji.deployed();
 
-    await kaoMoji.setKaoToken(kaoToken.address)
-    await kaoMoji.setAuctionAddress(auctionHouseAddress)
 
-
+    /**
+     * KAOSTAKING
+     */
     const KaoStaking = await ethers.getContractFactory('KaoStaking')
     console.log('Deploying KaoStaking')
     const kaoStaking = await upgrades.deployProxy(KaoStaking, [kaoToken.address], {
@@ -49,10 +49,16 @@ export default async function deployCore(auctionHouseAddress: string, voteDelay:
     await kaoDao.deployed();
     await kaoDao.setKaoMojiAddress(kaoMoji.address);
 
-
+    /**
+     * SETUP
+     */
     
     const minterRole = await kaoMoji.MINTER_ROLE()
     await kaoMoji.grantRole(minterRole, kaoDao.address)
+
+    await kaoMoji.setKaoTokenAddress(kaoToken.address)
+    await kaoMoji.setAuctionAddress(auctionHouseAddress)
+    await kaoMoji.setKaoStakingAddress(kaoStaking.address)
 
     return {
         kaoToken: kaoToken as any,
