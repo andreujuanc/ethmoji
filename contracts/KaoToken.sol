@@ -21,6 +21,12 @@ contract KaoToken is ERC20, ERC20Snapshot, AccessControl, ERC20Permit, ERC20Vote
     function snapshot() public onlyRole(SNAPSHOT_ROLE) {
         _snapshot();
     }
+
+    function burn(uint256 amount)
+    public
+    {
+        super._burn(msg.sender, amount);
+    }
     
     // The following functions are overrides required by Solidity.
 

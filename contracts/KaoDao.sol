@@ -10,40 +10,51 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 import "./KaoMoji.sol";
+import "./KaoToken.sol";
+import "./KaoStaking.sol";
 
 /// @custom:security-contact me@something.com
 contract KaoDao is Initializable, 
     GovernorUpgradeable,  GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable,
     UUPSUpgradeable, AccessControlUpgradeable {
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    //constructor() initializer {}
+        
+    // @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant ADMIN_PROPOSE_ROLE = keccak256("ADMIN_PROPOSE_ROLE");
     
+    uint256 public constant PROPOSAL_STAKE = 1e18;
+    
     KaoMoji private _kaoMoji;
+    KaoStaking private _staking;
+    uint256 private _votingDelay;
+    uint256 private _votingPeriod;
 
-    function initialize(ERC20VotesUpgradeable _token) external initializer 
+    function initialize(ERC20VotesUpgradeable token, KaoStaking staking, uint256 voteDelay, uint256 votePeriod) external initializer 
     {
          __Governor_init("KaoDao");
         __GovernorCountingSimple_init();
-        __GovernorVotes_init(_token);
+        __GovernorVotes_init(token);
         __GovernorVotesQuorumFraction_init(25);
         __UUPSUpgradeable_init();
         _setupRole(ADDRESS_UPDATER, msg.sender);
         _setupRole(UPGRADER_ROLE, msg.sender);
         _setupRole(ADMIN_PROPOSE_ROLE, msg.sender);
+        require(address(staking) != address(0), "Invalid staking address");
+        _staking = staking;
+        _votingDelay = voteDelay;
+        _votingPeriod = votePeriod;
     }
 
-    function votingDelay() public pure override returns (uint256) {
-        return 20;
-            //273; // 1 hour
+    function votingDelay() public view override returns (uint256) {
+        return _votingDelay; //273 => 1 hour
+            
     }
 
-    function votingPeriod() public pure override returns (uint256) {
-        return 80; // TODO: back to 1 week before deploy to mainnet
-            //45818; // 1 week
+    function votingPeriod() public view override returns (uint256) {
+        return _votingPeriod; //45818 => 1 week
     }
 
     function setKaoMojiAddress(address kaoMoji) external onlyRole(ADDRESS_UPDATER) {
@@ -65,10 +76,12 @@ contract KaoDao is Initializable,
         external
         returns (uint256)
     {
+        // TODO: trim string to ensure uniqueness
         require(address(_kaoMoji) != address(0), "kaoMoji == 0");
-        require(data.length > 0, "data > 0");
+        require(data.length > 0, "data == 0");
+        require(_staking.balanceOf(msg.sender) >= PROPOSAL_STAKE, "Not enough tokens staked");
 
-     
+
         address[] memory targets = new address[](1);
         targets[0] = address(_kaoMoji);
 
@@ -76,9 +89,21 @@ contract KaoDao is Initializable,
         values[0] = 0;
 
         bytes[] memory proposals = new bytes[](1);
-        proposals[0] = abi.encodeWithSelector(_kaoMoji.mint.selector, data);
+        proposals[0] = abi.encodeWithSelector(_kaoMoji.mint.selector, data, msg.sender); // mint(data, proposer)
 
         return super.propose(targets, values , proposals, description);
+    }
+
+    /**
+     * @dev See {IGovernor-execute}.
+     */
+    function execute(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) public payable override returns (uint256) {
+        return super.execute(targets, values, calldatas, descriptionHash);
     }
 
 
@@ -98,7 +123,8 @@ contract KaoDao is Initializable,
         override(IGovernorUpgradeable, GovernorVotesUpgradeable)
         returns (uint256)
     {
-        return super.getVotes(account, blockNumber);
+        uint256 votes = super.getVotes(account, blockNumber);
+        return votes > 0 ? votes : _staking.balanceOf(msg.sender);
     }
 
 

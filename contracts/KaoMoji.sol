@@ -17,19 +17,23 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "./zora/interfaces/IAuctionHouse.sol";
 
-contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  {
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    //constructor() initializer {}
-    
+import "./KaoToken.sol";
+import "./KaoStaking.sol";
+
+contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  { 
+    // @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
+
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BALANCE_BURNER_ROLE = keccak256("BALANCE_BURNER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
-
 
     mapping(uint256 => bytes) private _tokenData;
     uint256 private _totalSupply;
     IAuctionHouse private _auctionHouse;
-    address private _kaoToken;    
+    KaoToken private _kaoToken;    
+    KaoStaking private _kaoStaking;
 
 
     function initialize() initializer external {
@@ -51,37 +55,58 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         _auctionHouse = IAuctionHouse(auctionAddress);
     }
 
-    function setKaoToken(address kaoToken) external onlyRole(ADDRESS_UPDATER) {
-        _kaoToken = kaoToken;
+    function setKaoTokenAddress(address kaoToken) external onlyRole(ADDRESS_UPDATER) {
+        _kaoToken = KaoToken(kaoToken);
     }
 
-    function mint(bytes memory data)
+    function setKaoStakingAddress(address kaoStaking) external onlyRole(ADDRESS_UPDATER) {
+        _kaoStaking = KaoStaking(kaoStaking);
+    }
+
+    function mint(bytes memory _data, address _proposer)
         external
         onlyRole(MINTER_ROLE)
     {
 
         uint256 id = _totalSupply;
-        _safeMint(address(this), id, data);
-        _tokenData[id] = data;
+        
+        _totalSupply++;
+        _safeMint(address(this), id, _data);
+
+        _tokenData[id] = _data;
 
         _approve(address(_auctionHouse), id);
 
-
-        uint8 decimals = IERC20MetadataUpgradeable(_kaoToken).decimals();
+        uint8 decimals = _kaoToken.decimals();
         _auctionHouse.createAuction(
             id, 
-            address(this), // We have the balance
+            address(this), // token contract
             1 minutes, //duration 
             1 * 10 ** decimals,
-            payable(address(this)), // curator
-            0, // curatorFeePercentages 
-            _kaoToken
+            payable(_proposer), // proposer curator
+            getProposerPercentageFor(_proposer), // curatorFeePercentage => proproser is the curator
+            address(_kaoToken)
         );
 
-        _approve(address(0), id);
-        _totalSupply++;
-        
+        _approve(address(0), id);    
     }
+
+
+    function getProposerPercentageFor(address user) public view returns (uint8){
+        require(user != address(0), "Invalid Address");
+        uint256 total = _kaoStaking.totalSupply();
+        uint256 balance = _kaoStaking.balanceOf(user);
+        uint256 multiplier = _kaoStaking.getRewardsMultiplier(user);
+        
+        if(total == 0) return 0;
+        if(balance == 0) return 0;
+
+        uint256 share = (balance * 100 / total) * multiplier;
+        if(share > 100) return 100;
+
+        return uint8(share);
+    }
+
     
     // The following functions are overrides required by Solidity.
     // function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
@@ -124,5 +149,13 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         onlyRole(UPGRADER_ROLE)
         override
     {}
+
+    /*
+     * 100 - getProposerPercentageFor of the bid amount is sent to this contract to be burnt
+     * TODO: Create KaoTreasury to deal with this, instead, problem is that the owner of the token is the treasury instead of (this) when minting
+     */
+    function burn() external onlyRole(BALANCE_BURNER_ROLE) {
+        _kaoToken.burn(_kaoToken.balanceOf(address(this)));
+    }
 
 }
