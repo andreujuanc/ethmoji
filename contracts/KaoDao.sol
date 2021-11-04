@@ -17,9 +17,6 @@ import "./KaoStaking.sol";
 contract KaoDao is Initializable, 
     GovernorUpgradeable,  GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable,
     UUPSUpgradeable, AccessControlUpgradeable {
-        
-    // @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");

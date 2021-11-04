@@ -23,19 +23,22 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 interface KaoMojiInterface extends ethers.utils.Interface {
   functions: {
     "ADDRESS_UPDATER()": FunctionFragment;
+    "BALANCE_BURNER_ROLE()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MINTER_ROLE()": FunctionFragment;
     "UPGRADER_ROLE()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "burn()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getDataOf(uint256)": FunctionFragment;
+    "getProposerPercentageFor(address)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint(bytes)": FunctionFragment;
+    "mint(bytes,address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -44,7 +47,8 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setAuctionAddress(address)": FunctionFragment;
-    "setKaoToken(address)": FunctionFragment;
+    "setKaoStakingAddress(address)": FunctionFragment;
+    "setKaoTokenAddress(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -55,6 +59,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "ADDRESS_UPDATER",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "BALANCE_BURNER_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -74,6 +82,7 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "burn", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
@@ -81,6 +90,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getDataOf",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getProposerPercentageFor",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -102,7 +115,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
-  encodeFunctionData(functionFragment: "mint", values: [BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: "mint",
+    values: [BytesLike, string]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onERC721Received",
@@ -132,7 +148,14 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     functionFragment: "setAuctionAddress",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "setKaoToken", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setKaoStakingAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setKaoTokenAddress",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
@@ -157,6 +180,10 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "BALANCE_BURNER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
@@ -170,11 +197,16 @@ interface KaoMojiInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getDataOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getProposerPercentageFor",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
@@ -211,7 +243,11 @@ interface KaoMojiInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setKaoToken",
+    functionFragment: "setKaoStakingAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setKaoTokenAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -343,6 +379,8 @@ export class KaoMoji extends BaseContract {
   functions: {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<[string]>;
 
+    BALANCE_BURNER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
@@ -357,12 +395,21 @@ export class KaoMoji extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    burn(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
+    getProposerPercentageFor(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
@@ -389,7 +436,8 @@ export class KaoMoji extends BaseContract {
     ): Promise<[boolean]>;
 
     mint(
-      data: BytesLike,
+      _data: BytesLike,
+      _proposer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -446,7 +494,12 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setKaoToken(
+    setKaoStakingAddress(
+      kaoStaking: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setKaoTokenAddress(
       kaoToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -484,6 +537,8 @@ export class KaoMoji extends BaseContract {
 
   ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
 
+  BALANCE_BURNER_ROLE(overrides?: CallOverrides): Promise<string>;
+
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -498,12 +553,21 @@ export class KaoMoji extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  burn(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   getApproved(
     tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
   getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  getProposerPercentageFor(
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<number>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -530,7 +594,8 @@ export class KaoMoji extends BaseContract {
   ): Promise<boolean>;
 
   mint(
-    data: BytesLike,
+    _data: BytesLike,
+    _proposer: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -584,7 +649,12 @@ export class KaoMoji extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setKaoToken(
+  setKaoStakingAddress(
+    kaoStaking: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setKaoTokenAddress(
     kaoToken: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -619,6 +689,8 @@ export class KaoMoji extends BaseContract {
   callStatic: {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<string>;
 
+    BALANCE_BURNER_ROLE(overrides?: CallOverrides): Promise<string>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -633,12 +705,19 @@ export class KaoMoji extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    burn(overrides?: CallOverrides): Promise<void>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    getProposerPercentageFor(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<number>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -662,7 +741,11 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(data: BytesLike, overrides?: CallOverrides): Promise<void>;
+    mint(
+      _data: BytesLike,
+      _proposer: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -714,7 +797,15 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setKaoToken(kaoToken: string, overrides?: CallOverrides): Promise<void>;
+    setKaoStakingAddress(
+      kaoStaking: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setKaoTokenAddress(
+      kaoToken: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,
@@ -889,6 +980,8 @@ export class KaoMoji extends BaseContract {
   estimateGas: {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<BigNumber>;
 
+    BALANCE_BURNER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
@@ -903,12 +996,21 @@ export class KaoMoji extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    burn(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getDataOf(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    getProposerPercentageFor(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getRoleAdmin(
       role: BytesLike,
@@ -938,7 +1040,8 @@ export class KaoMoji extends BaseContract {
     ): Promise<BigNumber>;
 
     mint(
-      data: BytesLike,
+      _data: BytesLike,
+      _proposer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -995,7 +1098,12 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setKaoToken(
+    setKaoStakingAddress(
+      kaoStaking: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setKaoTokenAddress(
       kaoToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1034,6 +1142,10 @@ export class KaoMoji extends BaseContract {
   populateTransaction: {
     ADDRESS_UPDATER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    BALANCE_BURNER_ROLE(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DEFAULT_ADMIN_ROLE(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1053,6 +1165,10 @@ export class KaoMoji extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    burn(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -1060,6 +1176,11 @@ export class KaoMoji extends BaseContract {
 
     getDataOf(
       id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getProposerPercentageFor(
+      user: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1091,7 +1212,8 @@ export class KaoMoji extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
-      data: BytesLike,
+      _data: BytesLike,
+      _proposer: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1148,7 +1270,12 @@ export class KaoMoji extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setKaoToken(
+    setKaoStakingAddress(
+      kaoStaking: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setKaoTokenAddress(
       kaoToken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

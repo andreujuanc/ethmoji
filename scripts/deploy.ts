@@ -15,7 +15,7 @@ async function main() {
     throw new Error('Auction house must be deployed first')
   }
 
-  const core = await deployCore(auctionHouseAddress)
+  const core = await deployCore(auctionHouseAddress, '20', '40')
 
   await saveFrontendFiles(networkName, core.kaoDao.address, core.kaoMoji.address, core.kaoToken.address)
 

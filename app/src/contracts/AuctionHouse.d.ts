@@ -22,6 +22,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface AuctionHouseInterface extends ethers.utils.Interface {
   functions: {
+    "INTERFACE_ID_721()": FunctionFragment;
     "auctions(uint256)": FunctionFragment;
     "cancelAuction(uint256)": FunctionFragment;
     "createAuction(uint256,address,uint256,uint256,address,uint8,address)": FunctionFragment;
@@ -34,6 +35,10 @@ interface AuctionHouseInterface extends ethers.utils.Interface {
     "wethAddress()": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "INTERFACE_ID_721",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "auctions",
     values: [BigNumberish]
@@ -83,6 +88,10 @@ interface AuctionHouseInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "INTERFACE_ID_721",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "auctions", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "cancelAuction",
@@ -271,6 +280,8 @@ export class AuctionHouse extends BaseContract {
   interface: AuctionHouseInterface;
 
   functions: {
+    INTERFACE_ID_721(overrides?: CallOverrides): Promise<[string]>;
+
     auctions(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -349,6 +360,8 @@ export class AuctionHouse extends BaseContract {
 
     wethAddress(overrides?: CallOverrides): Promise<[string]>;
   };
+
+  INTERFACE_ID_721(overrides?: CallOverrides): Promise<string>;
 
   auctions(
     arg0: BigNumberish,
@@ -429,6 +442,8 @@ export class AuctionHouse extends BaseContract {
   wethAddress(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    INTERFACE_ID_721(overrides?: CallOverrides): Promise<string>;
+
     auctions(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -813,6 +828,8 @@ export class AuctionHouse extends BaseContract {
   };
 
   estimateGas: {
+    INTERFACE_ID_721(overrides?: CallOverrides): Promise<BigNumber>;
+
     auctions(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     cancelAuction(
@@ -862,6 +879,8 @@ export class AuctionHouse extends BaseContract {
   };
 
   populateTransaction: {
+    INTERFACE_ID_721(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     auctions(
       arg0: BigNumberish,
       overrides?: CallOverrides

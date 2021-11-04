@@ -65,8 +65,7 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
 
     function getRewardsMultiplier(address account) external view returns (uint256) {
         Balance memory _balance = _balances[account];
-        uint256 timeMultiplier = _timeMultiplier(_balance.weightedTimestamp);
-        return (_balance.raw * (100 + timeMultiplier)) / 100;
+        return _timeMultiplier(_balance.weightedTimestamp);
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
@@ -75,7 +74,7 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
     }
 
 
-    function withdraw(uint256 amount) public nonReentrant  {
+    function withdraw(uint256 amount) external nonReentrant  {
         _burnRaw(msg.sender, amount);
     }
 

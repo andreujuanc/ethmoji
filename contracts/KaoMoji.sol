@@ -21,8 +21,6 @@ import "./KaoToken.sol";
 import "./KaoStaking.sol";
 
 contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  { 
-    // @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -32,8 +30,8 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
     mapping(uint256 => bytes) private _tokenData;
     uint256 private _totalSupply;
     IAuctionHouse private _auctionHouse;
-    KaoToken private _kaoToken;    
-    KaoStaking private _kaoStaking;
+    KaoToken private _kaoToken;    // TODO: make it an interface
+    KaoStaking private _kaoStaking; // TODO: make it an interface
 
 
     function initialize() initializer external {
