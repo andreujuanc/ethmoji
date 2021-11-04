@@ -13,13 +13,13 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 import "./zora/interfaces/IAuctionHouse.sol";
 
 contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable, UUPSUpgradeable, AccessControlUpgradeable  {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+    //constructor() initializer {}
     
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -32,7 +32,7 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
     address private _kaoToken;    
 
 
-    function initialize() initializer public {
+    function initialize() initializer external {
         __ERC721_init("KaoMoji", "KMJ");
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -47,16 +47,16 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         return "https://somecoolstuffsootherpeoplecangetprerenders.io/token/{id}";
     }
 
-    function setAuctionAddress(address auctionAddress) public onlyRole(ADDRESS_UPDATER) {
+    function setAuctionAddress(address auctionAddress) external onlyRole(ADDRESS_UPDATER) {
         _auctionHouse = IAuctionHouse(auctionAddress);
     }
 
-    function setKaoToken(address kaoToken) public onlyRole(ADDRESS_UPDATER) {
+    function setKaoToken(address kaoToken) external onlyRole(ADDRESS_UPDATER) {
         _kaoToken = kaoToken;
     }
 
     function mint(bytes memory data)
-        public
+        external
         onlyRole(MINTER_ROLE)
     {
 
@@ -97,7 +97,7 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
     }
 
     function getDataOf(uint256 id)
-        public
+        external
         view
         returns (bytes memory)
     {

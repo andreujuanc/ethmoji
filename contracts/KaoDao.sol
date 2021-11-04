@@ -16,7 +16,7 @@ contract KaoDao is Initializable,
     GovernorUpgradeable,  GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable,
     UUPSUpgradeable, AccessControlUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+    //constructor() initializer {}
 
     bytes32 public constant ADDRESS_UPDATER = keccak256("ADDRESS_UPDATER");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
@@ -24,7 +24,7 @@ contract KaoDao is Initializable,
     
     KaoMoji private _kaoMoji;
 
-    function initialize(ERC20VotesUpgradeable _token) public initializer 
+    function initialize(ERC20VotesUpgradeable _token) external initializer 
     {
          __Governor_init("KaoDao");
         __GovernorCountingSimple_init();
@@ -46,7 +46,7 @@ contract KaoDao is Initializable,
             //45818; // 1 week
     }
 
-    function setKaoMojiAddress(address kaoMoji) public onlyRole(ADDRESS_UPDATER) {
+    function setKaoMojiAddress(address kaoMoji) external onlyRole(ADDRESS_UPDATER) {
         require(kaoMoji != address(0));
         _kaoMoji = KaoMoji(kaoMoji);
     }
@@ -62,7 +62,7 @@ contract KaoDao is Initializable,
     }
 
     function proposeKao(bytes memory data, string memory description)
-        public
+        external
         returns (uint256)
     {
         require(address(_kaoMoji) != address(0), "kaoMoji == 0");

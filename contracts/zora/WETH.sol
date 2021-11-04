@@ -45,8 +45,8 @@ contract WETH9 {
     function withdraw(uint wad) public {
         require(balanceOf[msg.sender] >= wad, "Not enough balance to withdraw");
         balanceOf[msg.sender] -= wad;
-        payable(msg.sender).transfer(wad);
         emit Withdrawal(msg.sender, wad);
+        payable(msg.sender).transfer(wad);
     }
 
     function totalSupply() public view returns (uint) {

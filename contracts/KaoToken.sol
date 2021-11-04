@@ -15,7 +15,7 @@ contract KaoToken is ERC20, ERC20Snapshot, AccessControl, ERC20Permit, ERC20Vote
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(SNAPSHOT_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, msg.sender);
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+        _mint(msg.sender, 1_000_000 * 10 ** decimals());
     }
 
     function snapshot() public onlyRole(SNAPSHOT_ROLE) {
