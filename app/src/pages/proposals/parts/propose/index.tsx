@@ -29,12 +29,10 @@ export default function Propose() {
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
         const data = ethers.utils.toUtf8Bytes(proposalData)
-        const callData = contracts?.moji.interface.encodeFunctionData('mint', [data])
-
-        if (!callData) throw new Error('Could not create proposal')
-
+        const description = "Some cool description here"
+       
         try {
-            const tx = await contracts?.dao.propose([addresses.KaoMoji], [0], [callData], proposalData)
+            const tx = await contracts?.dao.proposeKao(data, description)
             await tx?.wait()
         }
         catch (ex: any) {
