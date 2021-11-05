@@ -11,7 +11,7 @@ import { injected, walletconnect } from '../../core/connectors'
 
 
 export default function Connect() {
-    const { activate, active, deactivate, account, chainId } = useWeb3React<ethers.providers.Web3Provider>()
+    const { activate, active, deactivate, account, chainId, error, setError } = useWeb3React<ethers.providers.Web3Provider>()
     const [showProviderModal, setShowProviderModal] = useState(false)
     const triedEager = useEagerConnect()
 
@@ -33,7 +33,7 @@ export default function Connect() {
         return `${account?.substr(0, 6)}...${account?.substr(account.length - 4, 4)}`
     }, [account])
 
-    console.log(active, account, chainId)
+    console.log(active, account, chainId, error)
 
     return (
         <span style={{ display: 'flex' }}>
@@ -55,15 +55,30 @@ export default function Connect() {
                         <span>
                             Connect with your preferred wallet
                         </span>
-                        <br/>
+                        <br />
                         <Button onClick={() => connect(injected)}>
                             Metamask
                         </Button>
                         <Button onClick={() => connect(walletconnect)}>
                             WalletConnnect
                         </Button>
-                        <br/>
+                        <br />
                         <Button onClick={() => setShowProviderModal(false)}>
+                            Close
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            {error && (
+                <div className="connect-modal">
+                    <div className="content black-shadow-3">
+                        <span>
+                            {error.message}
+                        </span>
+                        
+                        <br />
+                        <Button onClick={() => setError(undefined as any)}>
                             Close
                         </Button>
                     </div>

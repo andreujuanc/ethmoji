@@ -1,9 +1,10 @@
-import { BigNumber, formatFixed } from "@ethersproject/bignumber"
+import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import { useEffect, useState } from "react"
 import { useContracts } from "../../hooks/useContracts"
 import { useSigner } from "../../hooks/useSigner"
 import './balance.css'
+import { formatValue } from "../../utils/formatValue"
 
 export default function Balance() {
     const contracts = useContracts()
@@ -33,21 +34,16 @@ export default function Balance() {
         }
     }, [contracts, signer, account])
 
-    const format = (value: BigNumber) => {
-        if (!value) return value
-        const parts = formatFixed(value, 18).split('.')
-
-        return `${parts[0]}.${(parts[1] ?? '').substr(0, 4)}`
-    }
-
     return (
         <div className="balanceContainer">
             <div className={'kaoBalance'}>
-                {balance?.kao ? format(balance.kao) : '--'} KAO
+                {formatValue(balance?.kao, '-- ')} KAO
             </div>
             <div>
-                {balance?.eth ? format(balance.eth) : '--'} ETH
+                {formatValue(balance?.eth, '-- ')} ETH
             </div>
         </div>
     )
 }
+
+
