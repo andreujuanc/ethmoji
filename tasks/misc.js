@@ -9,3 +9,11 @@ task("mine", "For testing purposes, it advances the blocknumber")
   });
 
 
+  task("dayforward", "For testing purposes, it advances the timestamp")
+  //.addPositionalParam("days", "The Amount of days to mine")
+  .setAction(async ({ blocks }) => {
+    await network.provider.send("evm_increaseTime", [3600*24])
+    await network.provider.send("evm_mine") 
+  });
+
+
