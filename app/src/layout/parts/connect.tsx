@@ -53,7 +53,7 @@ export default function Connect() {
                 <div className="connect-modal">
                     <div className="content black-shadow-3">
                         <span>
-                            Connect with your favourite wallet
+                            Connect with your preferred wallet
                         </span>
                         <br/>
                         <Button onClick={() => connect(injected)}>
