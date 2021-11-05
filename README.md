@@ -28,11 +28,8 @@ npm run start
  npx hardhat --network localhost faucet <ADDRESS> <AMOUNT>
  ```
 
- ### Cool things I managed to integrate
- - Auction
-    - Zora https://github.com/ourzora/auction-house
-      - Copied the AuctionHouse contract into the repo and used it.
-
- - AMM with sdks
-    - Paraswap
-      - Used SDK to build a swap feature for KAO pairs 
+### Move forward in time
+```
+npx hardhat --network localhost dayforward
+```
+ 

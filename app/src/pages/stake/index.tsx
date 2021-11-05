@@ -51,7 +51,7 @@ export default function ProposalsPage() {
         getAllowance()
     }, [signer, getAllowance])
 
-    const allowed = depositAmount && allowance && BigNumber.from(allowance).gte(depositAmount || '0')
+    const allowed = allowance && BigNumber.from(allowance || '0').gte(depositAmount || '0')
 
     return (
         <div className="page">

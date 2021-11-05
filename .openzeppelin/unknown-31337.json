@@ -140,6 +140,21 @@
       "address": "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
       "txHash": "0xaedbc6d551cddb8e30e1815fbb48d0b8e6d5e20f5fbfae954c0f7282c1613193",
       "kind": "uups"
+    },
+    {
+      "address": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
+      "txHash": "0xebe2343a0a61a1dcc529d844d9c51c1de0b85bc70f11bba6cab73dd8c7b483eb",
+      "kind": "uups"
+    },
+    {
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
+      "txHash": "0xcbcd951d7c8186104df38da41b27e79af520cb60d098daca1c6a80660c067875",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5",
+      "txHash": "0xb9e87585bd89cf4a00537ee33820791754fa06857e89a8ae7c2cf942a8d7fdb5",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -1047,6 +1062,150 @@
     "d7c3802baffc71b4249e4e9997f04928599572850d047b93c6cbf75d484cf71d": {
       "address": "0x04C89607413713Ec9775E14b954286519d836FEf",
       "txHash": "0xf87d5f32aea69980312f39001637988c85dca0181a2b3d31f7c637c835cd73b5",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:37"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:67"
+          },
+          {
+            "contract": "ERC1967UpgradeUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:214"
+          },
+          {
+            "contract": "UUPSUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:80"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:35"
+          },
+          {
+            "contract": "AccessControlUpgradeable",
+            "label": "_roles",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)43_storage)",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:63"
+          },
+          {
+            "contract": "AccessControlUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:219"
+          },
+          {
+            "contract": "KaoStaking",
+            "label": "stakingToken",
+            "type": "t_contract(IERC20Upgradeable)3210",
+            "src": "contracts/KaoStaking.sol:30"
+          },
+          {
+            "contract": "KaoStaking",
+            "label": "_totalSupply",
+            "type": "t_uint256",
+            "src": "contracts/KaoStaking.sol:32"
+          },
+          {
+            "contract": "KaoStaking",
+            "label": "_balances",
+            "type": "t_mapping(t_address,t_struct(Balance)12985_storage)",
+            "src": "contracts/KaoStaking.sol:33"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20Upgradeable)3210": {
+            "label": "contract IERC20Upgradeable"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_struct(Balance)12985_storage)": {
+            "label": "mapping(address => struct Balance)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(Balance)12985_storage": {
+            "label": "struct Balance",
+            "members": [
+              {
+                "label": "raw",
+                "type": "t_uint256"
+              },
+              {
+                "label": "weightedTimestamp",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_bytes32,t_struct(RoleData)43_storage)": {
+            "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(RoleData)43_storage": {
+            "label": "struct AccessControlUpgradeable.RoleData",
+            "members": [
+              {
+                "label": "members",
+                "type": "t_mapping(t_address,t_bool)"
+              },
+              {
+                "label": "adminRole",
+                "type": "t_bytes32"
+              }
+            ]
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "6f6973315cebce74f1236b2bd338da58e234ba0a30cc7f223ad8810b839a902a": {
+      "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "txHash": "0xf032039767f236c62c7129a0854792281a5dce038eee21b0e76c3e5db29574b8",
       "layout": {
         "storage": [
           {
