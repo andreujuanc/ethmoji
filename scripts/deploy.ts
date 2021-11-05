@@ -17,7 +17,7 @@ async function main() {
 
   const core = await deployCore(auctionHouseAddress, '20', '40')
 
-  await saveFrontendFiles(networkName, core.kaoDao.address, core.kaoMoji.address, core.kaoToken.address)
+  await saveFrontendFiles(networkName, core.kaoDao.address, core.kaoMoji.address, core.kaoToken.address, core.kaoStaking.address)
 
   console.log("Done!");
 }

@@ -2,7 +2,14 @@ import { artifacts } from "hardhat";
 import fs from 'fs';
 import { Networks } from "./networks";
 
-export async function saveFrontendFiles(network: Networks, kaoDaoAddress: string, kaoMojiAddress: string, kaoTokenAddress: string) {
+export async function saveFrontendFiles(
+  network: Networks,
+  kaoDaoAddress: string,
+  kaoMojiAddress: string,
+  kaoTokenAddress: string,
+  kaoStakingAddress: string
+) {
+
   const contractsDir = __dirname + "/../../app/src/contracts";
   const typesDir = __dirname + "/../../typechain";
   const addressesFile = contractsDir + "/contract-address.json";
@@ -23,7 +30,13 @@ export async function saveFrontendFiles(network: Networks, kaoDaoAddress: string
 
   const file = {
     ...addresses,
-    [network]: { ...addresses[network], KaoDao: kaoDaoAddress, KaoMoji: kaoMojiAddress, KaoToken: kaoTokenAddress }
+    [network]: {
+      ...addresses[network],
+      KaoDao: kaoDaoAddress,
+      KaoMoji: kaoMojiAddress,
+      KaoToken: kaoTokenAddress,
+      KaoStaking: kaoStakingAddress
+    }
   }
 
   fs.writeFileSync(addressesFile, JSON.stringify(file, undefined, 2));
@@ -35,6 +48,7 @@ export async function saveFrontendFiles(network: Networks, kaoDaoAddress: string
   await copy("KaoDao");
   await copy("KaoMoji");
   await copy("KaoToken");
+  await copy("KaoStaking");
   await copy("AuctionHouse");
   // TODO: Copy types to /app
   console.log("Files saved to frontend");

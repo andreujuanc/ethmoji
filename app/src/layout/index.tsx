@@ -12,6 +12,9 @@ export function Layout({ children }: { children: any }) {
                     <Link to="/">
                         Home
                     </Link>
+                    <Link to="/stake">
+                        Stake
+                    </Link>
                     <Link to="/gallery">
                         Gallery
                     </Link>

@@ -11,11 +11,13 @@ import { KaoMoji } from "../contracts/KaoMoji";
 import { KaoToken } from "../contracts/KaoToken";
 import { AuctionHouse } from "../contracts/AuctionHouse";
 import { useAddresses } from "./useAddresses";
+import { KaoStaking__factory } from "../contracts/factories/KaoStaking__factory";
+import { KaoStaking } from "../contracts/KaoStaking";
 
 
 export function useContracts() {
     const { connector, library, active } = useWeb3React()
-    const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji, token: KaoToken, auction: AuctionHouse }>()
+    const [contracts, setContracts] = useState<{ dao: KaoDao, moji: KaoMoji, token: KaoToken, auction: AuctionHouse, staking: KaoStaking }>()
     const addresses = useAddresses()
 
     const getKaoDao = useMemo(() => async () => {
@@ -27,8 +29,9 @@ export function useContracts() {
         const moji = KaoMoji__factory.connect(addresses.KaoMoji, signer);
         const token = KaoToken__factory.connect(addresses.KaoToken, signer);
         const auction = AuctionHouse__factory.connect(addresses.AuctionHouse, signer);
+        const staking = KaoStaking__factory.connect(addresses.KaoStaking, signer)
 
-        setContracts({ dao, moji, token, auction })
+        setContracts({ dao, moji, token, staking, auction })
 
     }, [connector, library, active, addresses])
 

@@ -6,6 +6,7 @@ type KaoAddresses = {
     KaoDao: string,
     KaoMoji: string,
     KaoToken: string,
+    KaoStaking: string
     WETH: string,
     AuctionHouse: string,
 }
@@ -13,7 +14,6 @@ type KaoAddresses = {
 type AddressBook = {
     [network: string]: KaoAddresses,
 }
-
 
 export function useAddresses (): KaoAddresses{
     const { chainId } = useWeb3React()

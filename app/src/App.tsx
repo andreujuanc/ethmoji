@@ -9,6 +9,7 @@ import './App.css'
 import Auctions from './pages/auctions'
 import BuyKaoPage from './pages/buy'
 import GalleryPage from './pages/gallery'
+import StakingPage from './pages/stake'
 
 function getLibrary(provider: any, connector: any) {
   return new ethers.providers.Web3Provider(provider)
@@ -24,6 +25,10 @@ export default function App() {
 
             <Route exact path="/" >
               <HomePage />
+            </Route>
+
+            <Route exact path="/stake" >
+              <StakingPage />
             </Route>
 
             <Route exact path="/gallery" >
