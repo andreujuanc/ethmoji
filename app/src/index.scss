@@ -36,6 +36,19 @@ nav a {
   box-shadow: 3px 3px black, 5px 5px white;
 }
 
+
+.black-shadow-1 {
+  border: 3px solid black !important;
+  box-shadow: 3px 3px black, 5px 5px #000;
+}
+
+.black-shadow-3 {
+  border: 3px solid black !important;
+  box-shadow: 9px 9px black;
+}
+
+
+
 header {
   margin-bottom: 1.5rem;
   h1 {

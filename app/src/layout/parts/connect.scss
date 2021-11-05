@@ -1,0 +1,37 @@
+.connect-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    border: none;
+
+    height: 100vh;
+    max-height: 100%;
+    width: 100vw;
+    max-width: 100%;
+
+    background: #01020255;
+    backdrop-filter: blur(1px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        background-color: #444;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+
+        /* spacing as needed */
+        padding: 1rem;
+
+        /* let it scroll */
+        overflow-y: auto;
+        overflow-x: hidden;
+        
+    }
+}
