@@ -22,11 +22,30 @@ export function useStaking() {
             setBalance(kaoBalance)
         }
 
-        getBalance()
+        const getStaking = async () => {
+            const address = await signer?.getAddress()
+            if (!address) return
+            const staked = await contracts?.staking.balanceOf(address)
+            setStaked(staked)
+        }
+
+        const getMultiplier = async () => {
+            const address = await signer?.getAddress()
+            if (!address) return
+            const multiplier = await contracts?.staking.getRewardsMultiplier(address)
+            setMultiplier(multiplier)
+        }
+
+        getStaking()
+        getMultiplier()
+
+        const multiplierInterval = setInterval(getMultiplier, 5000)
+        
         //const filter = contracts?.token.filters["Transfer(address,address,uint256)"]
         contracts?.token.on("Transfer(address,address,uint256)", getBalance)
         return () => {
             contracts?.token.off("Transfer(address,address,uint256)", getBalance)
+            clearInterval(multiplierInterval)
         }
     }, [contracts, signer, account])
 

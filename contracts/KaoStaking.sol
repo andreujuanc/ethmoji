@@ -154,17 +154,19 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
      * @param _ts WeightedTimestamp of a user
      * @return timeMultiplier Ranging from 20 (0.2x) to 60 (0.6x)
      */
-    function _timeMultiplier(uint256 _ts) internal view returns (uint8 timeMultiplier) {
+    function _timeMultiplier(uint256 _ts) internal view returns (uint256 timeMultiplier) {
         // If the user has no ts yet, they are not in the system
         if (_ts == 0) return 0;
 
         uint256 hodlLength = block.timestamp - _ts;
         if (hodlLength < 13 weeks) {
             // 0-3 months = 1x
-            return 0;
+            //return 0
+            return hodlLength * 19 / 13 weeks;
         } else if (hodlLength < 26 weeks) {
             // 3 months = 1.2x
-            return 20;
+            //return 20;
+            return hodlLength * 29 / 26 weeks;
         } else if (hodlLength < 52 weeks) {
             // 6 months = 1.3x
             return 30;
