@@ -7,7 +7,7 @@ export default function HomePage() {
     const kaoMojis = useKaoMojis(true)
 
     return (
-        <div>
+        <div className="page">
             <Logo />
             <br />
             <div style={{

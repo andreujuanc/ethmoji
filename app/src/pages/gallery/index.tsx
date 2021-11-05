@@ -5,7 +5,7 @@ export default function GalleryPage() {
     const kaoMojis = useKaoMojis(false)
 
     return (
-        <div>
+        <div className="page">
             <header>
                 <h1>
                     Gallery

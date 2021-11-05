@@ -2,12 +2,7 @@ import './index.scss'
 export function Logo() {
 
     return <h1
-        className="logo"
-        style={{
-            fontWeight: 'normal',
-            fontSize: '6rem',
-            textAlign: 'center'
-        }}>
+        className="logo">
         Eth Moji
     </h1>;
 }

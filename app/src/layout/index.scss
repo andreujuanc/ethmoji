@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  margin: 9px 1rem;
+  nav {
+    width: 100%;
+    display: flex;
+    flex-flow: wrap;
+  }
+}
+
+@media (max-width: 1240px) {
+  .header {
+    flex-direction: column;
+    height: 140px;
+    nav{
+      justify-content: center;
+    }
+  }
+}
+
+.page{
+  max-width: 600px;
+  min-width: 600px;
+  padding: 0 2rem;
+}
+
+
+@media (max-width: 1240px) {
+  .page {
+    flex-direction: column;
+    min-width: calc(98vw - 2rem);
+    padding: 0 1rem;
+  }
+}

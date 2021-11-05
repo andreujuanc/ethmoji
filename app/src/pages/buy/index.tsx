@@ -185,10 +185,7 @@ export default function BuyKaoPage() {
     }
 
     return (
-        <div style={{
-            maxWidth: '600px',
-            minWidth: '600px',
-        }}>
+        <div className="page">
             <header>
                 <h1>
                     Buy Kao

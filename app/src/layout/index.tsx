@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Balance from './parts/balance'
 import Connect from './parts/connect'
-import './index.css'
+import './index.scss'
 
 export function Layout({ children }: { children: any }) {
 
