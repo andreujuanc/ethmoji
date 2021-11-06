@@ -5,12 +5,10 @@ import Button from "../../../../components/button"
 import "../../../../components/input/index"
 import { useSigner } from "../../../../hooks/useSigner"
 import { Input } from "../../../../components/input"
-import { useAddresses } from "../../../../hooks/useAddresses"
 
 export default function Propose() {
     const contracts = useContracts()
     const signer = useSigner()
-    const addresses = useAddresses()
     const [proposalData, setProposalData] = useState<string>('')
 
     const selfDelegate = async () => {

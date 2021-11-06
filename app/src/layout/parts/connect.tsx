@@ -13,7 +13,7 @@ import { injected, walletconnect } from '../../core/connectors'
 export default function Connect() {
     const { activate, active, deactivate, account, chainId, error, setError } = useWeb3React<ethers.providers.Web3Provider>()
     const [showProviderModal, setShowProviderModal] = useState(false)
-    const triedEager = useEagerConnect()
+    useEagerConnect()
 
     async function connect(connector: AbstractConnector) {
         try {

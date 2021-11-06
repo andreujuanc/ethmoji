@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import { useEffect, useState } from "react"
 import { useContracts } from "./useContracts"
 import { useSigner } from "./useSigner"
-import { BigNumber, formatFixed } from "@ethersproject/bignumber"
+import { BigNumber } from "@ethersproject/bignumber"
 
 
 export function useStaking() {
@@ -12,7 +12,6 @@ export function useStaking() {
     const [staked, setStaked] = useState<BigNumber>()
     const [balance, setBalance] = useState<BigNumber>()
     const [multiplier, setMultiplier] = useState<BigNumber>()
-
 
     useEffect(() => {
         const getBalance = async () => {
@@ -36,15 +35,17 @@ export function useStaking() {
             setMultiplier(multiplier)
         }
 
+        getBalance()
         getStaking()
         getMultiplier()
 
         const multiplierInterval = setInterval(getMultiplier, 5000)
-        
-        //const filter = contracts?.token.filters["Transfer(address,address,uint256)"]
         contracts?.token.on("Transfer(address,address,uint256)", getBalance)
+        contracts?.staking.on('Staked(address,uint256)', getStaking)
+
         return () => {
             contracts?.token.off("Transfer(address,address,uint256)", getBalance)
+            contracts?.staking.off('Staked(address,uint256)', getStaking)
             clearInterval(multiplierInterval)
         }
     }, [contracts, signer, account])
