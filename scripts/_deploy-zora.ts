@@ -10,7 +10,7 @@ async function main() {
     const networkName = network.name
     if (!isValidNetwork(networkName)) throw new Error(`Network not supported: ${networkName}`);
 
-    const { addressesFile } = getAddresses(networkName);
+    const { addressesFile } = getAddresses();
 
     const addressJson = fs.readFileSync(addressesFile);
     const addresses: AddressBook = JSON.parse(addressJson.toString());

@@ -9,8 +9,8 @@ async function main() {
   const networkName = network.name
   if (!isValidNetwork(networkName)) throw new Error(`Network not supported: ${networkName}`);
 
-  const addresses = getAddresses(networkName);
-  const auctionHouseAddress = addresses[networkName].AuctionHouse
+  const addresses = getAddresses()[networkName];
+  const auctionHouseAddress = addresses.AuctionHouse
   if (!auctionHouseAddress) {
     throw new Error('Auction house must be deployed first')
   }

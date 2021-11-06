@@ -9,11 +9,16 @@
     "local:deploy:kao": "npm run deploy:kao -- --network localhost",
     "local:deploy:zora": "npm run deploy:zora -- --network localhost",
     "local:deploy": "npm run local:deploy:zora && npm run local:deploy:kao",
+    "local:upgrade": "npm run upgrade:kao -- --network localhost",
+
     "ropsten:deploy:kao": "npm run deploy:kao -- --network ropsten",
     "ropsten:deploy:zora": "npm run deploy:zora -- --network ropsten",
     "ropsten:deploy": "npm run ropsten:deploy:zora && npm run ropsten:deploy:kao",
+    
     "deploy:kao": "npx hardhat run scripts/deploy.ts",
     "deploy:zora": "npx hardhat run scripts/_deploy-zora.ts",
+    "upgrade:kao": "npx hardhat run scripts/upgrade.ts",
+
     "build": "npm run clean && npm run compile",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",

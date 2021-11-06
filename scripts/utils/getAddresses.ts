@@ -1,5 +1,4 @@
 import fs from "fs-extra";
-import { Networks } from "./networks";
 
 export type AddressBook = {
     [network: string]: {
@@ -11,7 +10,7 @@ export type AddressBook = {
     },
 } & { addressesFile: string }
 
-export function getAddresses(network: Networks): AddressBook {
+export function getAddresses(): AddressBook {
     const addressesFile = __dirname + "/../../app/src/contracts/contract-address.json";
     const contractsDir = __dirname + "/../../app/src/contracts";
     if (!fs.existsSync(addressesFile)) {
