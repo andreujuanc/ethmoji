@@ -46,12 +46,12 @@ contract KaoDao is Initializable,
     }
 
     function votingDelay() public view override returns (uint256) {
-        return _votingDelay; //273 => 1 hour
+        return _votingDelay;
             
     }
 
     function votingPeriod() public view override returns (uint256) {
-        return _votingPeriod; //45818 => 1 week
+        return _votingPeriod;
     }
 
     function setKaoMojiAddress(address kaoMoji) external onlyRole(ADDRESS_UPDATER) {

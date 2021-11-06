@@ -15,7 +15,15 @@ async function main() {
     throw new Error('Auction house must be deployed first')
   }
 
-  const core = await deployCore(auctionHouseAddress, '20', '40')
+  let voteStartDelayBlock = 6545 // 1 day
+  let votePeriodBlocks = 45818 // 1 week
+
+  if (networkName == Networks.localhost) {
+    voteStartDelayBlock = 2
+    votePeriodBlocks = 5
+  }
+
+  const core = await deployCore(auctionHouseAddress, voteStartDelayBlock, votePeriodBlocks)
 
   await saveFrontendFiles(networkName, core.kaoDao.address, core.kaoMoji.address, core.kaoToken.address, core.kaoStaking.address)
 
