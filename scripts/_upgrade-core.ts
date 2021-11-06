@@ -21,6 +21,8 @@ export default async function upgradeCore(): Promise<void> {
         kind: 'uups'
     });
 
+    console.log('KaoMoji version', await KaoMoji.attach(kaoMoji.address).version())
+
 
     // /**
     //  * KAOSTAKING

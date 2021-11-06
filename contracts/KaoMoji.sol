@@ -156,4 +156,8 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         _kaoToken.burn(_kaoToken.balanceOf(address(this)));
     }
 
+    function version() external pure returns (uint8) {
+        return 2;
+    }
+
 }
