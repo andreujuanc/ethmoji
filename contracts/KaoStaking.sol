@@ -116,10 +116,11 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
         require(account != address(0), "ERC20: burn from zero address");
         // 1. Get and update current balance
         Balance memory oldBalance = _balances[account];
-
+    
         // 1.2. Update
         require(oldBalance.raw >= amount, "ERC20: burn amount > balance");
 
+        _balances[account].raw = oldBalance.raw - amount;
         _totalSupply = _totalSupply.sub(amount);
 
         // 3. Set back scaled time
