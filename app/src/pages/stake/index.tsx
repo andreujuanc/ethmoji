@@ -1,10 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "ethers/lib/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../../components/button";
 import { Input } from "../../components/input";
 import { useContracts } from "../../hooks/useContracts";
-import { useSigner } from "../../hooks/useSigner";
 import { useStaking } from "../../hooks/useStaking";
 import { formatValue } from "../../utils/formatValue";
 
@@ -14,11 +13,9 @@ export default function ProposalsPage() {
 
     const staking = useStaking()
     const contracts = useContracts()
-    const signer = useSigner()
 
     const [depositAmount, setDepositAmount] = useState<string>()
     const [withdrawAmount, setWithdrawAmount] = useState<string>()
-    const [allowance, setAllowance] = useState<string>()
     const DECIMALS= 18
 
     const deposit = async () => {
@@ -39,19 +36,8 @@ export default function ProposalsPage() {
         await tx?.wait()
     }
 
-    const getAllowance = useCallback(async () => {
-        const account = await signer?.getAddress()
-        if (!account) return
-
-        const allowed = await contracts?.token.allowance(account, contracts.staking.address)
-        setAllowance(allowed?.toString())
-    }, [signer, contracts])
-
-    useEffect(() => {
-        getAllowance()
-    }, [signer, getAllowance])
-
-    const allowed = allowance && BigNumber.from(allowance || '0').gte(depositAmount || '0')
+    const allowance = staking.allowance && staking.allowance
+    const allowed = allowance && BigNumber.from(allowance || '0').gte(parseUnits(depositAmount || '0', DECIMALS))
 
     return (
         <div className="page">

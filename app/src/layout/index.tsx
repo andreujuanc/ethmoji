@@ -34,7 +34,8 @@ export function Layout({ children }: { children: any }) {
             </header>
             <main style={{
                 display: 'flex',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexDirection: 'column'
             }}>
                 {children}
             </main>

@@ -2,12 +2,14 @@ import { BigNumberish } from "@ethersproject/bignumber";
 import { ethers, upgrades } from "hardhat";
 import { KaoDao, KaoMoji, KaoToken, KaoStaking } from "../typechain";
 
-export default async function deployCore(auctionHouseAddress: string, voteDelay: BigNumberish, votePeriod: BigNumberish): Promise<{
+export type KaoContracts = {
     kaoToken: KaoToken
     kaoMoji: KaoMoji
     kaoDao: KaoDao
     kaoStaking: KaoStaking
-}> {
+}
+
+export default async function deployCore(auctionHouseAddress: string, voteDelay: BigNumberish, votePeriod: BigNumberish): Promise<KaoContracts> {
     /**
      * KAOTOKEN
      */

@@ -12,6 +12,7 @@ export function useStaking() {
     const [staked, setStaked] = useState<BigNumber>()
     const [balance, setBalance] = useState<BigNumber>()
     const [multiplier, setMultiplier] = useState<BigNumber>()
+    const [allowance, setAllowance] = useState<BigNumber>()
 
     useEffect(() => {
         const getBalance = async () => {
@@ -35,25 +36,39 @@ export function useStaking() {
             setMultiplier(multiplier)
         }
 
+        const getAllowance = async () => {
+            const account = await signer?.getAddress()
+            if (!account) return
+
+            const allowed = await contracts?.token.allowance(account, contracts.staking.address)
+            setAllowance(allowed)
+        }
+
         getBalance()
         getStaking()
         getMultiplier()
+        getAllowance()
 
         const multiplierInterval = setInterval(getMultiplier, 5000)
         contracts?.token.on("Transfer(address,address,uint256)", getBalance)
         contracts?.staking.on('Staked(address,uint256)', getStaking)
+        contracts?.staking.on('Withdrawn(address,uint256)', getStaking)
+        contracts?.token.on('Approval(address,address,uint256)', getAllowance) //indexed owner, indexed spender, value
 
         return () => {
+            clearInterval(multiplierInterval)
             contracts?.token.off("Transfer(address,address,uint256)", getBalance)
             contracts?.staking.off('Staked(address,uint256)', getStaking)
-            clearInterval(multiplierInterval)
+            contracts?.staking.off('Withdrawn(address,uint256)', getStaking)
+            contracts?.token.off('Approval(address,address,uint256)', getAllowance)
         }
     }, [contracts, signer, account])
 
     return {
         balance,
         staked,
-        multiplier
+        multiplier,
+        allowance
     };
 
 }
