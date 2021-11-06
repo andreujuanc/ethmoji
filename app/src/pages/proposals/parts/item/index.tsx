@@ -107,7 +107,19 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
             return <div>Ended  {proposal.endBlock.sub(currentBlockNumber).toString()} blocks ago</div>
         return null
     }
-    
+
+    const getKaoFromCallData = () => {
+        if (!proposal?.calldatas) return ''
+        if (proposal.calldatas.length === 0) return ''
+
+        const decoded = (ethers.utils.defaultAbiCoder.decode(
+            ['bytes', 'address'],
+            ethers.utils.hexDataSlice(proposal.calldatas[0], 4))
+        )
+        
+        return ethers.utils.toUtf8String(decoded[0])
+    }
+
     return (
         <Container>
             {/* <div>{proposalState}</div>
@@ -120,7 +132,7 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                 fontSize: '2rem',
                 textAlign: 'center'
             }}>
-                <KaoMojiFrame data={proposal.description.toString()} />
+                <KaoMojiFrame data={getKaoFromCallData()} />
             </div>
             {ProposalStateComponent(currentBlockNumber, proposalState)}
             <br />

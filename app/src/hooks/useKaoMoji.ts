@@ -21,7 +21,7 @@ export function useEnhanceKaoMoji(item: KaoMojiId) {
         const account = await signer?.getAddress()
         if (!account) return
         const owned = (await contracts?.moji.ownerOf(item.id))?.toLowerCase() === account.toLowerCase()
-        const bytesToData = await contracts?.moji.getDataOf(item.id) ?? 'no data'
+        const bytesToData = await contracts?.moji.getDataOf(item.id) ?? '0x0'
         const data = ethers.utils.toUtf8String(bytesToData)
         setKaoMoji({
             ...kaoMoji,

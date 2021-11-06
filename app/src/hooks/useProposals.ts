@@ -18,7 +18,7 @@ export type Proposal = {
 export default function useProposals() {
     const [proposals, setProposals] = useState<Proposal[]>([])
     const contracts = useContracts()
-    const getKaoDao = useMemo(() => async () => {
+    const getProposals = useMemo(() => async () => {
         if (!contracts) return
         const filter = contracts.dao?.filters?.ProposalCreated()
         if (filter) {
@@ -34,12 +34,12 @@ export default function useProposals() {
     }, [contracts])
 
     const subscribeToProposalCreated = useCallback(() => {
-        getKaoDao()
-        contracts?.dao.on('ProposalCreated', getKaoDao)
+        getProposals()
+        contracts?.dao.on('ProposalCreated', getProposals)
         return () => {
-            contracts?.dao.off('ProposalCreated', getKaoDao)
+            contracts?.dao.off('ProposalCreated', getProposals)
         }
-    }, [contracts, getKaoDao])
+    }, [contracts, getProposals])
 
     useEffect(() => {
         return subscribeToProposalCreated()

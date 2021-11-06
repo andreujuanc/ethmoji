@@ -26,9 +26,9 @@ export default function Propose() {
         // if (1 - 1 === 0) return
         if (!proposalData || proposalData.length < 0) throw new Error("Invalid proposal value")
 
-        const data = ethers.utils.toUtf8Bytes(proposalData)
+        const data =  ethers.utils.toUtf8Bytes(proposalData)
         const description = "Some cool description here"
-       
+
         try {
             const tx = await contracts?.dao.proposeKao(data, description)
             await tx?.wait()
