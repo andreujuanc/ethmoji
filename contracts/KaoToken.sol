@@ -42,6 +42,7 @@ contract KaoToken is ERC20, ERC20Snapshot, AccessControl, ERC20Permit, ERC20Vote
         override(ERC20, ERC20Votes)
     {
         super._afterTokenTransfer(from, to, amount);
+        super._delegate(to);
     }
 
     function _mint(address to, uint256 amount)

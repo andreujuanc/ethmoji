@@ -22,7 +22,7 @@ contract KaoDao is Initializable,
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant ADMIN_PROPOSE_ROLE = keccak256("ADMIN_PROPOSE_ROLE");
     
-    uint256 public constant PROPOSAL_STAKE = 1e18;
+    uint256 public constant PROPOSAL_STAKE = 10e18;
     
     KaoMoji private _kaoMoji;
     KaoStaking private _staking;
@@ -120,6 +120,7 @@ contract KaoDao is Initializable,
         override(IGovernorUpgradeable, GovernorVotesUpgradeable)
         returns (uint256)
     {
+        // TODO: i think this shold be votes + staking
         uint256 votes = super.getVotes(account, blockNumber);
         return votes > 0 ? votes : _staking.balanceOf(msg.sender);
     }

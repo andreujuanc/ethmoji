@@ -13,6 +13,7 @@ export function useStaking() {
     const [balance, setBalance] = useState<BigNumber>()
     const [multiplier, setMultiplier] = useState<BigNumber>()
     const [allowance, setAllowance] = useState<BigNumber>()
+    const [minStake, setMinStake] = useState<BigNumber>()
 
     useEffect(() => {
         const getBalance = async () => {
@@ -44,10 +45,15 @@ export function useStaking() {
             setAllowance(allowed)
         }
 
+        const getMinStake = async ()=>{
+            setMinStake(await contracts?.dao.PROPOSAL_STAKE())
+        }
+
         getBalance()
         getStaking()
         getMultiplier()
         getAllowance()
+        getMinStake()
 
         const multiplierInterval = setInterval(getMultiplier, 5000)
         contracts?.token.on("Transfer(address,address,uint256)", getBalance)
@@ -68,7 +74,8 @@ export function useStaking() {
         balance,
         staked,
         multiplier,
-        allowance
+        allowance,
+        minStake
     };
 
 }
