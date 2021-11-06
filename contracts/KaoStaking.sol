@@ -162,15 +162,15 @@ contract KaoStaking is  Initializable, ReentrancyGuardUpgradeable, UUPSUpgradeab
         if(hodlLength < 1 days){
             return 5;
         } else if (hodlLength < 1 weeks) {
-            return 5 + (hodlLength * 15 / 1 weeks);
+            return 5 + (hodlLength * 10 / 1 weeks); // 1 week long. : 15 
         } else if (hodlLength < 2 weeks) {
-            return 20 + (hodlLength * 10 / 2 weeks);
+            return 15 + ((hodlLength - 1 weeks) * 10 / 1 weeks); // 1 weeks long : 15 + 10
         } else if (hodlLength < 5 weeks) {
-            return 30 + (hodlLength * 10 / 5 weeks);
+            return 25 + ((hodlLength - 2 weeks) * 10 / 3 weeks); // 3 week long  : 25 + 10
         } else if (hodlLength < 12 weeks) {
-            return 40 + (hodlLength * 10 / 12 weeks);
+            return 35 + ((hodlLength - 5 weeks) * 10 / 7 weeks);  // 7 week long  : 35 + 10
         } else if (hodlLength < 30 weeks) {
-            return 50 + (hodlLength * 10 / 30 weeks);
+            return 45 + ((hodlLength - 12 weeks) * 10 / 23 weeks); // 23 week long  : 45 : 10
         } else {
             return 66; // 2/3th fee for long staking
         }

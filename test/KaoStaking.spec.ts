@@ -56,22 +56,42 @@ describe("KapStaking", function () {
         await transfer(core, user1, parseUnits('100', 'ether'), parseUnits('0', 'ether'))
         await transfer(core, user2, parseUnits('200', 'ether'), parseUnits('0', 'ether'))
 
-
         expect((await core.kaoStaking.getRewardsMultiplier(user1.address)).toString()).to.eq('0')
         expect((await core.kaoStaking.getRewardsMultiplier(user2.address)).toString()).to.eq('0')
-        
+
 
         await stake(core, user1, parseUnits('100', 'ether'), parseUnits('100', 'ether'))
         await stake(core, user2, parseUnits('200', 'ether'), parseUnits('300', 'ether'))
 
-        expect((await core.kaoStaking.getRewardsMultiplier(user1.address)).toString()).to.eq(parseUnits('100', 18).toString())
-        //expect((await core.kaoStaking.getRewardsMultiplier(user2.address)).toString()).to.eq('0')
-        
-        await network.provider.send("evm_increaseTime", [3600])
-        await network.provider.send("evm_mine") // this one will have 02:00 PM as its timestamp
+        expect((await core.kaoStaking.getRewardsMultiplier(user1.address)).toString()).to.eq('5') // 5% is the base fee
+        expect((await core.kaoStaking.getRewardsMultiplier(user2.address)).toString()).to.eq('5') // 5% is the base fee
 
-        
+        let prev_user1 = BigNumber.from('0');
+        let prev_user2 = BigNumber.from('0');
+
+        for (let i = 1; i < (30 * 7); i++) { // Max staking for rewards is 30 weeks
+            await network.provider.send("evm_increaseTime", [3600 * 24])
+            await network.provider.send("evm_mine")
+
+            let current_user1 = await core.kaoStaking.getRewardsMultiplier(user1.address)
+            let current_user2 = await core.kaoStaking.getRewardsMultiplier(user2.address)
+
+            expect(current_user1.toString()).to.be.gte(prev_user1)
+            expect(current_user1.toString()).to.be.gte(prev_user2)
+
+            prev_user1 = current_user1
+            prev_user2 = current_user2
+        }
+
+        await network.provider.send("evm_increaseTime", [3600 * 24])
+        await network.provider.send("evm_mine")
+
+        expect((await core.kaoStaking.getRewardsMultiplier(user1.address)).toString()).to.be.gte(BigNumber.from('66'))
+        expect((await core.kaoStaking.getRewardsMultiplier(user2.address)).toString()).to.be.gte(BigNumber.from('66'))
+
     
+    
+
 
     })
 
