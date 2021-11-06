@@ -120,9 +120,8 @@ contract KaoDao is Initializable,
         override(IGovernorUpgradeable, GovernorVotesUpgradeable)
         returns (uint256)
     {
-        // TODO: i think this shold be votes + staking
         uint256 votes = super.getVotes(account, blockNumber);
-        return votes > 0 ? votes : _staking.balanceOf(msg.sender);
+        return votes  + _staking.balanceOf(account);
     }
 
 

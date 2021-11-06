@@ -5,26 +5,26 @@ import { expect, use } from "chai";
 import { ethers, network } from "hardhat";
 import deployCore, { KaoContracts } from "../scripts/_deploy-core";
 
-describe("KapStaking", function () {
 
-    const transfer = async (core: KaoContracts, user: SignerWithAddress, amount: string, stakedTotalSupply: string) => {
-        await expect(() => core.kaoToken.transfer(user.address, parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, parseUnits(amount, 'ether'))
-        expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether').toString())
-    }
+const transfer = async (core: KaoContracts, user: SignerWithAddress, amount: string, stakedTotalSupply: string) => {
+    await expect(() => core.kaoToken.transfer(user.address, parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, parseUnits(amount, 'ether'))
+    expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether').toString())
+}
 
-    const stake = async (core: KaoContracts, user: SignerWithAddress, amount: string, satakedByUser: string, stakedTotalSupply: string) => {
-        await expect(() => core.kaoToken.connect(user).approve(core.kaoStaking.address, parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, '0')
-        await expect(() => core.kaoStaking.connect(user).stake(parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, BigNumber.from(parseUnits(amount, 'ether')).mul(-1))
-        expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether').toString())
-        expect(await core.kaoStaking.balanceOf(user.address)).to.be.eq(parseUnits(satakedByUser, 'ether').toString())
-    }
+const stake = async (core: KaoContracts, user: SignerWithAddress, amount: string, satakedByUser: string, stakedTotalSupply: string) => {
+    await expect(() => core.kaoToken.connect(user).approve(core.kaoStaking.address, parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, '0')
+    await expect(() => core.kaoStaking.connect(user).stake(parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, BigNumber.from(parseUnits(amount, 'ether')).mul(-1))
+    expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether').toString())
+    expect(await core.kaoStaking.balanceOf(user.address)).to.be.eq(parseUnits(satakedByUser, 'ether').toString())
+}
 
-    const withdraw = async (core: KaoContracts, user: SignerWithAddress, amount: string, satakedByUser: string, stakedTotalSupply: string) => {
-        await expect(() => core.kaoStaking.connect(user).withdraw(parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, parseUnits(amount, 'ether'))
-        expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether'), 'Incorrect total supply')
-        expect(await core.kaoStaking.balanceOf(user.address)).to.be.eq(parseUnits(satakedByUser, 'ether').toString(), 'Incorrect staked balane')
-    }
+const withdraw = async (core: KaoContracts, user: SignerWithAddress, amount: string, satakedByUser: string, stakedTotalSupply: string) => {
+    await expect(() => core.kaoStaking.connect(user).withdraw(parseUnits(amount, 'ether'))).to.changeTokenBalance(core.kaoToken, user, parseUnits(amount, 'ether'))
+    expect(await core.kaoStaking.totalSupply()).to.be.equal(parseUnits(stakedTotalSupply, 'ether'), 'Incorrect total supply')
+    expect(await core.kaoStaking.balanceOf(user.address)).to.be.eq(parseUnits(satakedByUser, 'ether').toString(), 'Incorrect staked balane')
+}
 
+describe("KaoStaking", function () {
 
     it("Should return amount of kaotokens staked correctly", async function () {
         const [owner, user1, user2] = await ethers.getSigners();
