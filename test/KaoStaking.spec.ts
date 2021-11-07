@@ -29,7 +29,7 @@ describe("KaoStaking", function () {
     it("Should return amount of kaotokens staked correctly", async function () {
         const [owner, user1, user2] = await ethers.getSigners();
 
-        const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', '1', '2')
+        const core = await deployCore('1', '2')
 
         await transfer(core, user1, '100', '0')
         await transfer(core, user2, '200', '0')
@@ -56,7 +56,7 @@ describe("KaoStaking", function () {
     it("Should increase the multiplier as time passes", async () => {
         const [owner, user1, user2] = await ethers.getSigners();
 
-        const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', '1', '2')
+        const core = await deployCore( '1', '2')
 
 
         await transfer(core, user1, '100', '0')

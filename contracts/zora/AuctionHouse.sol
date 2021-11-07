@@ -83,7 +83,8 @@ contract AuctionHouse is Initializable, IAuctionHouse, ReentrancyGuardUpgradeabl
         uint256 reservePrice,
         address payable curator,
         uint8 curatorFeePercentage,
-        address auctionCurrency
+        address auctionCurrency,
+        bool alreadyCurated
     ) public override nonReentrant returns (uint256) {
         require(
             IERC165(tokenContract).supportsInterface(INTERFACE_ID_721) || IERC165(tokenContract).supportsInterface(INTERFACE_ID_721),
@@ -116,7 +117,7 @@ contract AuctionHouse is Initializable, IAuctionHouse, ReentrancyGuardUpgradeabl
 
         emit AuctionCreated(auctionId, tokenId, tokenContract, duration, reservePrice, tokenOwner, curator, curatorFeePercentage, auctionCurrency);
 
-        if(auctions[auctionId].curator == address(0) || curator == tokenOwner) {
+        if(auctions[auctionId].curator == address(0) || curator == tokenOwner || alreadyCurated) {
             _approveAuction(auctionId, true);
         }
 

@@ -1,5 +1,6 @@
 export enum Networks {
     localhost = "localhost",
+    hardhat = 'hardhat',
     ropsten = "ropsten"
 }
 

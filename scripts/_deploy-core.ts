@@ -1,15 +1,19 @@
 import { BigNumberish } from "@ethersproject/bignumber";
 import { ethers, upgrades } from "hardhat";
-import { KaoDao, KaoMoji, KaoToken, KaoStaking } from "../typechain";
+import { KaoDao, KaoMoji, KaoToken, KaoStaking, AuctionHouse } from "../typechain";
+import { deployAuctionHouse } from "./_deploy-zora";
 
 export type KaoContracts = {
     kaoToken: KaoToken
     kaoMoji: KaoMoji
     kaoDao: KaoDao
     kaoStaking: KaoStaking
+    auctionHouse: AuctionHouse
 }
 
-export default async function deployCore(auctionHouseAddress: string, voteDelay: BigNumberish, votePeriod: BigNumberish): Promise<KaoContracts> {
+export default async function deployCore(voteDelay: BigNumberish, votePeriod: BigNumberish): Promise<KaoContracts> {
+    const auction = await deployAuctionHouse()
+
     /**
      * KAOTOKEN
      */
@@ -59,13 +63,14 @@ export default async function deployCore(auctionHouseAddress: string, voteDelay:
     await kaoMoji.grantRole(minterRole, kaoDao.address)
 
     await kaoMoji.setKaoTokenAddress(kaoToken.address)
-    await kaoMoji.setAuctionAddress(auctionHouseAddress)
+    await kaoMoji.setAuctionAddress(auction.auctionHouse.address)
     await kaoMoji.setKaoStakingAddress(kaoStaking.address)
 
     return {
         kaoToken: kaoToken as any,
         kaoMoji: kaoMoji as any,
         kaoDao: kaoDao as any,
-        kaoStaking: kaoStaking as any
+        kaoStaking: kaoStaking as any,
+        auctionHouse: auction.auctionHouse
     }
 }

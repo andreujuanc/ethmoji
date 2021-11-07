@@ -41,7 +41,7 @@ describe("KaoDao", function () {
     it("Should return amount of voting power correctly", async function () {
         const [owner, user1, user2] = await ethers.getSigners();
 
-        const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', '1', '2')
+        const core = await deployCore('1', '2')
 
         await transfer(core, user1, '100', '100')
         await stake(core, user1, '25', '100')

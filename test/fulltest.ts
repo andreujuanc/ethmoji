@@ -9,7 +9,7 @@ describe("KapDao", function () {
   it("Should allow only to propose kao, generic propose method is for admin only", async function () {
     const [owner, user1] = await ethers.getSigners();
 
-    const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', '1', '2')
+    const core = await deployCore('1', '2')
 
     const result = await core.kaoDao.propose([core.kaoMoji.address], [0], ["0x"], "Test")
     expect(getProposalIdFromReceipt(await result.wait())).to.have.lengthOf(77)
@@ -27,7 +27,7 @@ describe("KapDao", function () {
   it.skip("Should allow to propose kaomojis securely", async function () {
     const [owner, user1] = await ethers.getSigners();
 
-    const core = await deployCore('0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9', '1', '2')
+    const core = await deployCore('1', '2')
     core.kaoToken.transfer(user1.address, parseUnits('1', 'ether'))
 
     await core.kaoToken.connect(user1).increaseAllowance(core.kaoStaking.address, parseUnits('1', 'ether'))
