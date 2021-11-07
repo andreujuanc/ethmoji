@@ -8,7 +8,7 @@ export function Messages() {
 
     return (
         <div className="messages-container">
-            {messages?.map((x: Message) => <MessageContainer value={x} />)}
+            {messages?.map((x: Message, index: number) => <MessageContainer key={index} value={x} />)}
         </div>
     )
 }
