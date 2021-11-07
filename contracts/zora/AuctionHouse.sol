@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity ^0.8.2;
-pragma experimental ABIEncoderV2;
 
-import { SafeMath } from "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import { IERC721, IERC165 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
+import { SafeMathUpgradeable as SafeMath } from "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import { IERC721Upgradeable as IERC721, IERC165Upgradeable as IERC165 } from "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import { IERC20Upgradeable as IERC20 } from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import { SafeERC20Upgradeable as SafeERC20 } from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import { CountersUpgradeable as Counters} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+
+import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 
 import { IAuctionHouse } from "./interfaces/IAuctionHouse.sol";
+
 
 interface IWETH {
     function deposit() external payable;
@@ -22,10 +27,12 @@ interface IWETH {
 /**
  * @title An open auction house, enabling collectors and curators to run their own auctions
  */
-contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
+contract AuctionHouse is Initializable, IAuctionHouse, ReentrancyGuardUpgradeable, UUPSUpgradeable, AccessControlUpgradeable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
+    
+    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
     // The minimum amount of time left in an auction after a new bid is created
     uint256 public timeBuffer;
@@ -54,10 +61,14 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
     /*
      * Constructor
      */
-    constructor(address _weth) {
+    function initialize(address _weth) external initializer {
         wethAddress = _weth;
         timeBuffer = 1 * 60; // extend 15 minutes after every bid made in last 15 minutes
         minBidIncrementPercentage = 5; // 5%
+
+        __ReentrancyGuard_init();
+        __UUPSUpgradeable_init();
+        _setupRole(UPGRADER_ROLE, msg.sender);
     }
 
     /**
@@ -105,8 +116,7 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
 
         emit AuctionCreated(auctionId, tokenId, tokenContract, duration, reservePrice, tokenOwner, curator, curatorFeePercentage, auctionCurrency);
 
-
-        if(auctions[auctionId].curator == address(0) || curator == tokenOwner || msg.sender == tokenOwner) {
+        if(auctions[auctionId].curator == address(0) || curator == tokenOwner) {
             _approveAuction(auctionId, true);
         }
 
@@ -342,6 +352,12 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
     function _exists(uint256 auctionId) internal view returns(bool) {
         return auctions[auctionId].tokenOwner != address(0);
     }
+
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        onlyRole(UPGRADER_ROLE)
+        override
+    {}
 
     // TODO: consider reverting if the message sender is not WETH
     receive() external payable {}

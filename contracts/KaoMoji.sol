@@ -71,11 +71,11 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         uint256 id = _totalSupply;
         
         _totalSupply++;
-        _safeMint(address(this), id, _data);
-
+        _safeMint(proposer, id, _data); // temporarly give the token to the proposer (just to get the fees)
+        
         _tokenData[id] = _data;
 
-        _approve(address(_auctionHouse), id);
+        _approve(address(_auctionHouse), id); // temporarily approve the usage of the token so it can to go the AH
 
         uint8 decimals = _kaoToken.decimals();
         uint256 auctionId = _auctionHouse.createAuction(
@@ -83,8 +83,8 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
             address(this), // token contract
             1 minutes, //duration 
             1 * 10 ** decimals,
-            payable(_proposer), // proposer curator
-            getProposerPercentageFor(_proposer), // curatorFeePercentage
+            payable(address(this)), // proposer curator
+            100 - getProposerPercentageFor(_proposer), // curatorFeePercentage: proproser gets the inverse of the curator
             address(_kaoToken)
         );
 

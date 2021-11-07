@@ -1,5 +1,5 @@
 // @ts-ignore
-import { ethers, network } from "hardhat";
+import { ethers, network, upgrades } from "hardhat";
 import fs from "fs-extra";
 import { AddressBook, getAddresses } from "./utils/getAddresses";
 import { isValidNetwork, Networks } from "./utils/networks";
@@ -27,17 +27,23 @@ async function main() {
         weth = WETH.attach(wethAddress)
     }
 
-    // We get the contract to deploy
-    const AuctionHouse = await ethers.getContractFactory("AuctionHouse");
 
     console.log(`Deploying Auction House`);
 
-    const auctionHouse = await AuctionHouse.deploy(weth.address);
+
+    /**
+     * Auction House
+     */
+    const AuctionHouse = await ethers.getContractFactory("AuctionHouse");
+    console.log('Deploying AuctionHouse')
+    const auctionHouse = await upgrades.deployProxy(AuctionHouse, [weth.address], {
+        kind: 'uups'
+    });
 
     console.log(`Auction House deploying to ${auctionHouse.address}. Awaiting confirmation...`);
     await auctionHouse.deployed();
 
-    console.log("Auction House contracts deployed 📿");
+    console.log("Auction House contracts deployed");
 
 
     /**
