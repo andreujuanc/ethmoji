@@ -1,0 +1,35 @@
+.messages-container{
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    background-color: #999;
+    width: 100%;
+    max-width: 1024px;
+
+
+    .message-item{
+        display: flex;
+        flex-direction: row;
+        padding: 0.5rem 1rem;
+        min-height: 3rem;
+        
+        .message-icon{
+            line-height: 2rem;
+            margin-right: 0.5rem;
+        }
+        .message-body{
+            line-height: 2rem;
+        }
+        .message-dismiss{
+            line-height: 2rem;
+            width: 2rem;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        &.error{
+            background-color: red;
+        }
+    }
+
+}

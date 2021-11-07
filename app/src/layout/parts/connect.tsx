@@ -33,8 +33,6 @@ export default function Connect() {
         return `${account?.substr(0, 6)}...${account?.substr(account.length - 4, 4)}`
     }, [account])
 
-    console.log(active, account, chainId, error)
-
     return (
         <span style={{ display: 'flex' }}>
             {active && <div className="white-shadow-1" style={{

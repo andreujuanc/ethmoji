@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useMessages } from '../../hooks/useMessages'
 import './index.scss'
 
 type ButtonProps = {
@@ -11,6 +12,7 @@ type ButtonProps = {
 
 export default function Button(props: ButtonProps) {
     const [clicking, setClicking] = useState(false)
+    const { addException } = useMessages()
 
     const onClick = async () => {
         if (clicking || props.disabled) return
@@ -23,7 +25,7 @@ export default function Button(props: ButtonProps) {
             setClicking(false)
         } catch (ex: any) {
             setClicking(false)
-            throw ex
+            addException(ex)
         }
 
     }
@@ -36,7 +38,7 @@ export default function Button(props: ButtonProps) {
         >
             {props.children}
 
-            { clicking && <><span className="dot one">.</span><span className="dot two">.</span><span className="dot three">.</span></> }
+            {clicking && <><span className="dot one">.</span><span className="dot two">.</span><span className="dot three">.</span></>}
         </button>
     )
 }
