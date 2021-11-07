@@ -74,6 +74,7 @@ contract KaoDao is Initializable,
         returns (uint256)
     {
         // TODO: trim string to ensure uniqueness
+        // TODO: higher balance for larger data size?
         require(address(_kaoMoji) != address(0), "kaoMoji == 0");
         require(data.length > 0, "data == 0");
         require(_staking.balanceOf(msg.sender) >= PROPOSAL_STAKE, "Not enough tokens staked");

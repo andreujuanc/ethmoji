@@ -65,6 +65,8 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         external
         onlyRole(MINTER_ROLE)
     {
+        require(_proposer != address(0), "Invalid Proposer");
+        // TODO: validate data
 
         uint256 id = _totalSupply;
         
@@ -76,15 +78,17 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         _approve(address(_auctionHouse), id);
 
         uint8 decimals = _kaoToken.decimals();
-        _auctionHouse.createAuction(
+        uint256 auctionId = _auctionHouse.createAuction(
             id, 
             address(this), // token contract
             1 minutes, //duration 
             1 * 10 ** decimals,
             payable(_proposer), // proposer curator
-            getProposerPercentageFor(_proposer), // curatorFeePercentage => proproser is the curator
+            getProposerPercentageFor(_proposer), // curatorFeePercentage
             address(_kaoToken)
         );
+
+        require(auctionId > 0, "createAuction: auctionId > 0");
 
         _approve(address(0), id);    
     }
@@ -99,8 +103,8 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
         if(total == 0) return 0;
         if(balance == 0) return 0;
 
-        uint256 share = (balance * 100 / total) * multiplier;
-        if(share > 100) return 100;
+        uint256 share = ((balance * 100 / total) * (100 + multiplier)) / 100;
+        if(share > 99) return 99; // Auction house wont allow more than 99% curator fee
 
         return uint8(share);
     }
@@ -157,7 +161,7 @@ contract KaoMoji is Initializable, ERC721Upgradeable, IERC721ReceiverUpgradeable
     }
 
     function version() external pure returns (uint8) {
-        return 2;
+        return 1;
     }
 
 }

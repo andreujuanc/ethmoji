@@ -142,8 +142,9 @@ export default function ProposalItem({ proposal }: { proposal: Proposal }): JSX.
                     <Button disabled={voted} onClick={() => vote(VoteType.Against)}>(╯°□°）╯︵ ┻━┻</Button><br />
                     <Button disabled={voted} onClick={() => vote(VoteType.Abstain)}>(°ー°〃)</Button>
                 </div>
+                
             }
-
+            <br />
             {
                 proposalState === ProposalState.Defeated && 'Rejected ಥ_ಥ'
             }
