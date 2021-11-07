@@ -36,6 +36,8 @@ describe("KaoMoji", function () {
 
         await core.kaoMoji.mint(ethers.utils.toUtf8Bytes(':D'), user1.address)
 
+        //core.kaoMoji.ownerOf('') TODO: get token id from logs :/
+
         await core.auctionHouse.connect(user2).createBid('0', parseUnits('10', 'ether'))
 
         await network.provider.send("evm_increaseTime", [3600 * 24])
