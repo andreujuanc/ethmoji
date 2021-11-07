@@ -106,7 +106,7 @@ contract AuctionHouse is IAuctionHouse, ReentrancyGuard {
         emit AuctionCreated(auctionId, tokenId, tokenContract, duration, reservePrice, tokenOwner, curator, curatorFeePercentage, auctionCurrency);
 
 
-        if(auctions[auctionId].curator == address(0) || curator == tokenOwner) {
+        if(auctions[auctionId].curator == address(0) || curator == tokenOwner || msg.sender == tokenOwner) {
             _approveAuction(auctionId, true);
         }
 
